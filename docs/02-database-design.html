@@ -1,0 +1,234 @@
+<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DONECASH — Database Design</title><link rel="stylesheet" href="../presentation.css"></head><body><header class="reader-top"><a href="../START-HERE.html">← Delivery portal</a><span>DONECASH · ENGLISH HANDOVER</span><a href="02-database-design.md">Markdown source</a></header><div class="document-layout"><aside class="toc"><strong>IN THIS DOCUMENT</strong><a href="#1-design-principles">1. Design principles</a><a href="#2-entity-identification">2. Entity identification</a><a href="#3-attribute-identification">3. Attribute identification</a><a href="#4-relationship-identification">4. Relationship identification</a><a href="#5-entity-relationship-diagram">5. Entity relationship diagram</a><a href="#6-normalization-to-3nf">6. Normalization to 3NF</a><a href="#7-constraints-and-indexes">7. Constraints and indexes</a><a href="#8-state-machines">8. State machines</a><a href="#9-partitioning-and-retention">9. Partitioning and retention</a><a href="#10-physical-sql-handoff">10. Physical SQL handoff</a><a href="#sources">Sources</a></aside><main class="document"><h1>DONECASH — Database Design</h1>
+<p>English handover edition · Physical baseline: <a href="../database/schema.sql">schema.sql</a>. The SQL is a design starting point, not evidence of a migrated or production-hardened database.</p>
+<h2 id="1-design-principles">1. Design principles</h2>
+<ul>
+<li>PostgreSQL is the financial source of truth; Redis is not authoritative for money or finality.</li>
+<li>Double-entry, append-only ledger; <code>BIGINT</code> minor units (EGP piastres), never floating-point arithmetic.</li>
+<li>Separate identity/KYC, wallet lifecycle and accounting permissions.</li>
+<li>UUID internal identifiers; public references plus provider/external and correlation identifiers.</li>
+<li>Preserve financial history through lifecycle/archival. Encrypt sensitive identity data and use keyed search hashes where appropriate.</li>
+<li>Fees, limits and risk rules are versioned and effective-dated.</li>
+</ul>
+<h2 id="2-entity-identification">2. Entity identification</h2>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Entities</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Identity</td>
+<td><code>customers</code>, <code>customer_phones</code>, <code>customer_consents</code>, <code>devices</code>, <code>auth_sessions</code>, <code>auth_challenges</code></td>
+<td>Identity, contacts, consent, device and sessions</td>
+</tr>
+<tr>
+<td>KYC</td>
+<td><code>kyc_cases</code>, <code>kyc_documents</code>, <code>screening_results</code></td>
+<td>Verification workflow and evidence</td>
+</tr>
+<tr>
+<td>Wallet</td>
+<td><code>wallets</code>, <code>wallet_holds</code>, <code>beneficiaries</code></td>
+<td>Wallet state, reservations and saved recipients</td>
+</tr>
+<tr>
+<td>Ledger</td>
+<td><code>ledger_accounts</code>, <code>journal_entries</code>, <code>ledger_postings</code></td>
+<td>Accounting truth</td>
+</tr>
+<tr>
+<td>Payments</td>
+<td><code>payment_transactions</code>, <code>transfers</code>, <code>cash_operations</code>, <code>billers</code>, <code>bill_payments</code>, <code>merchants</code>, <code>merchant_qr_codes</code></td>
+<td>Financial commands and rail-specific data</td>
+</tr>
+<tr>
+<td>Policy</td>
+<td><code>fee_policies</code>, <code>limit_policies</code>, <code>limit_consumptions</code></td>
+<td>Pricing, limits and usage aggregates</td>
+</tr>
+<tr>
+<td>Risk</td>
+<td><code>risk_rules</code>, <code>risk_alerts</code>, <code>risk_cases</code>, <code>risk_case_alerts</code></td>
+<td>Detection and investigation</td>
+</tr>
+<tr>
+<td>Support</td>
+<td><code>disputes</code>, <code>support_tickets</code>, <code>ticket_events</code></td>
+<td>Complaints and communication</td>
+</tr>
+<tr>
+<td>Operations</td>
+<td><code>reconciliation_batches</code>, <code>reconciliation_items</code>, <code>outbox_events</code>, <code>notifications</code></td>
+<td>Matching, reliable events and messages</td>
+</tr>
+<tr>
+<td>IAM/audit</td>
+<td><code>staff_users</code>, <code>roles</code>, <code>permissions</code>, <code>staff_roles</code>, <code>role_permissions</code>, <code>approval_requests</code>, <code>audit_logs</code></td>
+<td>Access, segregation of duties and evidence</td>
+</tr>
+</tbody></table>
+<h2 id="3-attribute-identification">3. Attribute identification</h2>
+<p>The SQL source is the exact per-entity attribute inventory: types, required values, defaults, foreign keys, checks and indexes. Common conventions:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>UUID</td>
+<td>Internal, without business meaning</td>
+</tr>
+<tr>
+<td><code>created_at</code>, <code>updated_at</code></td>
+<td>timestamptz</td>
+<td>Store instants in UTC; display local time explicitly</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>integer where present</td>
+<td>Optimistic concurrency on mutable resources</td>
+</tr>
+<tr>
+<td><code>amount_minor</code></td>
+<td>bigint</td>
+<td>Positive business amount; postings also carry a signed amount</td>
+</tr>
+<tr>
+<td><code>currency</code></td>
+<td>char(3)</td>
+<td>Explicit EGP in MVP</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>text with CHECK</td>
+<td>Enumerated lifecycle, not several ambiguous booleans</td>
+</tr>
+<tr>
+<td><code>external_reference</code></td>
+<td>text</td>
+<td>Provider-scoped uniqueness where applicable</td>
+</tr>
+<tr>
+<td><code>idempotency_key</code></td>
+<td>text</td>
+<td>Unique within the command&#39;s defined scope</td>
+</tr>
+<tr>
+<td><code>metadata</code>/payload</td>
+<td>jsonb</td>
+<td>Non-core extensions/evidence; not a substitute for relational facts</td>
+</tr>
+</tbody></table>
+<h3 id="sensitive-data">Sensitive data</h3>
+<p>National ID uses ciphertext plus keyed-HMAC lookup hash. The baseline stores E.164 phone text for demonstration; production must decide encryption/tokenization and indexed-hash strategy. KYC media belongs in encrypted object storage; SQL stores object keys, content hashes and retention information. MPIN credential storage is intentionally absent from the domain schema and needs an authenticated credential store, suitable KDF and key-management policy. Never infer that this baseline already supplies production authentication.</p>
+<h2 id="4-relationship-identification">4. Relationship identification</h2>
+<ul>
+<li>Customer 1:N phones; one active primary phone, globally unique phone value in the baseline.</li>
+<li>Customer 1:N KYC cases, preserving historical reviews.</li>
+<li>Customer 1:N wallets historically; partial uniqueness controls active phone/currency wallets.</li>
+<li>Wallet 1:1 customer ledger account; accounts classify assets, liabilities, equity, revenue, expense and clearing.</li>
+<li>Journal 1:N postings, with at least two balanced same-currency postings when postings are committed.</li>
+<li>Payment 0..1 journal in the baseline; unsuccessful requests need not post.</li>
+<li>Transfer 1:1 payment, with source/destination wallet references.</li>
+<li>Payment 1:N disputes; partial uniqueness prevents duplicate open reasons.</li>
+<li>Reconciliation batch 1:N items; a match may link a payment, while an exception remains unresolved.</li>
+<li>Staff N:M roles N:M permissions through join tables; approval separates maker and checker.</li>
+</ul>
+<h2 id="5-entity-relationship-diagram">5. Entity relationship diagram</h2>
+<p>This overview shows the principal relationships; the SQL foreign keys are authoritative for the complete baseline.</p>
+<pre><code class="language-mermaid">erDiagram
+  CUSTOMERS ||--o{ CUSTOMER_PHONES : owns
+  CUSTOMERS ||--o{ DEVICES : registers
+  CUSTOMERS ||--o{ KYC_CASES : submits
+  KYC_CASES ||--o{ KYC_DOCUMENTS : includes
+  CUSTOMERS ||--o{ WALLETS : owns
+  WALLETS ||--|| LEDGER_ACCOUNTS : backed_by
+  LEDGER_ACCOUNTS ||--o{ LEDGER_POSTINGS : receives
+  JOURNAL_ENTRIES ||--|{ LEDGER_POSTINGS : contains
+  PAYMENT_TRANSACTIONS ||--o| JOURNAL_ENTRIES : posts
+  PAYMENT_TRANSACTIONS ||--o| TRANSFERS : specializes
+  PAYMENT_TRANSACTIONS ||--o| CASH_OPERATIONS : specializes
+  PAYMENT_TRANSACTIONS ||--o| BILL_PAYMENTS : specializes
+  BILLERS ||--o{ BILL_PAYMENTS : receives
+  MERCHANTS ||--o{ MERCHANT_QR_CODES : issues
+  WALLETS ||--o{ WALLET_HOLDS : reserves
+  PAYMENT_TRANSACTIONS ||--o{ DISPUTES : disputed_by
+  RISK_RULES ||--o{ RISK_ALERTS : triggers
+  RISK_CASES ||--o{ RISK_CASE_ALERTS : groups
+  RISK_ALERTS ||--o{ RISK_CASE_ALERTS : grouped_in
+  RECONCILIATION_BATCHES ||--o{ RECONCILIATION_ITEMS : contains
+  STAFF_USERS }o--o{ ROLES : assigned
+  ROLES }o--o{ PERMISSIONS : grants
+  STAFF_USERS ||--o{ AUDIT_LOGS : acts
+</code></pre>
+<h3 id="ledger-example-egp-375-transfer-egp-5-fee">Ledger example: EGP 375 transfer + EGP 5 fee</h3>
+<pre><code class="language-mermaid">flowchart LR
+  A[Sender wallet liability] --&gt;|Debit 38000 piastres| J[Journal entry]
+  J --&gt;|Credit 37500 piastres| B[Recipient wallet liability]
+  J --&gt;|Credit 500 piastres| F[Fee revenue]
+  P[Payment transaction] --&gt; J
+  J --&gt; O[Outbox event in same database transaction]
+</code></pre>
+<p>In the SQL convention, debit is positive and credit negative: <code>38000 - 37500 - 500 = 0</code>. Wallet liabilities have their own normal-side interpretation. This corrects an arithmetic mismatch in the original explanatory diagram, which did not match its EGP 375 + 5 caption; it does not change the SQL sign convention.</p>
+<h2 id="6-normalization-to-3nf">6. Normalization to 3NF</h2>
+<h3 id="first-normal-form">First normal form</h3>
+<p>Atomic columns; phones, devices, beneficiaries and KYC documents are rows in separate tables rather than lists embedded in text fields.</p>
+<h3 id="second-normal-form">Second normal form</h3>
+<p>Join-table data depends on the whole relationship key. Posting attributes depend on the posting, not only on its journal or account.</p>
+<h3 id="third-normal-form">Third normal form</h3>
+<p>Customer identity is not repeated in wallets/transfers. Biller descriptions live in <code>billers</code>; merchant data lives in <code>merchants</code>. Roles/permissions are separate entities. Batch metadata lives in the reconciliation batch rather than every item. Non-key facts depend on their entity key rather than transitively on another non-key attribute.</p>
+<h3 id="intentional-read-side-denormalization">Intentional read-side denormalization</h3>
+<ul>
+<li>There is no authoritative <code>available_balance_minor</code> column on wallets. A future materialized projection may be rebuilt from ledger/holds.</li>
+<li><code>limit_consumptions</code> is an operational aggregate; critical decisions need atomic consistency with payment commands.</li>
+<li>Historical receipt/counterparty snapshots may be stored in an explicit read model; <code>display_counterparty_name</code> is a proposed projection, not a column implemented in the baseline.</li>
+</ul>
+<h2 id="7-constraints-and-indexes">7. Constraints and indexes</h2>
+<p>The actual payment idempotency constraint is <code>(wallet_id, idempotency_key)</code>, not <code>(customer_id, idempotency_key)</code>. Provider references use <code>(provider_code, external_reference)</code>. Activity indexes include wallet/time; queues use status/time; active holds use a partial index. Business amounts are positive and signed postings nonzero. A deferred constraint trigger checks posting count, net amount and a single currency before commit. Update/delete of postings is blocked by an immutability trigger.</p>
+<p>Use row locks or serializable transactions with bounded conflict retry for reserving funds, limit consumption and posting. ORM convenience must not weaken database invariants.</p>
+<h3 id="baseline-gaps-requiring-hardening">Baseline gaps requiring hardening</h3>
+<p>The balance trigger fires on posting changes; a journal created without postings is not itself rejected by that trigger. It checks one posting currency but does not enforce matching journal/account currency. It does not by itself implement non-negative available balances, authorization, policy selection, payload-aware idempotency or immutable journal metadata. Quotes, provider inbox and extended merchant settlement/partial-refund models need explicit persistence decisions. See <a href="../handover/DELIVERY-STATUS.html">delivery status</a>; do not describe the baseline as a complete production financial database.</p>
+<h2 id="8-state-machines">8. State machines</h2>
+<table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Main path</th>
+<th>Alternative paths</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Payment</td>
+<td>CREATED → AUTHORIZED → PROCESSING → COMPLETED</td>
+<td>DECLINED before execution; FAILED only after authoritative negative finality; eligible cancellation; COMPLETED → REVERSAL_PENDING → REVERSED</td>
+</tr>
+<tr>
+<td>KYC</td>
+<td>DRAFT → SUBMITTED → IN_REVIEW → APPROVED</td>
+<td>MORE_INFO_REQUIRED, REJECTED, EXPIRED</td>
+</tr>
+<tr>
+<td>Wallet</td>
+<td>PENDING_KYC → ACTIVE</td>
+<td>RESTRICTED, SUSPENDED, CLOSED under guarded transitions</td>
+</tr>
+</tbody></table>
+<p>CHECK constraints enumerate states; transition legality is an additional domain/database implementation requirement.</p>
+<h2 id="9-partitioning-and-retention">9. Partitioning and retention</h2>
+<p>Start without speculative partitioning. Measure volume before considering monthly ledger/audit/outbox partitions and compatible keys/indexes. Financial retention comes from legal/sponsor requirements, not arbitrary code constants. KYC objects need malware scanning, retention tags, legal holds, encryption and short-lived signed access. Copy audit evidence to appropriate immutable/WORM storage and verify signed batches or hash integrity.</p>
+<h2 id="10-physical-sql-handoff">10. Physical SQL handoff</h2>
+<p>Use <a href="../database/schema.sql">schema.sql</a> as the baseline for a dedicated migration role. Application roles must not own financial tables. Review account classes and debit/credit rules with finance; agree provider reference/status semantics; create Prisma models/migrations while retaining SQL triggers/partial indexes; add property-based and concurrency tests for balancing, duplicate commands, holds, non-negative funds and linked reversals.</p>
+<p>The English delivery changes the customer&#39;s default locale to <code>en-EG</code>; it retains multilingual identity fields for future Arabic localization. No Prisma schema or applied migration history is included.</p>
+<h2 id="sources">Sources</h2>
+<ol>
+<li>Prisma, <a href="https://www.prisma.io/docs/orm/v6/prisma-client/queries/transactions">Transactions and Batch Queries</a>, accessed 13 September 2026.</li>
+<li>Central Bank of Egypt, <a href="https://www.cbe.org.eg/en/payment-systems-and-services/payment-services/mobile-wallet">Mobile Wallets</a>, accessed 13 September 2026.</li>
+<li>Central Bank of Egypt, <a href="https://www.cbe.org.eg/en/payment-systems-and-services/payment-systems-and-services-oversight/psos-and-psps-licensing-rules">PSOs and PSPs Licensing Rules</a>, 2025.</li>
+</ol>
+<footer>DONECASH · Final English Handover · 9 October 2026 · Product blueprint, not a production application.</footer></main></div></body></html>

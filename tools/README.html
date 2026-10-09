@@ -1,0 +1,16 @@
+<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DONECASH — Optional Reproduction Tools</title><link rel="stylesheet" href="../presentation.css"></head><body><header class="reader-top"><a href="../START-HERE.html">← Delivery portal</a><span>DONECASH · ENGLISH HANDOVER</span><a href="README.md">Markdown source</a></header><div class="document-layout"><aside class="toc"><strong>IN THIS DOCUMENT</strong><a href="#install">Install</a><a href="#documentation-diagrams">Documentation diagrams</a></aside><main class="document"><h1>DONECASH — Optional Reproduction Tools</h1>
+<p>The portal, documents, screenshots and prototype already work without installing tools. This directory exists only for maintainers who want to regenerate artifacts. It is not a NestJS/Next.js project.</p>
+<h2 id="install">Install</h2>
+<p>Use a compatible Node.js release (Node 22+ recommended for the pinned tooling). From this directory, run <code>npm install</code> and <code>npx playwright install chromium</code>. Then run the scripts from the <strong>delivery root</strong>, not the tools directory.</p>
+<pre><code class="language-sh">node tools/render-final-design.mjs
+node tools/build-presentation.mjs
+node tools/capture-presentation.mjs
+node tools/validate-delivery.mjs
+</code></pre>
+<p>The renderer rebuilds only this package&#39;s <code>design/final/</code> after validating the resolved path. It creates 14 presentation PNGs, 94 individual route captures, the English wireframe PNG and route manifest. Custom files placed in the generated final folder would be replaced; keep originals elsewhere.</p>
+<p><code>build-presentation.mjs</code> creates the offline portal, HTML versions of English Markdown documents and the file checksum manifest. <code>validate-delivery.mjs</code> checks local paths/language/coverage and opens routes in headless Chromium for navigation checks. They do not test an actual financial backend, native mobile app or complete accessibility.</p>
+<p>After a validation run writes its report, run the presentation builder once more to update HTML and checksums, then run <code>node tools/validate-delivery.mjs --verify-only</code>. That final mode verifies checksums without modifying the report. <code>capture-presentation.mjs</code> adds preview images of the portal/document reader under <code>design/presentation/</code>.</p>
+<p>In the authoring workspace, <code>DONECASH_NODE_MODULES</code> may point to an existing dependency directory. Normal recipients should install the pinned tools locally. No machine-specific dependency path is embedded in the delivered scripts.</p>
+<h2 id="documentation-diagrams">Documentation diagrams</h2>
+<p>Mermaid source diagrams remain editable in the Markdown. The offline HTML reader displays their source as code (not an online diagram service); use a Mermaid-capable Markdown editor for rendered interactive diagrams. No external CDN/font/network request is required by the presentation portal.</p>
+<footer>DONECASH · Final English Handover · 9 October 2026 · Product blueprint, not a production application.</footer></main></div></body></html>

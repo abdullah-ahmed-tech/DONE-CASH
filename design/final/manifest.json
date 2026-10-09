@@ -1,0 +1,831 @@
+{
+  "generatedAt": "2026-10-09T04:36:31.311Z",
+  "routeCount": 58,
+  "files": [
+    {
+      "file": "00-prototype-hub.png",
+      "kind": "hub"
+    },
+    {
+      "file": "01-mobile-ios-home.png",
+      "kind": "mobile-hero",
+      "platform": "ios",
+      "routes": [
+        "home"
+      ]
+    },
+    {
+      "file": "10-mobile-ios-01.png",
+      "kind": "mobile-contact-sheet",
+      "platform": "ios",
+      "routes": [
+        "splash",
+        "welcome",
+        "phone",
+        "otp",
+        "consent",
+        "identity-guide",
+        "id-capture",
+        "selfie",
+        "kyc-status",
+        "create-mpin",
+        "login",
+        "home"
+      ]
+    },
+    {
+      "file": "10-mobile-ios-02.png",
+      "kind": "mobile-contact-sheet",
+      "platform": "ios",
+      "routes": [
+        "recipient",
+        "amount",
+        "transfer-review",
+        "authorize",
+        "receipt",
+        "cash-in",
+        "cash-instructions",
+        "cash-out",
+        "cash-code",
+        "billers",
+        "bill-inquiry",
+        "qr"
+      ]
+    },
+    {
+      "file": "10-mobile-ios-03.png",
+      "kind": "mobile-contact-sheet",
+      "platform": "ios",
+      "routes": [
+        "merchant-review",
+        "activity",
+        "transaction-detail",
+        "new-dispute",
+        "dispute-detail",
+        "notifications",
+        "profile",
+        "limits",
+        "devices",
+        "security",
+        "help",
+        "close-wallet"
+      ]
+    },
+    {
+      "file": "02-mobile-android-home.png",
+      "kind": "mobile-hero",
+      "platform": "android",
+      "routes": [
+        "home"
+      ]
+    },
+    {
+      "file": "10-mobile-android-01.png",
+      "kind": "mobile-contact-sheet",
+      "platform": "android",
+      "routes": [
+        "splash",
+        "welcome",
+        "phone",
+        "otp",
+        "consent",
+        "identity-guide",
+        "id-capture",
+        "selfie",
+        "kyc-status",
+        "create-mpin",
+        "login",
+        "home"
+      ]
+    },
+    {
+      "file": "10-mobile-android-02.png",
+      "kind": "mobile-contact-sheet",
+      "platform": "android",
+      "routes": [
+        "recipient",
+        "amount",
+        "transfer-review",
+        "authorize",
+        "receipt",
+        "cash-in",
+        "cash-instructions",
+        "cash-out",
+        "cash-code",
+        "billers",
+        "bill-inquiry",
+        "qr"
+      ]
+    },
+    {
+      "file": "10-mobile-android-03.png",
+      "kind": "mobile-contact-sheet",
+      "platform": "android",
+      "routes": [
+        "merchant-review",
+        "activity",
+        "transaction-detail",
+        "new-dispute",
+        "dispute-detail",
+        "notifications",
+        "profile",
+        "limits",
+        "devices",
+        "security",
+        "help",
+        "close-wallet"
+      ]
+    },
+    {
+      "file": "03-backoffice-overview.png",
+      "kind": "backoffice-hero",
+      "routes": [
+        "overview"
+      ]
+    },
+    {
+      "file": "20-backoffice-01.png",
+      "kind": "backoffice-contact-sheet",
+      "routes": [
+        "overview",
+        "customer-search",
+        "customer-360",
+        "kyc-queue",
+        "kyc-review",
+        "transactions"
+      ]
+    },
+    {
+      "file": "20-backoffice-02.png",
+      "kind": "backoffice-contact-sheet",
+      "routes": [
+        "transaction-trace",
+        "risk-alerts",
+        "risk-case",
+        "support-queue",
+        "ticket-workspace",
+        "recon-batches"
+      ]
+    },
+    {
+      "file": "20-backoffice-03.png",
+      "kind": "backoffice-contact-sheet",
+      "routes": [
+        "recon-exceptions",
+        "fee-policies",
+        "limit-policies",
+        "risk-rules",
+        "approvals",
+        "staff-roles"
+      ]
+    },
+    {
+      "file": "20-backoffice-04.png",
+      "kind": "backoffice-contact-sheet",
+      "routes": [
+        "audit",
+        "reports",
+        "provider-health",
+        "notification-templates"
+      ]
+    }
+  ],
+  "screens": [
+    {
+      "file": "screens/mobile-ios-m-01-splash.png",
+      "platform": "ios",
+      "route": "splash",
+      "id": "M-01",
+      "title": "Secure launch"
+    },
+    {
+      "file": "screens/mobile-ios-m-02-welcome.png",
+      "platform": "ios",
+      "route": "welcome",
+      "id": "M-02",
+      "title": "Money, without the mystery."
+    },
+    {
+      "file": "screens/mobile-ios-m-03-phone.png",
+      "platform": "ios",
+      "route": "phone",
+      "id": "M-03",
+      "title": "Your mobile number"
+    },
+    {
+      "file": "screens/mobile-ios-m-04-otp.png",
+      "platform": "ios",
+      "route": "otp",
+      "id": "M-04",
+      "title": "Enter verification code"
+    },
+    {
+      "file": "screens/mobile-ios-m-05-consent.png",
+      "platform": "ios",
+      "route": "consent",
+      "id": "M-05",
+      "title": "Terms and privacy"
+    },
+    {
+      "file": "screens/mobile-ios-m-06-identity-guide.png",
+      "platform": "ios",
+      "route": "identity-guide",
+      "id": "M-06",
+      "title": "Verify your identity"
+    },
+    {
+      "file": "screens/mobile-ios-m-07-id-capture.png",
+      "platform": "ios",
+      "route": "id-capture",
+      "id": "M-07",
+      "title": "Capture your ID"
+    },
+    {
+      "file": "screens/mobile-ios-m-08-selfie.png",
+      "platform": "ios",
+      "route": "selfie",
+      "id": "M-08",
+      "title": "Quick selfie check"
+    },
+    {
+      "file": "screens/mobile-ios-m-09-kyc-status.png",
+      "platform": "ios",
+      "route": "kyc-status",
+      "id": "M-09",
+      "title": "Identity review"
+    },
+    {
+      "file": "screens/mobile-ios-m-10-create-mpin.png",
+      "platform": "ios",
+      "route": "create-mpin",
+      "id": "M-10",
+      "title": "Create your wallet PIN"
+    },
+    {
+      "file": "screens/mobile-ios-m-11-login.png",
+      "platform": "ios",
+      "route": "login",
+      "id": "M-11",
+      "title": "Welcome back"
+    },
+    {
+      "file": "screens/mobile-ios-m-12-home.png",
+      "platform": "ios",
+      "route": "home",
+      "id": "M-12",
+      "title": "Home"
+    },
+    {
+      "file": "screens/mobile-ios-m-13-recipient.png",
+      "platform": "ios",
+      "route": "recipient",
+      "id": "M-13",
+      "title": "Choose recipient"
+    },
+    {
+      "file": "screens/mobile-ios-m-14-amount.png",
+      "platform": "ios",
+      "route": "amount",
+      "id": "M-14",
+      "title": "Enter amount"
+    },
+    {
+      "file": "screens/mobile-ios-m-15-transfer-review.png",
+      "platform": "ios",
+      "route": "transfer-review",
+      "id": "M-15",
+      "title": "Review transfer"
+    },
+    {
+      "file": "screens/mobile-ios-m-16-authorize.png",
+      "platform": "ios",
+      "route": "authorize",
+      "id": "M-16",
+      "title": "Authorize transfer"
+    },
+    {
+      "file": "screens/mobile-ios-m-17-receipt.png",
+      "platform": "ios",
+      "route": "receipt",
+      "id": "M-17",
+      "title": "Transfer complete"
+    },
+    {
+      "file": "screens/mobile-ios-m-18-cash-in.png",
+      "platform": "ios",
+      "route": "cash-in",
+      "id": "M-18",
+      "title": "Add cash"
+    },
+    {
+      "file": "screens/mobile-ios-m-18a-cash-instructions.png",
+      "platform": "ios",
+      "route": "cash-instructions",
+      "id": "M-18A",
+      "title": "ATM cash-in instructions"
+    },
+    {
+      "file": "screens/mobile-ios-m-19-cash-out.png",
+      "platform": "ios",
+      "route": "cash-out",
+      "id": "M-19",
+      "title": "Cash out"
+    },
+    {
+      "file": "screens/mobile-ios-m-19a-cash-code.png",
+      "platform": "ios",
+      "route": "cash-code",
+      "id": "M-19A",
+      "title": "Withdrawal code"
+    },
+    {
+      "file": "screens/mobile-ios-m-20-billers.png",
+      "platform": "ios",
+      "route": "billers",
+      "id": "M-20",
+      "title": "Bills and top-up"
+    },
+    {
+      "file": "screens/mobile-ios-m-21-bill-inquiry.png",
+      "platform": "ios",
+      "route": "bill-inquiry",
+      "id": "M-21",
+      "title": "Electricity bill"
+    },
+    {
+      "file": "screens/mobile-ios-m-22-qr.png",
+      "platform": "ios",
+      "route": "qr",
+      "id": "M-22",
+      "title": "Scan to pay"
+    },
+    {
+      "file": "screens/mobile-ios-m-23-merchant-review.png",
+      "platform": "ios",
+      "route": "merchant-review",
+      "id": "M-23",
+      "title": "Review merchant payment"
+    },
+    {
+      "file": "screens/mobile-ios-m-24-activity.png",
+      "platform": "ios",
+      "route": "activity",
+      "id": "M-24",
+      "title": "Activity"
+    },
+    {
+      "file": "screens/mobile-ios-m-25-transaction-detail.png",
+      "platform": "ios",
+      "route": "transaction-detail",
+      "id": "M-25",
+      "title": "Transaction details"
+    },
+    {
+      "file": "screens/mobile-ios-m-26-new-dispute.png",
+      "platform": "ios",
+      "route": "new-dispute",
+      "id": "M-26",
+      "title": "Get help"
+    },
+    {
+      "file": "screens/mobile-ios-m-27-dispute-detail.png",
+      "platform": "ios",
+      "route": "dispute-detail",
+      "id": "M-27",
+      "title": "Case DC-S-83102"
+    },
+    {
+      "file": "screens/mobile-ios-m-28-notifications.png",
+      "platform": "ios",
+      "route": "notifications",
+      "id": "M-28",
+      "title": "Notifications"
+    },
+    {
+      "file": "screens/mobile-ios-m-29-profile.png",
+      "platform": "ios",
+      "route": "profile",
+      "id": "M-29",
+      "title": "Profile"
+    },
+    {
+      "file": "screens/mobile-ios-m-30-limits.png",
+      "platform": "ios",
+      "route": "limits",
+      "id": "M-30",
+      "title": "Limits and fees"
+    },
+    {
+      "file": "screens/mobile-ios-m-31-devices.png",
+      "platform": "ios",
+      "route": "devices",
+      "id": "M-31",
+      "title": "Devices and sessions"
+    },
+    {
+      "file": "screens/mobile-ios-m-32-security.png",
+      "platform": "ios",
+      "route": "security",
+      "id": "M-32",
+      "title": "Security"
+    },
+    {
+      "file": "screens/mobile-ios-m-33-help.png",
+      "platform": "ios",
+      "route": "help",
+      "id": "M-33",
+      "title": "Help center"
+    },
+    {
+      "file": "screens/mobile-ios-m-34-close-wallet.png",
+      "platform": "ios",
+      "route": "close-wallet",
+      "id": "M-34",
+      "title": "Close wallet"
+    },
+    {
+      "file": "screens/mobile-android-m-01-splash.png",
+      "platform": "android",
+      "route": "splash",
+      "id": "M-01",
+      "title": "Secure launch"
+    },
+    {
+      "file": "screens/mobile-android-m-02-welcome.png",
+      "platform": "android",
+      "route": "welcome",
+      "id": "M-02",
+      "title": "Money, without the mystery."
+    },
+    {
+      "file": "screens/mobile-android-m-03-phone.png",
+      "platform": "android",
+      "route": "phone",
+      "id": "M-03",
+      "title": "Your mobile number"
+    },
+    {
+      "file": "screens/mobile-android-m-04-otp.png",
+      "platform": "android",
+      "route": "otp",
+      "id": "M-04",
+      "title": "Enter verification code"
+    },
+    {
+      "file": "screens/mobile-android-m-05-consent.png",
+      "platform": "android",
+      "route": "consent",
+      "id": "M-05",
+      "title": "Terms and privacy"
+    },
+    {
+      "file": "screens/mobile-android-m-06-identity-guide.png",
+      "platform": "android",
+      "route": "identity-guide",
+      "id": "M-06",
+      "title": "Verify your identity"
+    },
+    {
+      "file": "screens/mobile-android-m-07-id-capture.png",
+      "platform": "android",
+      "route": "id-capture",
+      "id": "M-07",
+      "title": "Capture your ID"
+    },
+    {
+      "file": "screens/mobile-android-m-08-selfie.png",
+      "platform": "android",
+      "route": "selfie",
+      "id": "M-08",
+      "title": "Quick selfie check"
+    },
+    {
+      "file": "screens/mobile-android-m-09-kyc-status.png",
+      "platform": "android",
+      "route": "kyc-status",
+      "id": "M-09",
+      "title": "Identity review"
+    },
+    {
+      "file": "screens/mobile-android-m-10-create-mpin.png",
+      "platform": "android",
+      "route": "create-mpin",
+      "id": "M-10",
+      "title": "Create your wallet PIN"
+    },
+    {
+      "file": "screens/mobile-android-m-11-login.png",
+      "platform": "android",
+      "route": "login",
+      "id": "M-11",
+      "title": "Welcome back"
+    },
+    {
+      "file": "screens/mobile-android-m-12-home.png",
+      "platform": "android",
+      "route": "home",
+      "id": "M-12",
+      "title": "Home"
+    },
+    {
+      "file": "screens/mobile-android-m-13-recipient.png",
+      "platform": "android",
+      "route": "recipient",
+      "id": "M-13",
+      "title": "Choose recipient"
+    },
+    {
+      "file": "screens/mobile-android-m-14-amount.png",
+      "platform": "android",
+      "route": "amount",
+      "id": "M-14",
+      "title": "Enter amount"
+    },
+    {
+      "file": "screens/mobile-android-m-15-transfer-review.png",
+      "platform": "android",
+      "route": "transfer-review",
+      "id": "M-15",
+      "title": "Review transfer"
+    },
+    {
+      "file": "screens/mobile-android-m-16-authorize.png",
+      "platform": "android",
+      "route": "authorize",
+      "id": "M-16",
+      "title": "Authorize transfer"
+    },
+    {
+      "file": "screens/mobile-android-m-17-receipt.png",
+      "platform": "android",
+      "route": "receipt",
+      "id": "M-17",
+      "title": "Transfer complete"
+    },
+    {
+      "file": "screens/mobile-android-m-18-cash-in.png",
+      "platform": "android",
+      "route": "cash-in",
+      "id": "M-18",
+      "title": "Add cash"
+    },
+    {
+      "file": "screens/mobile-android-m-18a-cash-instructions.png",
+      "platform": "android",
+      "route": "cash-instructions",
+      "id": "M-18A",
+      "title": "ATM cash-in instructions"
+    },
+    {
+      "file": "screens/mobile-android-m-19-cash-out.png",
+      "platform": "android",
+      "route": "cash-out",
+      "id": "M-19",
+      "title": "Cash out"
+    },
+    {
+      "file": "screens/mobile-android-m-19a-cash-code.png",
+      "platform": "android",
+      "route": "cash-code",
+      "id": "M-19A",
+      "title": "Withdrawal code"
+    },
+    {
+      "file": "screens/mobile-android-m-20-billers.png",
+      "platform": "android",
+      "route": "billers",
+      "id": "M-20",
+      "title": "Bills and top-up"
+    },
+    {
+      "file": "screens/mobile-android-m-21-bill-inquiry.png",
+      "platform": "android",
+      "route": "bill-inquiry",
+      "id": "M-21",
+      "title": "Electricity bill"
+    },
+    {
+      "file": "screens/mobile-android-m-22-qr.png",
+      "platform": "android",
+      "route": "qr",
+      "id": "M-22",
+      "title": "Scan to pay"
+    },
+    {
+      "file": "screens/mobile-android-m-23-merchant-review.png",
+      "platform": "android",
+      "route": "merchant-review",
+      "id": "M-23",
+      "title": "Review merchant payment"
+    },
+    {
+      "file": "screens/mobile-android-m-24-activity.png",
+      "platform": "android",
+      "route": "activity",
+      "id": "M-24",
+      "title": "Activity"
+    },
+    {
+      "file": "screens/mobile-android-m-25-transaction-detail.png",
+      "platform": "android",
+      "route": "transaction-detail",
+      "id": "M-25",
+      "title": "Transaction details"
+    },
+    {
+      "file": "screens/mobile-android-m-26-new-dispute.png",
+      "platform": "android",
+      "route": "new-dispute",
+      "id": "M-26",
+      "title": "Get help"
+    },
+    {
+      "file": "screens/mobile-android-m-27-dispute-detail.png",
+      "platform": "android",
+      "route": "dispute-detail",
+      "id": "M-27",
+      "title": "Case DC-S-83102"
+    },
+    {
+      "file": "screens/mobile-android-m-28-notifications.png",
+      "platform": "android",
+      "route": "notifications",
+      "id": "M-28",
+      "title": "Notifications"
+    },
+    {
+      "file": "screens/mobile-android-m-29-profile.png",
+      "platform": "android",
+      "route": "profile",
+      "id": "M-29",
+      "title": "Profile"
+    },
+    {
+      "file": "screens/mobile-android-m-30-limits.png",
+      "platform": "android",
+      "route": "limits",
+      "id": "M-30",
+      "title": "Limits and fees"
+    },
+    {
+      "file": "screens/mobile-android-m-31-devices.png",
+      "platform": "android",
+      "route": "devices",
+      "id": "M-31",
+      "title": "Devices and sessions"
+    },
+    {
+      "file": "screens/mobile-android-m-32-security.png",
+      "platform": "android",
+      "route": "security",
+      "id": "M-32",
+      "title": "Security"
+    },
+    {
+      "file": "screens/mobile-android-m-33-help.png",
+      "platform": "android",
+      "route": "help",
+      "id": "M-33",
+      "title": "Help center"
+    },
+    {
+      "file": "screens/mobile-android-m-34-close-wallet.png",
+      "platform": "android",
+      "route": "close-wallet",
+      "id": "M-34",
+      "title": "Close wallet"
+    },
+    {
+      "file": "screens/backoffice-overview.png",
+      "platform": "backoffice",
+      "route": "overview",
+      "title": "OPERATIONS. UNDER CONTROL"
+    },
+    {
+      "file": "screens/backoffice-customer-search.png",
+      "platform": "backoffice",
+      "route": "customer-search",
+      "title": "CUSTOMER SEARCH"
+    },
+    {
+      "file": "screens/backoffice-customer-360.png",
+      "platform": "backoffice",
+      "route": "customer-360",
+      "title": "CUSTOMER 360"
+    },
+    {
+      "file": "screens/backoffice-kyc-queue.png",
+      "platform": "backoffice",
+      "route": "kyc-queue",
+      "title": "KYC REVIEW QUEUE"
+    },
+    {
+      "file": "screens/backoffice-kyc-review.png",
+      "platform": "backoffice",
+      "route": "kyc-review",
+      "title": "KYC CASE REVIEW"
+    },
+    {
+      "file": "screens/backoffice-transactions.png",
+      "platform": "backoffice",
+      "route": "transactions",
+      "title": "TRANSACTIONS"
+    },
+    {
+      "file": "screens/backoffice-transaction-trace.png",
+      "platform": "backoffice",
+      "route": "transaction-trace",
+      "title": "TRANSACTION TRACE"
+    },
+    {
+      "file": "screens/backoffice-risk-alerts.png",
+      "platform": "backoffice",
+      "route": "risk-alerts",
+      "title": "RISK ALERTS"
+    },
+    {
+      "file": "screens/backoffice-risk-case.png",
+      "platform": "backoffice",
+      "route": "risk-case",
+      "title": "RISK CASE RC-004219"
+    },
+    {
+      "file": "screens/backoffice-support-queue.png",
+      "platform": "backoffice",
+      "route": "support-queue",
+      "title": "SUPPORT QUEUE"
+    },
+    {
+      "file": "screens/backoffice-ticket-workspace.png",
+      "platform": "backoffice",
+      "route": "ticket-workspace",
+      "title": "TICKET WORKSPACE"
+    },
+    {
+      "file": "screens/backoffice-recon-batches.png",
+      "platform": "backoffice",
+      "route": "recon-batches",
+      "title": "RECONCILIATION BATCHES"
+    },
+    {
+      "file": "screens/backoffice-recon-exceptions.png",
+      "platform": "backoffice",
+      "route": "recon-exceptions",
+      "title": "RECONCILIATION EXCEPTIONS"
+    },
+    {
+      "file": "screens/backoffice-fee-policies.png",
+      "platform": "backoffice",
+      "route": "fee-policies",
+      "title": "FEE POLICIES"
+    },
+    {
+      "file": "screens/backoffice-limit-policies.png",
+      "platform": "backoffice",
+      "route": "limit-policies",
+      "title": "LIMIT POLICIES"
+    },
+    {
+      "file": "screens/backoffice-risk-rules.png",
+      "platform": "backoffice",
+      "route": "risk-rules",
+      "title": "RISK RULES"
+    },
+    {
+      "file": "screens/backoffice-approvals.png",
+      "platform": "backoffice",
+      "route": "approvals",
+      "title": "APPROVALS INBOX"
+    },
+    {
+      "file": "screens/backoffice-staff-roles.png",
+      "platform": "backoffice",
+      "route": "staff-roles",
+      "title": "STAFF AND ROLES"
+    },
+    {
+      "file": "screens/backoffice-audit.png",
+      "platform": "backoffice",
+      "route": "audit",
+      "title": "AUDIT EXPLORER"
+    },
+    {
+      "file": "screens/backoffice-reports.png",
+      "platform": "backoffice",
+      "route": "reports",
+      "title": "REPORTS"
+    },
+    {
+      "file": "screens/backoffice-provider-health.png",
+      "platform": "backoffice",
+      "route": "provider-health",
+      "title": "PROVIDER HEALTH"
+    },
+    {
+      "file": "screens/backoffice-notification-templates.png",
+      "platform": "backoffice",
+      "route": "notification-templates",
+      "title": "NOTIFICATION TEMPLATES"
+    }
+  ]
+}

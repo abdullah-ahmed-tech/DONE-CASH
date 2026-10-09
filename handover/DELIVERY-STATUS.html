@@ -1,0 +1,122 @@
+<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DONECASH — Delivery Status and Boundaries</title><link rel="stylesheet" href="../presentation.css"></head><body><header class="reader-top"><a href="../START-HERE.html">← Delivery portal</a><span>DONECASH · ENGLISH HANDOVER</span><a href="DELIVERY-STATUS.md">Markdown source</a></header><div class="document-layout"><aside class="toc"><strong>IN THIS DOCUMENT</strong><a href="#what-is-delivered">What is delivered</a><a href="#not-delivered-as-working-software">Not delivered as working software</a><a href="#delivery-edition-corrections">Delivery-edition corrections</a><a href="#required-before-implementation-sign-off">Required before implementation sign-off</a><a href="#required-before-real-money-launch">Required before real-money launch</a><a href="#approval-record">Approval record</a></aside><main class="document"><h1>DONECASH — Delivery Status and Boundaries</h1>
+<p>Release 1.0 · Prepared 9 October 2026 · Predevelopment handover.</p>
+<h2 id="what-is-delivered">What is delivered</h2>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Evidence</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Analysis/planning</td>
+<td>Eight English Markdown documents</td>
+<td>Delivered editorial baseline</td>
+</tr>
+<tr>
+<td>Financial-domain rules</td>
+<td>Business logic, accounting example and acceptance catalogue</td>
+<td>Specified, not implemented</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>PostgreSQL baseline SQL and ERD</td>
+<td>Source delivered; database execution not certified</td>
+</tr>
+<tr>
+<td>Customer design</td>
+<td>36 listed mobile routes and platform shells</td>
+<td>Navigation prototype delivered</td>
+</tr>
+<tr>
+<td>Operations design</td>
+<td>22 backoffice routes</td>
+<td>Navigation prototype delivered</td>
+</tr>
+<tr>
+<td>Visual presentation</td>
+<td>Contact sheets, individual captures and English wireframe board</td>
+<td>Delivered browser-rendered artifacts</td>
+</tr>
+<tr>
+<td>Brand sources</td>
+<td>PNG/SVG originals, Illustrator master and full supplied design-system files</td>
+<td>Preserved</td>
+</tr>
+<tr>
+<td>Presentation</td>
+<td>Offline portal, HTML document reader and walkthrough guide</td>
+<td>Delivered</td>
+</tr>
+<tr>
+<td>Packaging</td>
+<td>File inventory/checksums and archive</td>
+<td>Generated and validated</td>
+</tr>
+</tbody></table>
+<h2 id="not-delivered-as-working-software">Not delivered as working software</h2>
+<p>No NestJS backend, Next.js application, React Native native build, Prisma schema/migration history, real authentication, provider adapter implementation, operating database, automated financial test suite, merchant/agent standalone portal, real-money service, store release or recorded demonstration video.</p>
+<p>The prototype does not enforce actual PINs, OTPs, consent, KYC, fees, balances, duplicate protection, approvals or authorization. Many secondary controls are illustrative. Financial and dashboard data are synthetic. Route availability must not be described as completed end-to-end financial execution.</p>
+<h2 id="delivery-edition-corrections">Delivery-edition corrections</h2>
+<ul>
+<li>Translated/edited Arabic planning documents and the legacy wireframe into English, retaining original research links and dates.</li>
+<li>Corrected the EGP 375 transfer + EGP 5 fee ledger example to debit EGP 380.</li>
+<li>Aligned documented idempotency scope with the physical SQL&#39;s wallet-based constraint.</li>
+<li>Clarified the RACI go-live row and separate approval gates.</li>
+<li>Replaced malformed fee-clamp pseudocode and clarified unknown cash-out expiry.</li>
+<li>Changed the SQL default locale to English; multilingual fields remain.</li>
+<li>Removed blanket claims of complete design-system/accessibility compliance.</li>
+<li>Repaired a bill CTA targeting a nonexistent route and introduced contextual payment/status previews for bill, merchant and cash journeys. These remain simulations, not business-logic execution.</li>
+<li>Relabeled unsupported claims of complete flows/available Arabic and distinguished synthetic dashboard figures from research evidence.</li>
+<li>Made screenshot tooling portable and added individual screen exports and current packaging validation.</li>
+</ul>
+<p>Original working files were preserved. Changes described here apply to the independent delivery edition.</p>
+<h2 id="required-before-implementation-sign-off">Required before implementation sign-off</h2>
+<ol>
+<li>Approve requirements and all critical states, including failure/recovery and large text.</li>
+<li>Finalize sponsor/legal model, policies, chart of accounts and finality contracts.</li>
+<li>Specify OpenAPI payloads/errors, persistence of quotes/provider inbox and extended merchant settlement/refunds.</li>
+<li>Harden SQL: journal/posting completeness, matching currencies, immutable journal semantics, authoritative funds/limit locks and payload-aware idempotency.</li>
+<li>Finalize credential storage, OIDC/device proof, secrets, retention, audit and permission enforcement.</li>
+<li>Build shared token/components, licensed fonts/icon set and native accessibility behavior.</li>
+</ol>
+<h2 id="required-before-real-money-launch">Required before real-money launch</h2>
+<p>Written legal/sponsor and rail access; KYC/AML controls; provider UAT; multi-day reconciliation; independent security assessment; verified native accessibility/device compatibility; load/concurrency/idempotency tests; backup/restore/DR drills; on-call, complaints/escalation and store approval. None is certified by the current screenshot or navigation checks.</p>
+<h2 id="approval-record">Approval record</h2>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Owner</th>
+<th>Decision/date</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Product scope</td>
+<td>Product owner/client</td>
+<td>Pending recorded approval</td>
+</tr>
+<tr>
+<td>Visual design and copy</td>
+<td>Product/design/client</td>
+<td>Pending recorded approval</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td>Finance</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>Legal/compliance</td>
+<td>Legal/compliance/sponsor</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>Security and architecture</td>
+<td>Engineering/security</td>
+<td>Pending</td>
+</tr>
+</tbody></table>
+<p>This table is a sign-off template, not a representation of approvals already obtained.</p>
+<footer>DONECASH · Final English Handover · 9 October 2026 · Product blueprint, not a production application.</footer></main></div></body></html>

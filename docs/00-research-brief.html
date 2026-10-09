@@ -1,0 +1,162 @@
+<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DONECASH — Research Brief and Product Decisions</title><link rel="stylesheet" href="../presentation.css"></head><body><header class="reader-top"><a href="../START-HERE.html">← Delivery portal</a><span>DONECASH · ENGLISH HANDOVER</span><a href="00-research-brief.md">Markdown source</a></header><div class="document-layout"><aside class="toc"><strong>IN THIS DOCUMENT</strong><a href="#executive-summary">Executive summary</a><a href="#product-thesis">Product thesis</a><a href="#market-interpretation">Market interpretation</a><a href="#functional-benchmark">Functional benchmark</a><a href="#practical-operating-model-path">Practical operating-model path</a><a href="#limits-are-policy-not-constants">Limits are policy, not constants</a><a href="#technology-decision">Technology decision</a><a href="#recommended-portfolio-narrative">Recommended portfolio narrative</a><a href="#sources">Sources</a></aside><main class="document"><h1>DONECASH — Research Brief and Product Decisions</h1>
+<p>English handover edition · Research snapshot: 13 September 2026. Market figures and regulatory references below describe the original research snapshot, not a fresh legal determination.</p>
+<h2 id="executive-summary">Executive summary</h2>
+<p>DONECASH should compete through operational trust: a clear recipient check, visible fees, honest processing states and traceable financial operations. It should not be presented merely as a visual copy of an existing wallet.</p>
+<p>The NTRA Q2 2025 report recorded 46.3 million active wallets, 718 million transactions and EGP 943 billion in transaction value; P2P represented 71% of value. The CBE financial-inclusion strategy reported 77.6% inclusion at the end of 2025, representing 54.7 million people. These are source-period figures and not projections of DONECASH adoption.</p>
+<h2 id="product-thesis">Product thesis</h2>
+<p><strong>Clear before you send. Traceable after you send.</strong></p>
+<ol>
+<li><strong>Confirm with confidence:</strong> show the masked recipient, amount, fee and total debit before authorization.</li>
+<li><strong>Never guess the status:</strong> a timeout means processing until authoritative confirmation, not automatic failure.</li>
+<li><strong>Operations-grade by design:</strong> connect every payment to ledger, provider, reconciliation, support and audit evidence.</li>
+</ol>
+<h2 id="market-interpretation">Market interpretation</h2>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Evidence in the original research</th>
+<th>Product implication</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P2P dominates value</td>
+<td>71% of Q2 2025 transaction value</td>
+<td>Make transfers the MVP&#39;s core journey</td>
+</tr>
+<tr>
+<td>Bank-to-wallet funding matters</td>
+<td>InstaPay accounted for 65% of reported funding sources</td>
+<td>Plan a sponsor-backed bank/network adapter</td>
+</tr>
+<tr>
+<td>Core services are common</td>
+<td>Vodafone, Orange and e&amp; advertise transfers, cash services and bills</td>
+<td>Differentiate through clarity and reliability</td>
+</tr>
+<tr>
+<td>Accessibility is a visible regulatory requirement</td>
+<td>NTRA instructions issued in 2024</td>
+<td>Treat accessibility as Must, not decoration</td>
+</tr>
+<tr>
+<td>eKYC is evolving</td>
+<td>CBE digital-financial-identity framework referenced in August 2026</td>
+<td>Isolate identity integration behind an adapter</td>
+</tr>
+<tr>
+<td>Payment licensing has broadened</td>
+<td>PSP/PSO rules issued in 2025</td>
+<td>Choose sponsor/licensing model before production</td>
+</tr>
+</tbody></table>
+<h2 id="functional-benchmark">Functional benchmark</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Vodafone Cash</th>
+<th>Orange Cash</th>
+<th>e&amp; money</th>
+<th>DONECASH planned scope</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Wallet transfers</td>
+<td>Advertised</td>
+<td>Advertised</td>
+<td>Advertised</td>
+<td>MVP</td>
+</tr>
+<tr>
+<td>ATM/agent cash-in and cash-out</td>
+<td>Advertised</td>
+<td>Advertised</td>
+<td>Advertised</td>
+<td>MVP via adapter/simulator</td>
+</tr>
+<tr>
+<td>Bills and top-up</td>
+<td>Advertised</td>
+<td>Advertised</td>
+<td>Advertised</td>
+<td>MVP</td>
+</tr>
+<tr>
+<td>Merchant QR</td>
+<td>Not established from the source used</td>
+<td>Advertised</td>
+<td>Advertised</td>
+<td>MVP</td>
+</tr>
+<tr>
+<td>Virtual card</td>
+<td>Shopping services depend on channel</td>
+<td>Mentioned within wallet ecosystem</td>
+<td>Advertised</td>
+<td>Later</td>
+</tr>
+<tr>
+<td>Incoming international remittance</td>
+<td>Partner-dependent</td>
+<td>Advertised through NBE partners</td>
+<td>Not established from the source used</td>
+<td>Later</td>
+</tr>
+<tr>
+<td>Explainable pending and operations trace</td>
+<td>Not assessable from public pages</td>
+<td>Not assessable</td>
+<td>Not assessable</td>
+<td>Proposed differentiator</td>
+</tr>
+</tbody></table>
+<p>This is an inventory of public claims as of the research date, not a quality ranking or a hands-on competitor usability study.</p>
+<h2 id="practical-operating-model-path">Practical operating-model path</h2>
+<pre><code class="language-mermaid">flowchart LR
+  A[Portfolio prototype] --&gt; B[Choose operating model]
+  B --&gt; C{Independent PSP or sponsored?}
+  C -- Sponsored --&gt; D[Bank/PSP agreement + certification]
+  C -- Independent --&gt; E[CBE preliminary approval + license]
+  D --&gt; F[Provider/Meeza/KYC integrations]
+  E --&gt; F
+  F --&gt; G[Security, DR, AML/KYC, consumer protection validation]
+  G --&gt; H[Pilot with limits]
+  H --&gt; I[Controlled production rollout]
+</code></pre>
+<p>A portfolio prototype can simulate payments. A real wallet needs an approved legal operating model: a sponsoring bank/eligible licensed partner or the appropriate independent licensing route. Contracts, scheme access, security, disaster recovery, AML/KYC, customer protection and pilot approval precede production. Apple’s cited review guidelines also require appropriate legal-entity submission for highly regulated financial services.</p>
+<h2 id="limits-are-policy-not-constants">Limits are policy, not constants</h2>
+<p>The source review found different published individual limits: CBE/NTRA public pages referenced EGP 30,000 daily and EGP 100,000 monthly, while the Orange page referenced EGP 60,000 daily, EGP 200,000 monthly and a maximum wallet value of EGP 200,000. Do not select an arbitrary value from that discrepancy.</p>
+<ul>
+<li>Store versioned, effective-dated <code>limit_policies</code>.</li>
+<li>Record the policy version used for each decision.</li>
+<li>Publish through maker-checker approval.</li>
+<li>Obtain written sponsor/compliance confirmation of applicable values during UAT.</li>
+<li>Label prototype fees and limits as illustrative.</li>
+</ul>
+<h2 id="technology-decision">Technology decision</h2>
+<ul>
+<li>React Native/Expo for native camera, biometrics, secure storage, push and device trust.</li>
+<li>Next.js for the backoffice and a future merchant portal; a PWA is an optional presentation channel.</li>
+<li>NestJS modular monolith with explicit domain boundaries and transactional outbox.</li>
+<li>PostgreSQL/Prisma, retaining explicit SQL for ledger constraints and serializable posting.</li>
+<li>Redis/Upstash only for non-authoritative cache, throttling and ephemeral coordination.</li>
+<li>Docker Compose locally. Neon is a possible demo/preview database; regulated hosting needs appropriate SLA, residency, backup and contractual controls.</li>
+</ul>
+<h2 id="recommended-portfolio-narrative">Recommended portfolio narrative</h2>
+<p>Show the customer journey, operations trace, timeout recovery, architecture/ERD and the rationale for a modular monolith. Future development evidence should include concurrency, idempotency, audit and maker-checker tests. Two 90-second customer/operations videos are suggested presentation assets, <strong>not existing deliverables in this package</strong>.</p>
+<p>The current deliverable demonstrates product thinking, financial-domain modeling and UX planning. Backend integrity and DevOps remain design intentions until implemented and tested.</p>
+<h2 id="sources">Sources</h2>
+<ol>
+<li>National Telecom Regulatory Authority, <a href="https://www.tra.gov.eg/en/ntra-issues-q2-2025-report-on-the-usage-indicators-of-mobile-wallets-operated-by-telecom-companies/">Q2 2025 Mobile Wallet Usage Indicators</a>, 10 September 2025.</li>
+<li>Central Bank of Egypt, <a href="https://www.cbe.org.eg/en/news-publications/news/2026/02/17/14/44/financial-inclusion-2026">Second Financial Inclusion Strategy 2026–2030</a>, 17 February 2026.</li>
+<li>Orange Egypt, <a href="https://www.orange.eg/en/services/Orange-financial-services">Orange Cash E-Wallet</a>, accessed 13 September 2026.</li>
+<li>Vodafone Egypt, <a href="https://web.vodafone.com.eg/en/vodafone-cash">Vodafone Cash</a>, accessed 13 September 2026.</li>
+<li>e&amp; Egypt, <a href="https://www.eand.com.eg/portal/pages/services/eand_money_en.html">e&amp; money</a>, accessed 13 September 2026.</li>
+<li>NTRA, <a href="https://www.tra.gov.eg/en/ntra-issues-instructions-to-facilitate-the-use-of-mobile-e-wallet-services-for-people-of-determination/">Instructions for Mobile Wallet Accessibility</a>, 4 December 2024.</li>
+<li>Central Bank of Egypt, <a href="https://www.cbe.org.eg/en/payment-systems-and-services/digital-financial-identity">Digital Financial Identity</a>, updated 23 August 2026.</li>
+<li>Central Bank of Egypt, <a href="https://www.cbe.org.eg/en/news-publications/news/2025/06/19/08/20/psos-and-psps-licensing-rules">PSO/PSP Licensing Rules</a>, 19 June 2025.</li>
+<li>Apple Developer, <a href="https://developer.apple.com/app-store/review/guidelines/">App Review Guidelines</a>, accessed 13 September 2026.</li>
+<li>NTRA, <a href="https://www.tra.gov.eg/en/mobile-wallets-regulatory-rules/">Mobile Wallets Regulatory Rules</a>, accessed 13 September 2026.</li>
+</ol>
+<footer>DONECASH · Final English Handover · 9 October 2026 · Product blueprint, not a production application.</footer></main></div></body></html>

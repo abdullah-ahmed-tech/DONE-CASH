@@ -1,0 +1,912 @@
+{
+  "release": "1.0",
+  "preparedDate": "2026-10-09",
+  "generatedAt": "2026-10-09T04:37:33.803Z",
+  "fileCount": 180,
+  "checksumAlgorithm": "SHA-256",
+  "excluded": [
+    "handover/FILE-MANIFEST.json (self-reference)"
+  ],
+  "files": [
+    {
+      "path": "Assets/Done Cash.ai",
+      "bytes": 259076,
+      "sha256": "551bee260ea7b322009a05cb88c1afdbd30b1f14be3b1a4729120b88fe40b584"
+    },
+    {
+      "path": "Assets/PNG/App Icon - Paper Cream.png",
+      "bytes": 46267,
+      "sha256": "62d8cf2ab00af7b51060682b796dfdee7e99a16379cd48365c469069546329fd"
+    },
+    {
+      "path": "Assets/PNG/App Icon - Static Black.png",
+      "bytes": 45852,
+      "sha256": "0ffb39bf756a48781da29cfc578e253c995b62ddea31eba4e32bbed5836dbc03"
+    },
+    {
+      "path": "Assets/PNG/App Icon - Sticker Khaki.png",
+      "bytes": 47132,
+      "sha256": "fd1e90b3fdc4cd13499a72720280dffd90fd83727393c4fb69f48666b0ebf7fa"
+    },
+    {
+      "path": "Assets/PNG/Black Label.png",
+      "bytes": 38479,
+      "sha256": "59a48c74c91bcf3ad4109d135d4e220b1633dad5bf6d2190e828e4e97a5ddbdc"
+    },
+    {
+      "path": "Assets/PNG/Primary logo - Paper Cream.png",
+      "bytes": 38718,
+      "sha256": "db1c8cdc4c155ee0045a6be8c1498f9d978a1b65c3cb1252926953ce50d483da"
+    },
+    {
+      "path": "Assets/PNG/Primary Logo - Static Black.png",
+      "bytes": 38409,
+      "sha256": "fd04f2d832469d8d43bb1420f5de610c468c31cfa88182310fc26f2e66888c31"
+    },
+    {
+      "path": "Assets/PNG/Primary Logo - Sticker Khaki.png",
+      "bytes": 39385,
+      "sha256": "56c4ebfa669bb7457ce197049bb8e8755dd6ad3bb577e21786ea7c0639efd6ff"
+    },
+    {
+      "path": "Assets/PNG/White Label.png",
+      "bytes": 37806,
+      "sha256": "cd032bfebae01cb6348a39beb3f46cf96d4c53f38738b788e5ceb4dc1b52587b"
+    },
+    {
+      "path": "Assets/SVG/App Icon - Paper Cream.svg",
+      "bytes": 3842,
+      "sha256": "ad39c789bf127d3b082bb556c4699a74d084fc746af1d75cddde881f8abc02bf"
+    },
+    {
+      "path": "Assets/SVG/App Icon - Static Black.svg",
+      "bytes": 3808,
+      "sha256": "84934015735d2e12019bd85450c1899b91d1b7b0260df336327ae992b770076b"
+    },
+    {
+      "path": "Assets/SVG/App Icon - Sticker Khaki.svg",
+      "bytes": 3811,
+      "sha256": "37d7d513b6de62ea30eede86095c770eebf11840254c5e51c3d0e24855b54eee"
+    },
+    {
+      "path": "Assets/SVG/Black Label.svg",
+      "bytes": 3635,
+      "sha256": "298cfe1f73e203058aa758fecd06fce67647c8fa738593fe167c75d319d6346e"
+    },
+    {
+      "path": "Assets/SVG/Primary logo - Paper Cream.svg",
+      "bytes": 3815,
+      "sha256": "fb95fd37a8eaef4dd69ae7750258a675fa4f516ab5d60d0dc7c6ceebf037e59e"
+    },
+    {
+      "path": "Assets/SVG/Primary Logo - Static Black.svg",
+      "bytes": 3781,
+      "sha256": "c499a945e7d6c0138120cbe3836697ead2b3294797ce6ba04222945d08f7448b"
+    },
+    {
+      "path": "Assets/SVG/Primary Logo - Sticker Khaki.svg",
+      "bytes": 3784,
+      "sha256": "53143c5c6fca19815da3f089cb9db6d022f82d5e3c33a1fe200ba5e9d8cd4e94"
+    },
+    {
+      "path": "Assets/SVG/White Label.svg",
+      "bytes": 3655,
+      "sha256": "91915099ab44431396e334338f599f8ca276b41122bb7202b3f166f4e727e2a2"
+    },
+    {
+      "path": "database/schema.sql",
+      "bytes": 24539,
+      "sha256": "b26cd0e1086f0a68e84ed1d41bb0c34d0fd4086de3daf7cfeea4d53568c5db52"
+    },
+    {
+      "path": "design/final/00-prototype-hub.png",
+      "bytes": 94477,
+      "sha256": "a3c76a72d8ba9beb77f7ff82e0a060dc40cc464c5941d87263ba825ea316f0b2"
+    },
+    {
+      "path": "design/final/01-mobile-ios-home.png",
+      "bytes": 110919,
+      "sha256": "ca05153e34ae7d7c3b3979524b11b4aab6b7df779c1cc3aa8230ff432a40eac3"
+    },
+    {
+      "path": "design/final/02-mobile-android-home.png",
+      "bytes": 110072,
+      "sha256": "34f3f35246166f9c1817f3b0f295f3ced67a64408739f92797100575c6ec4137"
+    },
+    {
+      "path": "design/final/03-backoffice-overview.png",
+      "bytes": 82321,
+      "sha256": "809025f3caf64107871a6fe7fd242c9631e2b9fe6a33e030e7cb1f05804c0f41"
+    },
+    {
+      "path": "design/final/10-mobile-android-01.png",
+      "bytes": 282697,
+      "sha256": "43789189261308b6905c34ab707e1a5c12a5752bc1203295da54812bb72ac2dd"
+    },
+    {
+      "path": "design/final/10-mobile-android-02.png",
+      "bytes": 294088,
+      "sha256": "31146353eec1fe99f0f41bb5f3ee87018bf6250f5a813c0b18e1744740e35529"
+    },
+    {
+      "path": "design/final/10-mobile-android-03.png",
+      "bytes": 302269,
+      "sha256": "420c31b654d55e4ac0bde5efe864b192813a4762c5fbd9614917f69d67a149f4"
+    },
+    {
+      "path": "design/final/10-mobile-ios-01.png",
+      "bytes": 285142,
+      "sha256": "901d12cc914f3787f87fe13e3d81f87a1a75fba013f98f246d09f96a11bf6601"
+    },
+    {
+      "path": "design/final/10-mobile-ios-02.png",
+      "bytes": 296266,
+      "sha256": "46c9fb4f08d08887522e4cbd5a0834ad554e9634a9dd11cc19577c674ebf0bf1"
+    },
+    {
+      "path": "design/final/10-mobile-ios-03.png",
+      "bytes": 304347,
+      "sha256": "272a45d6f73ffff269001c3db94c66495597b8cfaaf6bbf9f1894f5d65e2d602"
+    },
+    {
+      "path": "design/final/20-backoffice-01.png",
+      "bytes": 438725,
+      "sha256": "dde740bdccd57b68f097a051dad8e6b906dd89ebe0862da7077e60f43ee8691f"
+    },
+    {
+      "path": "design/final/20-backoffice-02.png",
+      "bytes": 436330,
+      "sha256": "9808c3ba3d65958f0e7375a61f2737c01e9b893d910db78dc0365f2b3839e48b"
+    },
+    {
+      "path": "design/final/20-backoffice-03.png",
+      "bytes": 404980,
+      "sha256": "7e7e644606d9a59a84b36ca8e64a048ccc655027f550062e2bc8af4936f58767"
+    },
+    {
+      "path": "design/final/20-backoffice-04.png",
+      "bytes": 283608,
+      "sha256": "2b4f7538803a81d4df322bd4d257355fae9d7125e4ca3b850e7b3424d1af3400"
+    },
+    {
+      "path": "design/final/manifest.json",
+      "bytes": 20358,
+      "sha256": "79991cbf87a29c6feff5c0f7e0c184d9451537aee27c5378ab81432d60160e11"
+    },
+    {
+      "path": "design/final/screens/backoffice-approvals.png",
+      "bytes": 58092,
+      "sha256": "4ac545d1456e1e35472d0cb173a69cc08e32204c0050721a7be538a697fa9026"
+    },
+    {
+      "path": "design/final/screens/backoffice-audit.png",
+      "bytes": 62221,
+      "sha256": "cf6922fd657478e90b361502bc5f73a6bd9ec42df8b7a044b849f7f691b5a681"
+    },
+    {
+      "path": "design/final/screens/backoffice-customer-360.png",
+      "bytes": 75767,
+      "sha256": "2637ccb519025b30b5ca71901209f4e67ad80669837287a56ef060c9d5fe0c04"
+    },
+    {
+      "path": "design/final/screens/backoffice-customer-search.png",
+      "bytes": 59243,
+      "sha256": "dfdfcd656c0fd293b652b8503a31ef52478b3688d7704bfe5e3f262f27b86bd6"
+    },
+    {
+      "path": "design/final/screens/backoffice-fee-policies.png",
+      "bytes": 63248,
+      "sha256": "05669730d2e0303eb14721a1928559a735a80f7f473219db56a01ab1e20f7514"
+    },
+    {
+      "path": "design/final/screens/backoffice-kyc-queue.png",
+      "bytes": 67550,
+      "sha256": "1217f070b929fcd9a9b34387ca2ec7fae1f8d8ceeceb555dfe16923013f18d58"
+    },
+    {
+      "path": "design/final/screens/backoffice-kyc-review.png",
+      "bytes": 67955,
+      "sha256": "cd3804c1db4d1ccceae45c6dab15c7a28ad429b56cd9aa5650539bc637dc7f67"
+    },
+    {
+      "path": "design/final/screens/backoffice-limit-policies.png",
+      "bytes": 60106,
+      "sha256": "519f46666075cb2314e35dd8fa97a044ba85ba26079d429fcaadfa1f3fa24534"
+    },
+    {
+      "path": "design/final/screens/backoffice-notification-templates.png",
+      "bytes": 72752,
+      "sha256": "065910c5e833eed3d102ecb68957d9130d17a1ecf54a1f1f89a4370b54eba8a7"
+    },
+    {
+      "path": "design/final/screens/backoffice-overview.png",
+      "bytes": 82321,
+      "sha256": "809025f3caf64107871a6fe7fd242c9631e2b9fe6a33e030e7cb1f05804c0f41"
+    },
+    {
+      "path": "design/final/screens/backoffice-provider-health.png",
+      "bytes": 65730,
+      "sha256": "f7ca4e143645b04d1d954597d2087b3082316f561d3c5d65a357034cb137c8d1"
+    },
+    {
+      "path": "design/final/screens/backoffice-recon-batches.png",
+      "bytes": 68474,
+      "sha256": "9a07946518d74558f83b743fcd5587296abc5cbed13e987e759ababb21ccc24c"
+    },
+    {
+      "path": "design/final/screens/backoffice-recon-exceptions.png",
+      "bytes": 68586,
+      "sha256": "d68040edc9da0a381bde97bc70ac81c13715efafd21373946be7b8ed1dbeba2a"
+    },
+    {
+      "path": "design/final/screens/backoffice-reports.png",
+      "bytes": 69739,
+      "sha256": "2e8d08df333eb35abbc57df69408eb93cd5c35349fadfcd648b3bb7f4b17d9c9"
+    },
+    {
+      "path": "design/final/screens/backoffice-risk-alerts.png",
+      "bytes": 67278,
+      "sha256": "f4181f3ce1610d8bebcbba571680f36668966a18707ada0c7228298b6615488e"
+    },
+    {
+      "path": "design/final/screens/backoffice-risk-case.png",
+      "bytes": 71276,
+      "sha256": "327f61235899b41454b8a9c7a8157b7cbf5a24d92e1f26c2a45a05d4a61ba58b"
+    },
+    {
+      "path": "design/final/screens/backoffice-risk-rules.png",
+      "bytes": 68283,
+      "sha256": "425d65c60df36f8977deb6249dd1d9e0015c3d60930188588d60d4e0c9f89ece"
+    },
+    {
+      "path": "design/final/screens/backoffice-staff-roles.png",
+      "bytes": 56974,
+      "sha256": "2fa1755a1b8c7f40ac01c382915e90a0b85210307c4d9a50d20ebc93976fbaab"
+    },
+    {
+      "path": "design/final/screens/backoffice-support-queue.png",
+      "bytes": 63656,
+      "sha256": "630b3bfcdd25c2da88f3c1ce5ecb00938faf367af8b8e93a1f098378916152e4"
+    },
+    {
+      "path": "design/final/screens/backoffice-ticket-workspace.png",
+      "bytes": 70497,
+      "sha256": "12df9b2a6d5e21e6ce44947217b4119568c7b108b100fca03edf84d6fce0546d"
+    },
+    {
+      "path": "design/final/screens/backoffice-transaction-trace.png",
+      "bytes": 70081,
+      "sha256": "b31a999d1445e8f57b925d1fdc4414b00fef2658e1026d85721d969da8f1661d"
+    },
+    {
+      "path": "design/final/screens/backoffice-transactions.png",
+      "bytes": 59329,
+      "sha256": "fb35eaf1467db6bf9bdf59bd8cec444d2af7861fcc6681b2f54d9ac5458484d9"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-01-splash.png",
+      "bytes": 20290,
+      "sha256": "6bb158a37fbd1665aac91bd258ea87e1892e0d643ef785ff3242cbff8447442d"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-02-welcome.png",
+      "bytes": 30312,
+      "sha256": "5ce2293b949c919dc57c2034ba9dc62553b165d38ef280f935a46f3e7787e078"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-03-phone.png",
+      "bytes": 24351,
+      "sha256": "e240f36673eb129eb23cca47fc6fdb4449a2153917aee92e75e4d874fb7b767c"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-04-otp.png",
+      "bytes": 21731,
+      "sha256": "dd8513d1a9345650aa07e3b9b23709c3aaa4f4393a27a66d75d44ec55414f10f"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-05-consent.png",
+      "bytes": 24450,
+      "sha256": "a1dea34a5e8a85a2c2fb3ed5fa9d86dc0ad52a79bc8912000cfb6d7858de0786"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-06-identity-guide.png",
+      "bytes": 22652,
+      "sha256": "0bfcc2a7932ae7a11bb7325dc1297616f09dcc27cbbeffc735308c39191ddc13"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-07-id-capture.png",
+      "bytes": 18843,
+      "sha256": "fb791a54e2c42bb7b4c6b4c0ca60a1ee686085f1f9ad7d961da8ed9b622e61c6"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-08-selfie.png",
+      "bytes": 24533,
+      "sha256": "849fb945abf12728ecd180465d7cb680355b36ab1a0341c8fb7db9e17d2016f8"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-09-kyc-status.png",
+      "bytes": 26983,
+      "sha256": "025bf38e827215ab08a730662b5f5ad6dac9d209d9336d0ba5b9cf62feb4283e"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-10-create-mpin.png",
+      "bytes": 23980,
+      "sha256": "2e7c7626799d20b9809187e59c61cd20e2c78d0e63a7fffc1e21d2ccdbcb6167"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-11-login.png",
+      "bytes": 21448,
+      "sha256": "3a2db065bc1bd477f1384d2e9aa8f9d6c91212a9ccd1cdbdd329732efd09a63a"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-12-home.png",
+      "bytes": 30631,
+      "sha256": "504862fa424fad33f46581cc9170884334f9fc2fa0d17c8dbfe0531d78286a70"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-13-recipient.png",
+      "bytes": 30226,
+      "sha256": "5471a87c4b9580dbd5d3b9fc2b283f810694abaac0d22ad49bfee20a81df2d20"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-14-amount.png",
+      "bytes": 26022,
+      "sha256": "054c829f3eb0a606a0c18ddce7f90b35fc0f5d07ca960ced1b510815343113bb"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-15-transfer-review.png",
+      "bytes": 26659,
+      "sha256": "1762b06d6978dbbd5565d6c8fee2d9a664acb7d3a27376c33a49a76aae581e78"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-16-authorize.png",
+      "bytes": 21048,
+      "sha256": "8f60db7a09cd5ec0a528dd9f70b888097f50ba52f29eda538603913a677e3f26"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-17-receipt.png",
+      "bytes": 27683,
+      "sha256": "f10e02eed78fd515527b618d4f6752d25d06bbbec49363310cdf267b7fbe206f"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-18-cash-in.png",
+      "bytes": 29148,
+      "sha256": "eaa66b37fc5a4764aa3a2122a71774f8d54cb2318f52da0fb5bc9e57ca0081d9"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-18a-cash-instructions.png",
+      "bytes": 27096,
+      "sha256": "580b368a891f1e8cc8ec79653eb34033dc42cfc67a8c133dbb37ed5490c3dba0"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-19-cash-out.png",
+      "bytes": 25169,
+      "sha256": "fabb1ed7a36f4d78098320566ff4234a1a98fe43b99cc149e8dd62f1ca57335e"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-19a-cash-code.png",
+      "bytes": 26125,
+      "sha256": "d012990f3e029a24472aa798f56a959324d3ab20e5d950076f6088ae1d550890"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-20-billers.png",
+      "bytes": 31450,
+      "sha256": "23160b9dabf10c35b0a36b4d94cbc12aba9abd75afb906f1aa5b420c10beb25f"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-21-bill-inquiry.png",
+      "bytes": 23884,
+      "sha256": "fb9201c90913a438b91d9f127819586b914fb1a008fc538e1cc525fd0f15c72a"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-22-qr.png",
+      "bytes": 20239,
+      "sha256": "9c9886edc4e69d936b302a8a07c5b3d2b532f98e057f76231cf521f6026c1932"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-23-merchant-review.png",
+      "bytes": 28962,
+      "sha256": "cf9fa047d0d5d2ad4cf282a88d3957b42aed906dfab445ff17d3e39855b52bcc"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-24-activity.png",
+      "bytes": 25870,
+      "sha256": "240497c7496cf47f1b95a6c1b84e03e8b461cc0e19bc831b7b176f575d246dd1"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-25-transaction-detail.png",
+      "bytes": 26873,
+      "sha256": "86155d22a49912437e4b243dc9a6e0f08f3fd4366113db703a80ebe635c38e9e"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-26-new-dispute.png",
+      "bytes": 25228,
+      "sha256": "9c66c4c500d16adabaf333cc0c10c8b14101f0377a1613a34e707003f26ee8f9"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-27-dispute-detail.png",
+      "bytes": 28974,
+      "sha256": "68fc4b1eaabca5803877129949aebb0db9be333fb95d57536bb8a146d800df00"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-28-notifications.png",
+      "bytes": 26298,
+      "sha256": "8ab78134752174e0ca02119c7d7df319302739c202bda7603d8284c4123b2f6b"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-29-profile.png",
+      "bytes": 23801,
+      "sha256": "4f67c458b9de402b020c62f194f0b210e6f190375e3a24fdd912e0f5b92cbdd3"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-30-limits.png",
+      "bytes": 33569,
+      "sha256": "9b731a6d5486beb268ce049ffe5c85ecbcca7fa086cb894b3993e7f0ae91dcff"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-31-devices.png",
+      "bytes": 28966,
+      "sha256": "6163770ea1be93c0632e1ce46918b90e3aca19a977d5fb232c1769bb82af1e11"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-32-security.png",
+      "bytes": 26421,
+      "sha256": "a80c0d730e7a0a2b2f83254231c70b22829f40627b92ae55579fb5d1f6866a07"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-33-help.png",
+      "bytes": 27087,
+      "sha256": "f3ad7005ba33b7991e42b3051c315308fc3537799174c57a87fa6e5d87a4f399"
+    },
+    {
+      "path": "design/final/screens/mobile-android-m-34-close-wallet.png",
+      "bytes": 25913,
+      "sha256": "91590fbce3b350c50fceadebb2e837c28bb217c406370a411e1bd94847d70f1e"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-01-splash.png",
+      "bytes": 21056,
+      "sha256": "08e3a1f783ef0b763fb18e9775dcb606d4d713753073b48bffd53dc52abb67da"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-02-welcome.png",
+      "bytes": 31086,
+      "sha256": "7bf77753316719bb812b192fe356e544d9cecb4dd072b990fdfad85e04f46cff"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-03-phone.png",
+      "bytes": 25043,
+      "sha256": "6fa4618415aab3ebb68b5047de881c9405292bb9e1d5fdb15f1e96f05dfd0e4f"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-04-otp.png",
+      "bytes": 22442,
+      "sha256": "fa0aaf7b9c23eff3591b936c34fbd8a0601819650f17017301ece17994edcac9"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-05-consent.png",
+      "bytes": 25164,
+      "sha256": "1d8e549aed0fc0a033a8db1018c0d01ccbfc3eec99565c5caf0797e59455b52f"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-06-identity-guide.png",
+      "bytes": 23346,
+      "sha256": "0d3f2ca1a9d002f18d82200bc327280bafc7ffe17f84d6f905582f247b2551aa"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-07-id-capture.png",
+      "bytes": 19508,
+      "sha256": "6c7e40a844ca1d1a3894c7f871e09f4a287dd41e0c2c9c81ff529f6f288c58eb"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-08-selfie.png",
+      "bytes": 25196,
+      "sha256": "4bc817e47e9621a543eeff2e65577ec9e8d09b1f22cdcc6086b69d8f436a0536"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-09-kyc-status.png",
+      "bytes": 27641,
+      "sha256": "35994573ddd22d915709a374d30ada7a2feeb2ae7eb6e24d7eeea14abd438d24"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-10-create-mpin.png",
+      "bytes": 25093,
+      "sha256": "e86ffb6aac53723bce58cbf352796ccdc38dd80b39d709700a60ff3f35ae7be6"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-11-login.png",
+      "bytes": 22129,
+      "sha256": "1a10ed83dbd0244ca228fbd7ebd2b8e119d3655a632143834896b2563402c633"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-12-home.png",
+      "bytes": 31453,
+      "sha256": "066f5188b5dcede3eee578d004b7c310731e17a848ed9f42bfc27efeacbf27d8"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-13-recipient.png",
+      "bytes": 30845,
+      "sha256": "75368c9e8b257b5c26ab9a6834a76c6d68c9c6b706ff35eddf827b7a4892fc49"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-14-amount.png",
+      "bytes": 26763,
+      "sha256": "a7b905ec9d79dccfdc7683ad275a3b940a198fef1ecc979f77f462682a7ef461"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-15-transfer-review.png",
+      "bytes": 27326,
+      "sha256": "aa0e6f8e600251c7472b0b17fddc7d4030a3847d40760293a4eceea16aad8cef"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-16-authorize.png",
+      "bytes": 21728,
+      "sha256": "1913585fce2c2ba7832a5350331587ca2344dd5674de73e36d04b35aad721e6a"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-17-receipt.png",
+      "bytes": 28311,
+      "sha256": "d8535faf9f1308d07e4449bcd44c616221109e0f149885e6d9ce8d2c5d8d65c0"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-18-cash-in.png",
+      "bytes": 29803,
+      "sha256": "c075e8f7a589c42da61a92b680366fea181ea9286766db7feada3df6b7238182"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-18a-cash-instructions.png",
+      "bytes": 27782,
+      "sha256": "f7976acd3a008921c38dd21ede4157ee83fd1606f98807081c152d1b3e26308e"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-19-cash-out.png",
+      "bytes": 25854,
+      "sha256": "1b51043ffddaa50c8dbe5fd134c30170f5b001cb2e056e8ecba259cba68b806d"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-19a-cash-code.png",
+      "bytes": 26795,
+      "sha256": "5095843b81b97c295b3d219d5f4fcec894dc0a3559c1542f04d43e95288fb39f"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-20-billers.png",
+      "bytes": 32121,
+      "sha256": "4ca5db8b4d29fac709ebd09cb7695d57e7d03cb298260ee21d7f648bd70fab85"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-21-bill-inquiry.png",
+      "bytes": 24559,
+      "sha256": "cfdd4ddf8f4ad7b1b3e2c05339fdf045906a78f4d98e2ff449cc50936c8b35af"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-22-qr.png",
+      "bytes": 20758,
+      "sha256": "86001a181bb22be988d75a5595279eb698f269e2d56d87da8a3140b17cb3e365"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-23-merchant-review.png",
+      "bytes": 29635,
+      "sha256": "f819d0d9a11f8f8b6eb13a5478cc797d159f3652104d4d13abe54f8dd91dc15a"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-24-activity.png",
+      "bytes": 26665,
+      "sha256": "338dd6b5ae2d30726d49e5d214d23a406955983bfd10106f229b89274906e5de"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-25-transaction-detail.png",
+      "bytes": 27542,
+      "sha256": "4aacbd2279183a2f2940d849aeba753397870d57c837c5f20eedaae5c5f775eb"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-26-new-dispute.png",
+      "bytes": 25859,
+      "sha256": "f17b842bb3743e41b75b17d7ad0ab2d1b575b1480b526ce3809573ae3fb8a629"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-27-dispute-detail.png",
+      "bytes": 29626,
+      "sha256": "294422546b09f98aa3f131ee094a13ef00152cdad211c064d2d0205026a595ca"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-28-notifications.png",
+      "bytes": 26967,
+      "sha256": "ba3bab545846ea132d63dc23fdde1bb4b846cfad71e2a9c553ef223be6642abd"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-29-profile.png",
+      "bytes": 24573,
+      "sha256": "412a9f679785b5410f460ffd5406324350e974a369d0611dd75a21d7c3e3c7cb"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-30-limits.png",
+      "bytes": 34384,
+      "sha256": "319393de95fbc98fa0dc098ec7dc0073a9379040f1ad9d2d8ed8247d0e697936"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-31-devices.png",
+      "bytes": 29637,
+      "sha256": "fb3ee452df78e2a3d275dbf8ecda69e8c0df34141d690fe30ce40281f3904401"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-32-security.png",
+      "bytes": 27076,
+      "sha256": "ce4d98a830ce5c7f8a7d5f63a019e96cc239047c5c77bf3f2fa708a947338d1c"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-33-help.png",
+      "bytes": 27729,
+      "sha256": "12ff5c85c5ec812e61a67353a2999f2f53241a4f08c227e732aa216d9f0fd598"
+    },
+    {
+      "path": "design/final/screens/mobile-ios-m-34-close-wallet.png",
+      "bytes": 26578,
+      "sha256": "29594ff20a08e9f319192f0ba04b8d458c9c86f4b8c58a3aab0263b21f302bcb"
+    },
+    {
+      "path": "design/presentation/00-delivery-portal.png",
+      "bytes": 77885,
+      "sha256": "38223c2624cd9e37496aea8a8ce07f2f7aef005d2eed796cd216f1616cebe7f6"
+    },
+    {
+      "path": "design/presentation/01-document-reader.png",
+      "bytes": 79231,
+      "sha256": "208f53aad1c290d6611547eb3192f98c676b7f3eff127110da7ed108257c77a6"
+    },
+    {
+      "path": "design/README.html",
+      "bytes": 3579,
+      "sha256": "dcb9141595863a77adc9eb3529a172737e9135d0a8c9f3eae8db649cd8505fdb"
+    },
+    {
+      "path": "design/README.md",
+      "bytes": 2225,
+      "sha256": "eafb81fb1338d0e5387befdf96a9cba2930189257963b5b1365f78cefd0b129e"
+    },
+    {
+      "path": "design/wireframes.html",
+      "bytes": 8207,
+      "sha256": "f59740babd4cce890cf7d811352758899f2f193bb41dab1552b63e595843ffb5"
+    },
+    {
+      "path": "design/wireframes.png",
+      "bytes": 104966,
+      "sha256": "5ebfbe964cdc53473516abf343979ab1a01ae90b617f2e06f1331e9e7919873f"
+    },
+    {
+      "path": "Design System/DESIGN (1).html",
+      "bytes": 27901,
+      "sha256": "baf0a9c00d3e94d87e4e742ed259c54a2cebbd8d27cb59a760727d7363657e1c"
+    },
+    {
+      "path": "Design System/DESIGN (1).md",
+      "bytes": 20723,
+      "sha256": "3d8874e10a548e1d476b8d6ce2ed144a8d44b97b9cd4f33ac4dbcaf272440729"
+    },
+    {
+      "path": "Design System/product-extension.css",
+      "bytes": 1259,
+      "sha256": "023f6b2887d69d6922cbef7a560476942c32cd2449c6033993c0263a7ee74a27"
+    },
+    {
+      "path": "Design System/theme.css",
+      "bytes": 2149,
+      "sha256": "cc6af487154826c2687802ae57cc66899f7089b798dbe0d662d99d3a87ba1d3a"
+    },
+    {
+      "path": "Design System/tokens.json",
+      "bytes": 11047,
+      "sha256": "0b16f8ccbaf5ff4601d8c3cab21fa89c4cf164de88496ac59e3338f198cbf14a"
+    },
+    {
+      "path": "Design System/variables.css",
+      "bytes": 2774,
+      "sha256": "fbb9017849e80630c6cc73871435bc25da0ef4f0a281fb9886eafac1ac0cbafd"
+    },
+    {
+      "path": "docs/00-research-brief.html",
+      "bytes": 10094,
+      "sha256": "be2bf4b9d19aeed677d52c46fecb93fd3b930c0a3b90e9dad2a75983b8465ffd"
+    },
+    {
+      "path": "docs/00-research-brief.md",
+      "bytes": 7435,
+      "sha256": "ffd1d55f3f0e2e7031f24061bf0131b5df111d18811614fbd9484187040d7448"
+    },
+    {
+      "path": "docs/01-product-requirements.html",
+      "bytes": 29017,
+      "sha256": "0ffd092512106163c02ae678790f35378609e426d822a3d0c040ff6131d78075"
+    },
+    {
+      "path": "docs/01-product-requirements.md",
+      "bytes": 21574,
+      "sha256": "7da93ea5f2f4cdf543d38fc06a7433731f2bbfacf4eb9abb78a501a811e79ef5"
+    },
+    {
+      "path": "docs/02-database-design.html",
+      "bytes": 15235,
+      "sha256": "0df01e6b62f337b03bd826d967f8dd87c89f2aff7a023986c4c04a49d74be7df"
+    },
+    {
+      "path": "docs/02-database-design.md",
+      "bytes": 11256,
+      "sha256": "f3e72c8b6b442ea707f858f4eb6eca5ceeb46a799dd57fdbd399a2f7f54b738c"
+    },
+    {
+      "path": "docs/03-technical-design.html",
+      "bytes": 23072,
+      "sha256": "8198e7ca7b70a4d8410b70a4db027d96cd322bd54c475aa28aaaeaf9cd6cc556"
+    },
+    {
+      "path": "docs/03-technical-design.md",
+      "bytes": 16200,
+      "sha256": "2e8b656dc86dc6ff7ce245883af5608ee20c5ab15bfa5901ec8a21768cef931b"
+    },
+    {
+      "path": "docs/04-ux-ui-design.html",
+      "bytes": 25333,
+      "sha256": "c7fb2fdc5458ad2cd84cadd62cbfe067adb7922980112f8e0f49e96e532090ee"
+    },
+    {
+      "path": "docs/04-ux-ui-design.md",
+      "bytes": 18480,
+      "sha256": "51299af49c997d41d591d83b357b31614f5d0acff25fd00123414e778d065927"
+    },
+    {
+      "path": "docs/05-business-logic.html",
+      "bytes": 36472,
+      "sha256": "aa5700b29a668d5cbaf42972ac123c2b4daa5d34274718273afa16e91aa0ed05"
+    },
+    {
+      "path": "docs/05-business-logic.md",
+      "bytes": 26307,
+      "sha256": "6b36329ca6ae69f4698931dbba9fbcfec8be1833e745f1221326723fc13e579b"
+    },
+    {
+      "path": "docs/06-design-system-audit.html",
+      "bytes": 12723,
+      "sha256": "0a0f9ca7d44d079340a0794df17c2e105362891903065282b676187864af188f"
+    },
+    {
+      "path": "docs/06-design-system-audit.md",
+      "bytes": 9163,
+      "sha256": "f70890cb857c45d44a38d99285159ec5e8eb748f4862a7ae595459ce5a6de06d"
+    },
+    {
+      "path": "docs/07-external-integrations.html",
+      "bytes": 29810,
+      "sha256": "ec813047737a29fd494cfbaaf32d3096570b437d169fcce3da16c11250aab44a"
+    },
+    {
+      "path": "docs/07-external-integrations.md",
+      "bytes": 23177,
+      "sha256": "3cd8c58290dd316f4ee37a2386e6dce07f900cee4690396b5b0c7c56af3b04b8"
+    },
+    {
+      "path": "handover/ARCHIVE-VERIFICATION.html",
+      "bytes": 2065,
+      "sha256": "e4be30bcec0fac12343bd1122be1f728cc783ab4c7c03f84375e698a18c56fbd"
+    },
+    {
+      "path": "handover/ARCHIVE-VERIFICATION.md",
+      "bytes": 1135,
+      "sha256": "df97ec586bd1105f4dd3767076832e33e5e27500ef8131c5a8eb712260d68b2d"
+    },
+    {
+      "path": "handover/ASSET-INVENTORY.html",
+      "bytes": 3101,
+      "sha256": "10804f795844d6dab30e546d373fa9a68d1ea74c63575bc55047e048b5e8bfa4"
+    },
+    {
+      "path": "handover/ASSET-INVENTORY.md",
+      "bytes": 1747,
+      "sha256": "89c691b3291fa0980b4b5832583fe0f283541dcaef83b2a12402cf0568aec070"
+    },
+    {
+      "path": "handover/DELIVERY-STATUS.html",
+      "bytes": 6509,
+      "sha256": "1bd2d416bfb8abb8015d991883beb2ced26abd6c63cf6f5b06ec248f131dcfce"
+    },
+    {
+      "path": "handover/DELIVERY-STATUS.md",
+      "bytes": 4437,
+      "sha256": "4ad7e32b605ce839d32de06819fcad76ab38ac76ada8b67afd095fbbbc0c7949"
+    },
+    {
+      "path": "handover/PRESENTATION-GUIDE.html",
+      "bytes": 5437,
+      "sha256": "ffb22d7f614fb07dbb77dc8554a9b009f04074def554bd6895589ec4c4e7f5e0"
+    },
+    {
+      "path": "handover/PRESENTATION-GUIDE.md",
+      "bytes": 3576,
+      "sha256": "43be8217cb88e41b762cead1fec7a528f3496b71f293255af25c20f4f58dcd7c"
+    },
+    {
+      "path": "handover/VALIDATION-REPORT.html",
+      "bytes": 2650,
+      "sha256": "8521dc41eb269fe2f6a4fa4f37bcbf18d882cc8bb81a1207080e71b94d2ae37b"
+    },
+    {
+      "path": "handover/VALIDATION-REPORT.md",
+      "bytes": 1595,
+      "sha256": "e4458d9a696821da141d9f2c42513923b0fde20ce8de6f0ef7f004aeca9dd2c2"
+    },
+    {
+      "path": "presentation.css",
+      "bytes": 8241,
+      "sha256": "61c2d5e4d3821bb3bfbdd8aa67856f2b267c412d2821a98c1972b5307d109c13"
+    },
+    {
+      "path": "prototype/backoffice.html",
+      "bytes": 32846,
+      "sha256": "977744e89e3fc1299e2b3217655732aef3bb8f6e394bcf2c346f435558a1c557"
+    },
+    {
+      "path": "prototype/index.html",
+      "bytes": 2976,
+      "sha256": "810ccfff8aa95de4ce9254d90d0293f2a392a2aa03224fee79ea6770122f2e21"
+    },
+    {
+      "path": "prototype/mobile.html",
+      "bytes": 38310,
+      "sha256": "6199aab5b9d3ccd770d36c8a016a8f2b04ad49783ce140e12705bbbf88367476"
+    },
+    {
+      "path": "prototype/shared.css",
+      "bytes": 2627,
+      "sha256": "bd56f4d24eab587c0bf2a8a62fbc1720452e82cbd34833461b3232d7f65aec98"
+    },
+    {
+      "path": "README.html",
+      "bytes": 6085,
+      "sha256": "5e3c16f3f06c6d49cc7fdf9fec1e0486a22a8ad9cbe790c5c347900fe57e8ab7"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4362,
+      "sha256": "7c39c86d9ce81f75cb077bfa4f8a65b6682b28b14932ffa2117f85a871730575"
+    },
+    {
+      "path": "START-HERE.html",
+      "bytes": 36545,
+      "sha256": "609fbb3268622f1aabeb37e208b68c3f54892bbc2d33eca9bfbf7e38af1b56d7"
+    },
+    {
+      "path": "tools/build-presentation.mjs",
+      "bytes": 10522,
+      "sha256": "cb51fd78a03dbe0ffbe7fc4811e4946a92481605e03ba55744df5a3f87021d63"
+    },
+    {
+      "path": "tools/capture-presentation.mjs",
+      "bytes": 1393,
+      "sha256": "18394878124dbf937808628f538d8574a2702d40bbd33329f4f0b9ea4fd95039"
+    },
+    {
+      "path": "tools/package.json",
+      "bytes": 311,
+      "sha256": "ec69f575f6909e254535e105b0fcb64cda36359f7daccad439506e7659d4b560"
+    },
+    {
+      "path": "tools/README.html",
+      "bytes": 3201,
+      "sha256": "50bd3e65e5f658db40aa2afe17e367d5b3abddb20e0fc7bcb9e633a0f95a9ae4"
+    },
+    {
+      "path": "tools/README.md",
+      "bytes": 2179,
+      "sha256": "eb3a20c22cfbe6f07d7710bb21e474f889a424508158b300e08ee46396648e65"
+    },
+    {
+      "path": "tools/render-final-design.mjs",
+      "bytes": 10483,
+      "sha256": "48bc1a95e8568313c7027c777502b4729d9f5b8868b01ecf2a95d9ccc1359ff9"
+    },
+    {
+      "path": "tools/validate-delivery.mjs",
+      "bytes": 8911,
+      "sha256": "5982c798c7d178d66a960ca327d82794cabd11adae5b3eb33dece8e3addb8ae9"
+    }
+  ]
+}

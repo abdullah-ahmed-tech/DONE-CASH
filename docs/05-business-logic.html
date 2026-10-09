@@ -1,0 +1,850 @@
+<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DONECASH — Business Logic Specification</title><link rel="stylesheet" href="../presentation.css"></head><body><header class="reader-top"><a href="../START-HERE.html">← Delivery portal</a><span>DONECASH · ENGLISH HANDOVER</span><a href="05-business-logic.md">Markdown source</a></header><div class="document-layout"><aside class="toc"><strong>IN THIS DOCUMENT</strong><a href="#1-purpose-and-scope">1. Purpose and Scope</a><a href="#2-domain-vocabulary">2. Domain Vocabulary</a><a href="#3-aggregate-boundaries-and-ownership">3. Aggregate Boundaries and Ownership</a><a href="#4-customer-and-eligibility-rules">4. Customer and Eligibility Rules</a><a href="#5-onboarding-and-kyc-logic">5. Onboarding and KYC Logic</a><a href="#6-authentication-and-device-trust">6. Authentication and Device Trust</a><a href="#7-balance-logic">7. Balance Logic</a><a href="#8-fee-logic">8. Fee Logic</a><a href="#9-limit-logic">9. Limit Logic</a><a href="#10-recipient-resolution-and-beneficiaries">10. Recipient Resolution and Beneficiaries</a><a href="#11-p2p-transfer-logic">11. P2P Transfer Logic</a><a href="#12-cash-in-logic">12. Cash-in Logic</a><a href="#13-cash-out-logic">13. Cash-out Logic</a><a href="#14-bill-payment-and-top-up-logic">14. Bill Payment and Top-up Logic</a><a href="#15-merchant-qr-payment-logic">15. Merchant QR Payment Logic</a><a href="#16-transaction-state-machine">16. Transaction State Machine</a><a href="#17-reversal-and-refund-logic">17. Reversal and Refund Logic</a><a href="#18-risk-and-fraud-logic">18. Risk and Fraud Logic</a><a href="#19-dispute-and-support-logic">19. Dispute and Support Logic</a><a href="#20-reconciliation-logic">20. Reconciliation Logic</a><a href="#21-notifications-logic">21. Notifications Logic</a><a href="#22-policy-lifecycle">22. Policy Lifecycle</a><a href="#23-backoffice-authorization-logic">23. Backoffice Authorization Logic</a><a href="#24-audit-logic">24. Audit Logic</a><a href="#25-provider-integration-logic">25. Provider Integration Logic</a><a href="#26-failure-and-recovery-matrix">26. Failure and Recovery Matrix</a><a href="#27-domain-events">27. Domain Events</a><a href="#28-business-rule-traceability">28. Business Rule Traceability</a><a href="#29-minimum-automated-test-catalogue">29. Minimum Automated Test Catalogue</a><a href="#30-open-decisions-before-production">30. Open Decisions Before Production</a><a href="#sources">Sources</a></aside><main class="document"><h1>DONECASH — Business Logic Specification</h1>
+<p>English handover edition · This specification defines intended behavior and future automated acceptance tests. It does not describe an already implemented financial engine. Original research references retain their September 2026 access dates.</p>
+<h2 id="1-purpose-and-scope">1. Purpose and Scope</h2>
+<p>This document defines the executable business behavior of DONECASH across the customer mobile application, merchant and agent capabilities, payment orchestration, ledger, risk and compliance, support, reconciliation, notifications, and the internal operations platform.</p>
+<p>It sits between product requirements and implementation. Every rule must be implemented in one authoritative domain module, exposed through use cases rather than duplicated in controllers or UI code, and covered by automated tests.</p>
+<h3 id="core-invariants">Core invariants</h3>
+<ol>
+<li>A financial transaction is never considered completed before a balanced ledger entry is committed.</li>
+<li>A posted ledger entry is immutable; correction happens through a linked reversal or adjustment.</li>
+<li>The same authorized request cannot move money twice.</li>
+<li>Available balance cannot become negative unless an explicit overdraft product exists; none exists in the MVP.</li>
+<li>A timeout is not a failure. Unknown external outcomes remain <code>PROCESSING</code> until reconciled.</li>
+<li>Limits, fees and risk decisions use the policy version effective at authorization time.</li>
+<li>Privileged operational actions require a reason, an audit event, and maker-checker approval where configured.</li>
+<li>Customer-facing status and internal accounting status remain distinguishable but traceable.</li>
+</ol>
+<h2 id="2-domain-vocabulary">2. Domain Vocabulary</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Customer</td>
+<td>Verified or prospective natural person using the wallet</td>
+</tr>
+<tr>
+<td>Wallet</td>
+<td>Customer-facing store of value and lifecycle state</td>
+</tr>
+<tr>
+<td>Ledger account</td>
+<td>Accounting account representing a wallet, clearing account, fee account or platform account</td>
+</tr>
+<tr>
+<td>Payment transaction</td>
+<td>Business command and lifecycle visible to customer/operations</td>
+</tr>
+<tr>
+<td>Journal entry</td>
+<td>Balanced accounting event containing at least two postings</td>
+</tr>
+<tr>
+<td>Posting</td>
+<td>Immutable debit or credit against one ledger account</td>
+</tr>
+<tr>
+<td>Hold</td>
+<td>Temporary reservation reducing available balance without final settlement</td>
+</tr>
+<tr>
+<td>Quote</td>
+<td>Short-lived calculation of amount, fees, limits and recipient/merchant context</td>
+</tr>
+<tr>
+<td>Provider</td>
+<td>External bank, switch, biller, KYC, SMS or cash network</td>
+</tr>
+<tr>
+<td>Reversal</td>
+<td>New journal entry economically cancelling an earlier entry</td>
+</tr>
+<tr>
+<td>Adjustment</td>
+<td>Controlled accounting entry resolving a verified difference</td>
+</tr>
+<tr>
+<td>Reconciliation break</td>
+<td>Difference between provider evidence and internal state</td>
+</tr>
+<tr>
+<td>Policy</td>
+<td>Versioned business rule with scope and effective dates</td>
+</tr>
+<tr>
+<td>Maker-checker</td>
+<td>Separation requiring a second authorized person to approve a sensitive action</td>
+</tr>
+</tbody></table>
+<h2 id="3-aggregate-boundaries-and-ownership">3. Aggregate Boundaries and Ownership</h2>
+<table>
+<thead>
+<tr>
+<th>Aggregate</th>
+<th>Owns</th>
+<th>May reference</th>
+<th>Must not do</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Customer</td>
+<td>profile, status, primary contact</td>
+<td>KYC case, devices</td>
+<td>write ledger</td>
+</tr>
+<tr>
+<td>KYC Case</td>
+<td>documents, screening, decision</td>
+<td>customer, staff decision</td>
+<td>activate wallet directly</td>
+</tr>
+<tr>
+<td>Wallet</td>
+<td>lifecycle, restrictions, holds</td>
+<td>customer, ledger account</td>
+<td>store authoritative balance</td>
+</tr>
+<tr>
+<td>Payment Transaction</td>
+<td>state, quote snapshot, provider references</td>
+<td>wallet, journal entry</td>
+<td>mutate postings</td>
+</tr>
+<tr>
+<td>Journal Entry</td>
+<td>postings, reversal link</td>
+<td>transaction</td>
+<td>accept unbalanced commit</td>
+</tr>
+<tr>
+<td>Risk Case</td>
+<td>alerts, decision, restrictions</td>
+<td>customer, transactions</td>
+<td>post money</td>
+</tr>
+<tr>
+<td>Reconciliation Batch</td>
+<td>items, resolution state</td>
+<td>transactions, provider file</td>
+<td>edit provider evidence</td>
+</tr>
+<tr>
+<td>Approval Request</td>
+<td>proposed action, maker/checker, decision</td>
+<td>resource</td>
+<td>allow maker = checker</td>
+</tr>
+</tbody></table>
+<h2 id="4-customer-and-eligibility-rules">4. Customer and Eligibility Rules</h2>
+<h3 id="br-cus-001-unique-identity">BR-CUS-001 — Unique identity</h3>
+<ul>
+<li>National ID uniqueness is checked using a keyed deterministic hash, never by logging or exposing the plaintext ID.</li>
+<li>A duplicate identity does not reveal the existing account. The response directs the customer to secure recovery.</li>
+<li>One mobile number may have only one active wallet relationship at a time.</li>
+</ul>
+<h3 id="br-cus-002-eligibility">BR-CUS-002 — Eligibility</h3>
+<p>For the Egyptian MVP, the customer must:</p>
+<ul>
+<li>provide an eligible Egyptian mobile number;</li>
+<li>pass phone ownership verification;</li>
+<li>provide a valid national ID and required consents;</li>
+<li>pass the configured KYC/screening level;</li>
+<li>not be classified as prohibited or under an unresolved blocking decision.</li>
+</ul>
+<p>Published CBE/NTRA material states one active wallet per phone and up to three wallets per national ID; the final production rule must come from the effective sponsor/regulatory policy.^1</p>
+<h3 id="br-cus-003-customer-status">BR-CUS-003 — Customer status</h3>
+<pre><code class="language-text">PENDING_KYC → ACTIVE → RESTRICTED → ACTIVE
+                    ↘ SUSPENDED → ACTIVE | CLOSED
+PENDING_KYC → CLOSED
+</code></pre>
+<ul>
+<li><code>RESTRICTED</code>: login and read access may remain; selected financial operations are blocked.</li>
+<li><code>SUSPENDED</code>: all money movement blocked except controlled refund/closure processes.</li>
+<li><code>CLOSED</code>: no new transactions; retention and balance-return workflow remains.</li>
+</ul>
+<h2 id="5-onboarding-and-kyc-logic">5. Onboarding and KYC Logic</h2>
+<h3 id="onboarding-flow">Onboarding flow</h3>
+<ol>
+<li>Normalize mobile number to E.164 and apply enumeration-safe eligibility check.</li>
+<li>Create OTP challenge with purpose, TTL, attempt limit and device context.</li>
+<li>Verify OTP atomically; successful challenge can be consumed once.</li>
+<li>Record mandatory consent document versions and optional marketing consent separately.</li>
+<li>Create KYC case and pre-signed upload references.</li>
+<li>Validate document type, file integrity, malware result, OCR fields and liveness result.</li>
+<li>Run sanctions/PEP/adverse screening through a provider adapter.</li>
+<li>Auto-approve only when every required control passes and no manual-review rule fires.</li>
+<li>On approval, create customer wallet and ledger account inside one transaction.</li>
+<li>Require MPIN setup and device trust before first money movement.</li>
+</ol>
+<h3 id="kyc-decisions">KYC decisions</h3>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Decision</th>
+<th>Customer message</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>All checks clear</td>
+<td><code>APPROVED</code></td>
+<td>Wallet ready</td>
+</tr>
+<tr>
+<td>Image/OCR incomplete</td>
+<td><code>MORE_INFO_REQUIRED</code></td>
+<td>Retake or provide missing information</td>
+</tr>
+<tr>
+<td>Potential screening match</td>
+<td><code>IN_REVIEW</code></td>
+<td>Review in progress; no accusation</td>
+</tr>
+<tr>
+<td>Confirmed ineligibility</td>
+<td><code>REJECTED</code></td>
+<td>Unable to open wallet; support path</td>
+</tr>
+<tr>
+<td>ID expired during review</td>
+<td><code>EXPIRED</code></td>
+<td>Provide a valid ID</td>
+</tr>
+</tbody></table>
+<p>Every non-approval decision records a reason code. Free text is supplemental and never drives automated behavior.</p>
+<h2 id="6-authentication-and-device-trust">6. Authentication and Device Trust</h2>
+<h3 id="mpin">MPIN</h3>
+<ul>
+<li>Minimum six digits and weak/repeated/sequential patterns rejected.</li>
+<li>Store only a slow KDF hash with per-user salt and server-side pepper protected by KMS/HSM.</li>
+<li>Five consecutive failures trigger policy-based cooldown and risk signal; higher risk may suspend authentication.</li>
+<li>MPIN reset invalidates existing refresh tokens and requires phone verification plus step-up/device review.</li>
+</ul>
+<h3 id="sessions">Sessions</h3>
+<ul>
+<li>Access token short-lived; refresh token rotated on every use.</li>
+<li>Reuse of an old refresh token revokes the token family and opens a risk alert.</li>
+<li>A new device starts <code>PENDING</code>; financial operations may have a cooling period or lower limits.</li>
+<li>Biometric authentication unlocks a device-held key; biometric templates never reach DONECASH.</li>
+</ul>
+<h3 id="step-up-triggers">Step-up triggers</h3>
+<ul>
+<li>new/untrusted device;</li>
+<li>unusual velocity or location change;</li>
+<li>first beneficiary or high-value transaction;</li>
+<li>MPIN reset within the configured risk window;</li>
+<li>privileged staff action or sensitive data reveal.</li>
+</ul>
+<h2 id="7-balance-logic">7. Balance Logic</h2>
+<h3 id="calculations">Calculations</h3>
+<p>For a wallet liability account whose normal side is credit:</p>
+<pre><code class="language-text">ledgerBalance = totalCredits - totalDebits
+activeHolds   = sum(ACTIVE hold amounts)
+availableBalance = ledgerBalance - activeHolds
+</code></pre>
+<p>The API may serve a cached balance read model, but authorization revalidates against authoritative postings and active holds in the same database transaction.</p>
+<h3 id="balance-rules">Balance rules</h3>
+<ul>
+<li>Holds cannot exceed currently available balance.</li>
+<li>Capturing a hold posts the final journal entry and marks the hold <code>CAPTURED</code> atomically.</li>
+<li>Releasing/expiring a hold does not create a posting unless the product’s accounting policy explicitly requires one.</li>
+<li>A wallet restriction does not change balance; it changes allowed operations.</li>
+</ul>
+<h2 id="8-fee-logic">8. Fee Logic</h2>
+<h3 id="fee-selection">Fee selection</h3>
+<p>Fee policy is selected by:</p>
+<pre><code class="language-text">transaction type + customer segment + channel + provider + effective timestamp
+</code></pre>
+<p>Most specific eligible policy wins. Equal-specificity active policies are a configuration error and block publication.</p>
+<h3 id="calculations-2">Calculations</h3>
+<pre><code class="language-text">FLAT       = flatMinor
+PERCENTAGE = roundHalfUp(amountMinor × percentageBps / 10,000)
+TIERED     = policy-defined bracket calculation
+baseFee    = selected FLAT, PERCENTAGE or TIERED calculation
+finalFee   = clamp(baseFee, minMinor, maxMinor)
+totalDebit = amountMinor + finalFee
+</code></pre>
+<p><code>clamp</code> applies the configured minimum and optional maximum; missing bounds do not create an artificial zero cap. Percentage arithmetic must use integer-safe multiplication/division and explicit half-up rounding. Validate that configured maximum is not below minimum.</p>
+<ul>
+<li><code>quote</code> stores policy code/version, inputs, calculated fee, total debit and expiry.</li>
+<li>Authorization rejects an expired quote and returns a fresh quote; it never silently changes the fee.</li>
+<li>Promotions create an explicit discount component and funding account rather than editing fee revenue after posting.</li>
+</ul>
+<h2 id="9-limit-logic">9. Limit Logic</h2>
+<h3 id="applicable-limits">Applicable limits</h3>
+<ul>
+<li>per transaction;</li>
+<li>daily amount/count;</li>
+<li>monthly amount/count;</li>
+<li>rolling risk window;</li>
+<li>wallet balance ceiling;</li>
+<li>cash-out channel limit;</li>
+<li>new-wallet or new-device lower limits.</li>
+</ul>
+<h3 id="evaluation">Evaluation</h3>
+<ol>
+<li>Resolve effective policies for customer segment, KYC level, transaction type and channel.</li>
+<li>Lock the relevant consumption records or evaluate inside a serializable transaction.</li>
+<li>Calculate <code>projectedConsumption = currentConsumption + requestedAmount</code>.</li>
+<li>Reject before financial posting if any hard limit fails.</li>
+<li>Store policy versions and consumption window on the transaction decision.</li>
+<li>Increment consumption only when the policy-defined stage is reached; release it on a qualifying cancellation/reversal.</li>
+</ol>
+<p>Limits remain configuration data because published sources and operator pages can reflect different effective values at different times.^1 ^2</p>
+<h2 id="10-recipient-resolution-and-beneficiaries">10. Recipient Resolution and Beneficiaries</h2>
+<ul>
+<li>Normalize phone input and reject the customer’s own wallet.</li>
+<li>Apply enumeration protection: exact input, rate limits, generic responses, risk monitoring.</li>
+<li>Return only a masked display name after eligibility checks.</li>
+<li>First transfer to a recipient shows a stronger warning and may require step-up.</li>
+<li>Saving a beneficiary requires recent authentication and records alias, destination and creation context.</li>
+<li>Blocking a beneficiary affects the customer’s shortcut only; it does not block the recipient system-wide.</li>
+</ul>
+<h2 id="11-p2p-transfer-logic">11. P2P Transfer Logic</h2>
+<h3 id="preconditions">Preconditions</h3>
+<ul>
+<li>source and destination wallets exist and are eligible;</li>
+<li>source wallet allows outgoing P2P; destination allows incoming P2P;</li>
+<li>amount is positive and currency is supported;</li>
+<li>quote is current and bound to the same source, recipient and amount;</li>
+<li>available balance covers amount + fee;</li>
+<li>limits and risk decision allow execution;</li>
+<li>authorization proof is valid and transaction-bound.</li>
+</ul>
+<h3 id="atomic-posting">Atomic posting</h3>
+<p>Example: send EGP 375.00 with EGP 5.00 fee.</p>
+<table>
+<thead>
+<tr>
+<th>Account</th>
+<th>Direction</th>
+<th align="right">Amount</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sender wallet liability</td>
+<td>Debit</td>
+<td align="right">380.00</td>
+</tr>
+<tr>
+<td>Receiver wallet liability</td>
+<td>Credit</td>
+<td align="right">375.00</td>
+</tr>
+<tr>
+<td>Transfer fee revenue</td>
+<td>Credit</td>
+<td align="right">5.00</td>
+</tr>
+</tbody></table>
+<p>Within one database transaction:</p>
+<ol>
+<li>reserve idempotency key;</li>
+<li>lock source account/limit consumption;</li>
+<li>revalidate balance, policy and risk decision freshness;</li>
+<li>create payment transaction;</li>
+<li>create balanced journal entry and postings;</li>
+<li>update limit consumption;</li>
+<li>write outbox events;</li>
+<li>commit;</li>
+<li>notify both parties asynchronously.</li>
+</ol>
+<h3 id="idempotency-behavior">Idempotency behavior</h3>
+<table>
+<thead>
+<tr>
+<th>Request condition</th>
+<th>Response</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>First valid key</td>
+<td>Execute once and persist response fingerprint</td>
+</tr>
+<tr>
+<td>Same key + same payload</td>
+<td>Return original outcome</td>
+</tr>
+<tr>
+<td>Same key + different payload</td>
+<td><code>409 IDEMPOTENCY_KEY_REUSED</code></td>
+</tr>
+<tr>
+<td>Client timeout after commit</td>
+<td>Retry returns original completed transaction</td>
+</tr>
+</tbody></table>
+<h2 id="12-cash-in-logic">12. Cash-in Logic</h2>
+<h3 id="agent-branch-atm">Agent/branch/ATM</h3>
+<ul>
+<li>Create intent with amount, channel, expiry and customer identity context.</li>
+<li>External provider confirmation must contain unique reference and verified signature.</li>
+<li>Duplicate confirmations are ignored idempotently.</li>
+<li>Posting credits the customer wallet liability and debits the appropriate cash/provider clearing account.</li>
+<li>Cash-in marked <code>COMPLETED</code> only after confirmed provider evidence or a sponsor-approved finality rule.</li>
+</ul>
+<h3 id="card-to-wallet">Card-to-wallet</h3>
+<ul>
+<li>Use tokenized provider flows; DONECASH must not store PAN/CVV.</li>
+<li>Funding card ownership/name matching and velocity controls apply.</li>
+<li>Chargeback risk may create a temporary hold or delayed availability by policy.</li>
+</ul>
+<h2 id="13-cash-out-logic">13. Cash-out Logic</h2>
+<ol>
+<li>Validate wallet, balance, limits, risk and channel availability.</li>
+<li>Create quote and transaction-bound authorization.</li>
+<li>Create active hold for amount + fee.</li>
+<li>Generate a single-use withdrawal code, store only its hash and bind it to channel, amount and expiry.</li>
+<li>On provider success, capture the hold and post wallet debit, provider clearing credit and fee credit.</li>
+<li>On verified rejection or confirmed expiry without dispense, release the hold. Local code expiry alone must not release a withdrawal whose provider outcome is unknown.</li>
+<li>On timeout, retain <code>PROCESSING</code> until polling/webhook/reconciliation resolves the external outcome.</li>
+</ol>
+<h2 id="14-bill-payment-and-top-up-logic">14. Bill Payment and Top-up Logic</h2>
+<h3 id="inquiry">Inquiry</h3>
+<ul>
+<li>Inquiry is read-only and receives a provider reference plus expiry.</li>
+<li>The displayed biller name, subscriber reference mask, amount and fees are snapshotted in the quote.</li>
+<li>A stale inquiry must be refreshed before payment.</li>
+</ul>
+<h3 id="payment">Payment</h3>
+<ul>
+<li>Prevent duplicates using wallet + biller + bill reference + configured period.</li>
+<li>Create hold/authorization before calling provider when finality is asynchronous.</li>
+<li>Provider accepted-but-unknown remains <code>PROCESSING</code>.</li>
+<li>A confirmed failure releases the hold. A confirmed success captures it.</li>
+<li>Reconciliation can resolve unknown items but cannot overwrite provider evidence.</li>
+</ul>
+<h2 id="15-merchant-qr-payment-logic">15. Merchant QR Payment Logic</h2>
+<h3 id="qr-validation">QR validation</h3>
+<ul>
+<li>Verify signature/checksum, merchant status, QR status, currency and expiry.</li>
+<li>Static QR allows customer-entered amount; dynamic QR binds amount and merchant order reference.</li>
+<li>Used dynamic QR cannot be replayed.</li>
+<li>Display merchant name, branch, amount and fee before authorization.</li>
+</ul>
+<h3 id="posting">Posting</h3>
+<ul>
+<li>Debit customer wallet for amount + customer fee, if any.</li>
+<li>Credit merchant payable/settlement account for net or gross amount according to contract.</li>
+<li>Credit fee revenue and/or merchant fee receivable explicitly.</li>
+<li>Settlement to merchant bank is a separate transaction and reconciliation process.</li>
+</ul>
+<h2 id="16-transaction-state-machine">16. Transaction State Machine</h2>
+<pre><code class="language-mermaid">stateDiagram-v2
+  [*] --&gt; CREATED
+  CREATED --&gt; AUTHORIZED: customer proof accepted
+  CREATED --&gt; DECLINED: validation/risk/limit failure
+  AUTHORIZED --&gt; PROCESSING: external confirmation required
+  AUTHORIZED --&gt; COMPLETED: internal atomic transfer
+  AUTHORIZED --&gt; CANCELLED: cancelled before execution
+  PROCESSING --&gt; COMPLETED: provider confirms success
+  PROCESSING --&gt; FAILED: provider confirms failure
+  PROCESSING --&gt; PROCESSING: timeout / retry / poll
+  COMPLETED --&gt; REVERSAL_PENDING: accepted reversal request
+  REVERSAL_PENDING --&gt; REVERSED: reversal entry committed
+  REVERSAL_PENDING --&gt; COMPLETED: reversal rejected
+</code></pre>
+<p>Invalid state transitions return a domain conflict and create no side effect.</p>
+<h2 id="17-reversal-and-refund-logic">17. Reversal and Refund Logic</h2>
+<ul>
+<li>Reversal eligibility depends on transaction type, finality, age, provider capability and dispute state.</li>
+<li>A completed P2P is not automatically reversible because the recipient may already use the funds.</li>
+<li>A reversal creates a new payment transaction and new journal entry linked to the original.</li>
+<li>Partial merchant refund stores cumulative refunded amount and rejects a total above the captured amount.</li>
+<li>Financial adjustment requires evidence, maker-checker approval and a specific adjustment account.</li>
+<li>Customer notifications explain economic result, not internal ledger terminology.</li>
+</ul>
+<h2 id="18-risk-and-fraud-logic">18. Risk and Fraud Logic</h2>
+<h3 id="decision-inputs">Decision inputs</h3>
+<ul>
+<li>customer/KYC risk tier;</li>
+<li>device trust, app integrity and recent enrollment/reset;</li>
+<li>amount, frequency, recipient novelty and velocity;</li>
+<li>failed authentication attempts;</li>
+<li>IP/network/geolocation consistency where lawful;</li>
+<li>provider/channel health;</li>
+<li>historical disputes and confirmed fraud;</li>
+<li>sanctions/PEP or compliance restrictions.</li>
+</ul>
+<h3 id="decision-outputs">Decision outputs</h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ALLOW</code></td>
+<td>Continue</td>
+</tr>
+<tr>
+<td><code>CHALLENGE</code></td>
+<td>Require step-up and re-evaluate</td>
+</tr>
+<tr>
+<td><code>HOLD</code></td>
+<td>Prevent or reserve value pending review</td>
+</tr>
+<tr>
+<td><code>DECLINE</code></td>
+<td>Stop without posting</td>
+</tr>
+<tr>
+<td><code>REVIEW</code></td>
+<td>Create alert/case; synchronous policy decides whether to pause</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Each alert stores rule code/version, evidence snapshot and score.</li>
+<li>Customer text never exposes fraud thresholds or accusations.</li>
+<li>Rule publication requires test cases against historical/synthetic data and checker approval.</li>
+</ul>
+<h2 id="19-dispute-and-support-logic">19. Dispute and Support Logic</h2>
+<h3 id="dispute-eligibility">Dispute eligibility</h3>
+<ul>
+<li>transaction belongs to customer;</li>
+<li>transaction type/reason combination is supported;</li>
+<li>transaction is within the configured dispute window;</li>
+<li>no duplicate open dispute for transaction + reason;</li>
+<li>required evidence is present.</li>
+</ul>
+<h3 id="workflow">Workflow</h3>
+<p><code>OPEN → IN_REVIEW → WAITING_CUSTOMER → IN_REVIEW → ACCEPTED | REJECTED → CLOSED</code></p>
+<ul>
+<li>Opening a dispute does not move money automatically.</li>
+<li>SLA uses business-calendar policy and pauses only in explicitly allowed states.</li>
+<li>Staff messages are separated into customer-visible and internal notes.</li>
+<li>Any accepted financial remedy calls the controlled refund/reversal use case.</li>
+</ul>
+<h2 id="20-reconciliation-logic">20. Reconciliation Logic</h2>
+<h3 id="import">Import</h3>
+<ul>
+<li>Verify file/provider identity, expected business date, schema, totals and SHA-256.</li>
+<li>Same provider/date/hash is idempotent.</li>
+<li>Preserve original file in immutable storage; parsed rows remain linked to source line.</li>
+</ul>
+<h3 id="matching-priority">Matching priority</h3>
+<ol>
+<li>exact provider reference;</li>
+<li>internal reference carried by provider;</li>
+<li>approved composite match: amount + masked participant + bounded timestamp;</li>
+<li>otherwise manual exception.</li>
+</ol>
+<h3 id="exception-classification">Exception classification</h3>
+<ul>
+<li><code>NOT_FOUND_INTERNAL</code>;</li>
+<li><code>NOT_FOUND_EXTERNAL</code>;</li>
+<li><code>AMOUNT_MISMATCH</code>;</li>
+<li><code>STATUS_MISMATCH</code>;</li>
+<li><code>DUPLICATE</code>.</li>
+</ul>
+<p>Resolution never edits the imported evidence or historical transaction. It may update operational status, request provider action, or create an approved adjustment/reversal.</p>
+<h2 id="21-notifications-logic">21. Notifications Logic</h2>
+<ul>
+<li>Financial notifications derive from committed outbox events, never from client success screens.</li>
+<li>Template version, locale and masked destination are stored.</li>
+<li>Push failure may fall back to SMS for mandatory financial/security events.</li>
+<li>Notification retries are idempotent by event + template + channel.</li>
+<li>Optional marketing consent cannot suppress mandatory security or transaction notices.</li>
+<li>A delivery failure does not roll back a completed financial transaction.</li>
+</ul>
+<h2 id="22-policy-lifecycle">22. Policy Lifecycle</h2>
+<pre><code class="language-text">DRAFT → REVIEWED → SCHEDULED → ACTIVE → RETIRED
+</code></pre>
+<ul>
+<li>Draft can be edited by maker.</li>
+<li>Review runs validation, overlap detection and scenario simulation.</li>
+<li>Checker cannot be maker.</li>
+<li>Scheduled policy has future <code>effective_from</code> and cannot be silently edited; create a new version.</li>
+<li>At most one equally specific active version may match a request.</li>
+<li>Every decision persists policy identifiers for later explanation.</li>
+</ul>
+<h2 id="23-backoffice-authorization-logic">23. Backoffice Authorization Logic</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Minimum controls</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Customer search</td>
+<td>exact identifier + reason-for-access + audit</td>
+</tr>
+<tr>
+<td>Reveal sensitive data</td>
+<td>separate permission + reason + watermark + audit</td>
+</tr>
+<tr>
+<td>KYC decision</td>
+<td>assigned role; high-risk decision may require checker</td>
+</tr>
+<tr>
+<td>Wallet restriction</td>
+<td>reason; high-impact action requires checker</td>
+</tr>
+<tr>
+<td>Ledger view</td>
+<td>finance/audit read-only</td>
+</tr>
+<tr>
+<td>Adjustment/reversal</td>
+<td>maker-checker; no direct table write</td>
+</tr>
+<tr>
+<td>Policy activation</td>
+<td>maker-checker + simulation evidence</td>
+</tr>
+<tr>
+<td>Export</td>
+<td>scoped permission + approval for sensitive bulk data + expiring file</td>
+</tr>
+<tr>
+<td>Role assignment</td>
+<td>IAM admin + expiry + SoD validation</td>
+</tr>
+</tbody></table>
+<h2 id="24-audit-logic">24. Audit Logic</h2>
+<p>Audit events are append-only and include:</p>
+<ul>
+<li>actor type/id, role and session;</li>
+<li>action and resource type/id;</li>
+<li>timestamp, IP/device and correlation ID;</li>
+<li>reason code and approval request where applicable;</li>
+<li>before/after diff with sensitive values masked;</li>
+<li>outcome and failure code.</li>
+</ul>
+<p>Sensitive reads are auditable, not only writes. Audit export is copied to immutable/WORM storage and monitored for continuity.</p>
+<h2 id="25-provider-integration-logic">25. Provider Integration Logic</h2>
+<ul>
+<li>Each provider implements a canonical adapter interface: <code>quote/inquire</code>, <code>execute</code>, <code>getStatus</code>, <code>cancel</code> where supported, and webhook verification.</li>
+<li>Circuit breakers stop new calls when failure thresholds are exceeded; they do not guess outcomes for in-flight transactions.</li>
+<li>Retry only operations declared safe or protected by provider idempotency.</li>
+<li>Webhook inbox deduplicates message IDs/signatures before business processing.</li>
+<li>Out-of-order events are rejected or reconciled using provider sequence/finality rules.</li>
+</ul>
+<h2 id="26-failure-and-recovery-matrix">26. Failure and Recovery Matrix</h2>
+<table>
+<thead>
+<tr>
+<th>Failure</th>
+<th>Customer state</th>
+<th>System action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Client disconnect before request reaches API</td>
+<td>No transaction</td>
+<td>Safe retry with same key</td>
+</tr>
+<tr>
+<td>Client timeout after internal commit</td>
+<td>Completed, possibly unseen</td>
+<td>Retry returns original response</td>
+</tr>
+<tr>
+<td>Provider timeout before known acceptance</td>
+<td>Processing</td>
+<td>Poll and reconcile; do not retry unsafe call blindly</td>
+</tr>
+<tr>
+<td>Database serialization conflict</td>
+<td>No commit</td>
+<td>bounded server retry with same command</td>
+</tr>
+<tr>
+<td>Outbox worker down</td>
+<td>Financial commit preserved</td>
+<td>catch up and send notification later</td>
+</tr>
+<tr>
+<td>Redis unavailable</td>
+<td>Degraded controls</td>
+<td>fail closed for auth/rate-critical paths; ledger unaffected</td>
+</tr>
+<tr>
+<td>Biller unavailable</td>
+<td>No new payment or Processing if accepted</td>
+<td>surface provider status and preserve holds correctly</td>
+</tr>
+<tr>
+<td>Reconciliation file malformed</td>
+<td>Batch failed</td>
+<td>no partial silent acceptance; report line/schema issue</td>
+</tr>
+</tbody></table>
+<h2 id="27-domain-events">27. Domain Events</h2>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Producer</th>
+<th>Primary consumers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>CustomerKycApproved</code></td>
+<td>KYC</td>
+<td>Wallet provisioning, notification</td>
+</tr>
+<tr>
+<td><code>WalletActivated</code></td>
+<td>Wallet</td>
+<td>Customer experience, analytics</td>
+</tr>
+<tr>
+<td><code>TransferCompleted</code></td>
+<td>Payments/Ledger</td>
+<td>notifications, activity, risk monitoring</td>
+</tr>
+<tr>
+<td><code>TransactionProcessing</code></td>
+<td>Payments</td>
+<td>polling, customer status</td>
+</tr>
+<tr>
+<td><code>TransactionReversed</code></td>
+<td>Ledger/Payments</td>
+<td>notification, limits, reconciliation</td>
+</tr>
+<tr>
+<td><code>RiskAlertRaised</code></td>
+<td>Risk</td>
+<td>case management, wallet controls</td>
+</tr>
+<tr>
+<td><code>DisputeOpened</code></td>
+<td>Support</td>
+<td>SLA, notification, operations queue</td>
+</tr>
+<tr>
+<td><code>ReconciliationBreakDetected</code></td>
+<td>Reconciliation</td>
+<td>finance queue, incident rules</td>
+</tr>
+<tr>
+<td><code>PolicyActivated</code></td>
+<td>Policy</td>
+<td>cache invalidation, audit, decision engine</td>
+</tr>
+</tbody></table>
+<p>Event payloads contain identifiers and necessary snapshots only; PII is fetched by an authorized consumer rather than broadcast.</p>
+<h2 id="28-business-rule-traceability">28. Business Rule Traceability</h2>
+<table>
+<thead>
+<tr>
+<th>Rule group</th>
+<th>Requirements</th>
+<th>Main tables</th>
+<th>Main tests</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Eligibility/KYC</td>
+<td>FR-001–003, FR-201–202</td>
+<td>customers, phones, kyc_*</td>
+<td>duplicates, decision transitions, expiry</td>
+</tr>
+<tr>
+<td>Wallet/balance</td>
+<td>FR-004, NFR-003</td>
+<td>wallets, ledger_*, holds</td>
+<td>balance properties, no negative available</td>
+</tr>
+<tr>
+<td>P2P</td>
+<td>FR-005–006</td>
+<td>transactions, transfers, postings</td>
+<td>concurrency, idempotency, fee/limit versions</td>
+</tr>
+<tr>
+<td>Cash</td>
+<td>FR-007</td>
+<td>cash_operations, holds</td>
+<td>expiry, duplicate webhook, unknown outcome</td>
+</tr>
+<tr>
+<td>Bills/QR</td>
+<td>FR-008–009</td>
+<td>bill_*, merchant_*</td>
+<td>stale inquiry, replayed QR, pending resolution</td>
+</tr>
+<tr>
+<td>Disputes</td>
+<td>FR-011, FR-205</td>
+<td>disputes, tickets</td>
+<td>eligibility, SLA, financial remedy separation</td>
+</tr>
+<tr>
+<td>Risk</td>
+<td>FR-203</td>
+<td>risk_*</td>
+<td>rule versioning, challenge, hold approvals</td>
+</tr>
+<tr>
+<td>Reconciliation</td>
+<td>FR-206</td>
+<td>reconciliation_*</td>
+<td>import idempotency, match classes, adjustments</td>
+</tr>
+<tr>
+<td>Policies</td>
+<td>FR-207</td>
+<td>fee_policies, limit_policies</td>
+<td>overlaps, effective time, maker-checker</td>
+</tr>
+<tr>
+<td>IAM/Audit</td>
+<td>FR-208–209</td>
+<td>staff/roles/approvals/audit</td>
+<td>SoD, reveal reason, append-only evidence</td>
+</tr>
+</tbody></table>
+<h2 id="29-minimum-automated-test-catalogue">29. Minimum Automated Test Catalogue</h2>
+<h3 id="property-and-concurrency-tests">Property and concurrency tests</h3>
+<ul>
+<li>every posted journal entry balances to zero by currency;</li>
+<li>arbitrary transfer sequence preserves system-wide value excluding explicit fees/funding;</li>
+<li>N concurrent transfers cannot spend beyond available balance;</li>
+<li>reversal plus original has zero net economic effect for reversible components;</li>
+<li>retrying any command with the same idempotency key produces at most one economic event.</li>
+</ul>
+<h3 id="policy-tests">Policy tests</h3>
+<ul>
+<li>boundary values: zero, minimum, maximum, one unit below/above;</li>
+<li>midnight/month boundary in Africa/Cairo and UTC conversion;</li>
+<li>policy activation exactly at effective timestamp;</li>
+<li>conflicting policy publication is rejected;</li>
+<li>fee rounding and caps use integer arithmetic.</li>
+</ul>
+<h3 id="state-tests">State tests</h3>
+<ul>
+<li>every allowed transition succeeds;</li>
+<li>every invalid transition creates no side effect;</li>
+<li>timeout never becomes failure without evidence;</li>
+<li>out-of-order webhook cannot regress final state;</li>
+<li>closed/restricted wallet behavior matches operation matrix.</li>
+</ul>
+<h2 id="30-open-decisions-before-production">30. Open Decisions Before Production</h2>
+<ul>
+<li>Sponsoring bank/PSP model and exact finality rules.</li>
+<li>Effective regulatory limits and wallet balance ceilings.</li>
+<li>Provider-specific refund/reversal guarantees.</li>
+<li>KYC automation thresholds and manual review obligations.</li>
+<li>AML transaction monitoring scenarios and reporting workflow.</li>
+<li>Data retention, localization and incident reporting obligations.</li>
+<li>Chart of accounts approval and settlement calendar.</li>
+</ul>
+<h2 id="sources">Sources</h2>
+<ol>
+<li>National Telecom Regulatory Authority, <a href="https://www.tra.gov.eg/en/mobile-wallets-regulatory-rules/">Mobile Wallet Regulatory Rules</a>, accessed 13 September 2026.</li>
+<li>Orange Egypt, <a href="https://www.orange.eg/en/services/Orange-financial-services">Orange Cash E-Wallet</a>, accessed 13 September 2026.</li>
+<li>Central Bank of Egypt, <a href="https://www.cbe.org.eg/en/news-publications/news/2025/06/19/08/20/psos-and-psps-licensing-rules">PSO and PSP Licensing Rules</a>, 19 June 2025.</li>
+<li>OWASP, <a href="https://mas.owasp.org/MASVS/">Mobile Application Security Verification Standard</a>, accessed 13 September 2026.</li>
+<li>Prisma, <a href="https://www.prisma.io/docs/orm/v6/prisma-client/queries/transactions">Transactions and Batch Queries</a>, accessed 13 September 2026.</li>
+</ol>
+<footer>DONECASH · Final English Handover · 9 October 2026 · Product blueprint, not a production application.</footer></main></div></body></html>

@@ -1,0 +1,598 @@
+<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UGLYCASH — Style Reference</title><link rel="stylesheet" href="../presentation.css"></head><body><header class="reader-top"><a href="../START-HERE.html">← Delivery portal</a><span>DONECASH · ENGLISH HANDOVER</span><a href="DESIGN (1).md">Markdown source</a></header><div class="document-layout"><aside class="toc"><strong>IN THIS DOCUMENT</strong><a href="#tokens-colors">Tokens — Colors</a><a href="#tokens-typography">Tokens — Typography</a><a href="#tokens-spacing-amp-shapes">Tokens — Spacing &amp; Shapes</a><a href="#components">Components</a><a href="#do-39-s-and-don-39-ts">Do&#39;s and Don&#39;ts</a><a href="#surfaces">Surfaces</a><a href="#elevation">Elevation</a><a href="#imagery">Imagery</a><a href="#layout-2">Layout</a><a href="#agent-prompt-guide">Agent Prompt Guide</a><a href="#quick-color-reference">Quick Color Reference</a><a href="#example-component-prompts">Example Component Prompts</a><a href="#similar-brands">Similar Brands</a><a href="#quick-start">Quick Start</a></aside><main class="document"><h1>UGLYCASH — Style Reference</h1>
+<blockquote>
+<p>Sticker-covered notebook on cream paper — a vibe of irreverent, maximalist fintech that wears its chaos proudly.</p>
+</blockquote>
+<p><strong>Theme:</strong> light</p>
+<p>UGLYCASH runs a sticker-bombed Gen-Z finance language: warm light canvas, oversized black display type, and a riot of vivid accent panels (hot pink, electric cyan, toxic lime, dusty khaki) splashed across mostly achromatic layouts. The signature move is a heavy black hairline (1px) that traces every surface — cards, phone frames, buttons, illustrations — giving the impression of printed stickers peeled onto a page. Radii are exaggerated (16px for controls, 38–46px for hero cards) to amplify the soft, toy-like feel, while the palette stays disciplined: one neutral canvas, one neutral surface, and three or four saturated brand colors used as full-bleed card fills rather than thin accents. Headlines shout at 85–164px with negative tracking; body text retreats to 14–18px Inter. Everything reads as fast, loud, and deliberately unpolished.</p>
+<h2 id="tokens-colors">Tokens — Colors</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Value</th>
+<th>Token</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Static Black</td>
+<td><code>#000000</code></td>
+<td><code>--color-static-black</code></td>
+<td>Text, borders, icon strokes, button outlines — the structural ink that outlines every sticker-like surface and carries all body and heading type</td>
+</tr>
+<tr>
+<td>Paper Cream</td>
+<td><code>#f2f2f2</code></td>
+<td><code>--color-paper-cream</code></td>
+<td>Page canvas, body backgrounds, and soft section fills</td>
+</tr>
+<tr>
+<td>Card White</td>
+<td><code>#ffffff</code></td>
+<td><code>--color-card-white</code></td>
+<td>Elevated card surfaces and inverse text on dark panels</td>
+</tr>
+<tr>
+<td>Surface Graphite</td>
+<td><code>#3a3a3a</code></td>
+<td><code>--color-surface-graphite</code></td>
+<td>Dark card and panel fills for inverted sections</td>
+</tr>
+<tr>
+<td>Hardware Ink</td>
+<td><code>#000100</code></td>
+<td><code>--color-hardware-ink</code></td>
+<td>Near-black phone-frame and hardware fills (visually indistinguishable from #000000, used on device mockups)</td>
+</tr>
+<tr>
+<td>Hairline Smoke</td>
+<td><code>#6e6e6e</code></td>
+<td><code>--color-hairline-smoke</code></td>
+<td>Muted body text and secondary borders</td>
+</tr>
+<tr>
+<td>Placeholder Ash</td>
+<td><code>#888888</code></td>
+<td><code>--color-placeholder-ash</code></td>
+<td>Helper text, disabled-state type, and low-priority metadata</td>
+</tr>
+<tr>
+<td>Sticker Khaki</td>
+<td><code>#e7e3bf</code></td>
+<td><code>--color-sticker-khaki</code></td>
+<td>Card and panel fills — dusty olive-cream that reads as vintage paper against the white canvas</td>
+</tr>
+<tr>
+<td>Riot Pink</td>
+<td><code>#fa00ff</code></td>
+<td><code>--color-riot-pink</code></td>
+<td>Saturated card fills, sticker backgrounds, hero callouts — the loudest voice in the accent set</td>
+</tr>
+<tr>
+<td>Voltage Cyan</td>
+<td><code>#02bbff</code></td>
+<td><code>--color-voltage-cyan</code></td>
+<td>Saturated card fills and feature panel backgrounds — secondary brand voice, often paired with phone mockup screenshots</td>
+</tr>
+<tr>
+<td>Toxic Lime</td>
+<td><code>#adff02</code></td>
+<td><code>--color-toxic-lime</code></td>
+<td>Green action color for filled buttons, selected navigation states, and focused conversion moments</td>
+</tr>
+</tbody></table>
+<h2 id="tokens-typography">Tokens — Typography</h2>
+<h3 id="helvetica-now-display-cn-bold-display-and-headline-voice-compressed-ultra-bold-negative-tracking-0-033em-at-85-164px-carries-the-page-39-s-identity-shouty-statements-like-164px-section-openers-substitute-with-39-helvetica-neue-condensed-bold-39-or-39-roboto-condensed-900-39-font-helvetica-now-display-cn-bold">Helvetica Now Display Cn Bold — Display and headline voice — compressed, ultra-bold, negative tracking (-0.033em at 85–164px). Carries the page&#39;s identity: shouty statements like 164px section openers. Substitute with &#39;Helvetica Neue Condensed Bold&#39; or &#39;Roboto Condensed 900&#39;. · <code>--font-helvetica-now-display-cn-bold</code></h3>
+<ul>
+<li><strong>Substitute:</strong> Helvetica Neue Condensed Bold or Roboto Condensed 900</li>
+<li><strong>Weights:</strong> 700, 900</li>
+<li><strong>Sizes:</strong> 20px, 64px, 85px, 164px</li>
+<li><strong>Line height:</strong> 0.85, 0.94, 1.20</li>
+<li><strong>Letter spacing:</strong> -0.033em at display sizes, -0.020em at 20px</li>
+<li><strong>Role:</strong> Display and headline voice — compressed, ultra-bold, negative tracking (-0.033em at 85–164px). Carries the page&#39;s identity: shouty statements like 164px section openers. Substitute with &#39;Helvetica Neue Condensed Bold&#39; or &#39;Roboto Condensed 900&#39;.</li>
+</ul>
+<h3 id="inter-body-ui-navigation-and-small-headings-weight-400-for-body-500-for-emphasis-700-for-subheadings-letter-spacing-0-02em-tightens-the-ui-text-free-google-font-font-inter">Inter — Body, UI, navigation, and small headings. Weight 400 for body, 500 for emphasis, 700 for subheadings. Letter-spacing -0.02em tightens the UI text. Free Google Font. · <code>--font-inter</code></h3>
+<ul>
+<li><strong>Substitute:</strong> Inter</li>
+<li><strong>Weights:</strong> 400, 500, 700</li>
+<li><strong>Sizes:</strong> 12px, 14px, 18px, 20px, 24px</li>
+<li><strong>Line height:</strong> 1.17, 1.20, 1.22, 1.29, 1.33, 1.40</li>
+<li><strong>Letter spacing:</strong> -0.02em</li>
+<li><strong>Role:</strong> Body, UI, navigation, and small headings. Weight 400 for body, 500 for emphasis, 700 for subheadings. Letter-spacing -0.02em tightens the UI text. Free Google Font.</li>
+</ul>
+<h3 id="miss-fajardose-hand-lettered-display-accent-used-sparingly-one-observation-for-a-personal-signature-on-a-card-substitute-with-39-caveat-brush-39-or-39-permanent-marker-39-for-the-same-marker-on-paper-feel-font-miss-fajardose">Miss Fajardose — Hand-lettered display accent — used sparingly (one observation) for a personal signature on a card. Substitute with &#39;Caveat Brush&#39; or &#39;Permanent Marker&#39; for the same marker-on-paper feel. · <code>--font-miss-fajardose</code></h3>
+<ul>
+<li><strong>Substitute:</strong> Caveat Brush or Permanent Marker</li>
+<li><strong>Weights:</strong> 400</li>
+<li><strong>Sizes:</strong> 38px</li>
+<li><strong>Line height:</strong> 1.20</li>
+<li><strong>Role:</strong> Hand-lettered display accent — used sparingly (one observation) for a personal signature on a card. Substitute with &#39;Caveat Brush&#39; or &#39;Permanent Marker&#39; for the same marker-on-paper feel.</li>
+</ul>
+<h3 id="system-sans-serif-fallback-body-fallback-appears-in-357-instances-as-the-default-rendering-surface-for-generic-ui-chrome-and-inline-text-nodes-font-system-sans-serif">System sans-serif — Fallback body fallback; appears in 357 instances as the default rendering surface for generic UI chrome and inline text nodes. · <code>--font-system-sans-serif</code></h3>
+<ul>
+<li><strong>Substitute:</strong> system-ui</li>
+<li><strong>Weights:</strong> 400</li>
+<li><strong>Sizes:</strong> 12px</li>
+<li><strong>Line height:</strong> 1.20</li>
+<li><strong>Role:</strong> Fallback body fallback; appears in 357 instances as the default rendering surface for generic UI chrome and inline text nodes.</li>
+</ul>
+<h3 id="type-scale">Type Scale</h3>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Size</th>
+<th>Line Height</th>
+<th>Letter Spacing</th>
+<th>Token</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>caption</td>
+<td>12px</td>
+<td>1.2</td>
+<td>-0.24px</td>
+<td><code>--text-caption</code></td>
+</tr>
+<tr>
+<td>body-sm</td>
+<td>14px</td>
+<td>1.29</td>
+<td>—</td>
+<td><code>--text-body-sm</code></td>
+</tr>
+<tr>
+<td>body</td>
+<td>18px</td>
+<td>1.33</td>
+<td>-0.36px</td>
+<td><code>--text-body</code></td>
+</tr>
+<tr>
+<td>subheading</td>
+<td>20px</td>
+<td>1.2</td>
+<td>-0.4px</td>
+<td><code>--text-subheading</code></td>
+</tr>
+<tr>
+<td>heading-sm</td>
+<td>24px</td>
+<td>1.22</td>
+<td>-0.48px</td>
+<td><code>--text-heading-sm</code></td>
+</tr>
+<tr>
+<td>heading</td>
+<td>64px</td>
+<td>0.94</td>
+<td>-1.28px</td>
+<td><code>--text-heading</code></td>
+</tr>
+<tr>
+<td>heading-lg</td>
+<td>85px</td>
+<td>0.85</td>
+<td>-2.81px</td>
+<td><code>--text-heading-lg</code></td>
+</tr>
+<tr>
+<td>display</td>
+<td>164px</td>
+<td>0.85</td>
+<td>-5.41px</td>
+<td><code>--text-display</code></td>
+</tr>
+</tbody></table>
+<h2 id="tokens-spacing-amp-shapes">Tokens — Spacing &amp; Shapes</h2>
+<p><strong>Density:</strong> comfortable</p>
+<h3 id="spacing-scale">Spacing Scale</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Value</th>
+<th>Token</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>4</td>
+<td>4px</td>
+<td><code>--spacing-4</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td>5px</td>
+<td><code>--spacing-5</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td>9px</td>
+<td><code>--spacing-9</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td>10px</td>
+<td><code>--spacing-10</code></td>
+</tr>
+<tr>
+<td>16</td>
+<td>16px</td>
+<td><code>--spacing-16</code></td>
+</tr>
+<tr>
+<td>20</td>
+<td>20px</td>
+<td><code>--spacing-20</code></td>
+</tr>
+<tr>
+<td>24</td>
+<td>24px</td>
+<td><code>--spacing-24</code></td>
+</tr>
+<tr>
+<td>27</td>
+<td>27px</td>
+<td><code>--spacing-27</code></td>
+</tr>
+<tr>
+<td>34</td>
+<td>34px</td>
+<td><code>--spacing-34</code></td>
+</tr>
+<tr>
+<td>96</td>
+<td>96px</td>
+<td><code>--spacing-96</code></td>
+</tr>
+<tr>
+<td>168</td>
+<td>168px</td>
+<td><code>--spacing-168</code></td>
+</tr>
+</tbody></table>
+<h3 id="border-radius">Border Radius</h3>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cards</td>
+<td>16px</td>
+</tr>
+<tr>
+<td>buttons</td>
+<td>16px</td>
+</tr>
+<tr>
+<td>hairline</td>
+<td>1px</td>
+</tr>
+<tr>
+<td>heroCards</td>
+<td>38px</td>
+</tr>
+<tr>
+<td>phoneFrames</td>
+<td>43px</td>
+</tr>
+<tr>
+<td>featurePanels</td>
+<td>46px</td>
+</tr>
+</tbody></table>
+<h3 id="layout">Layout</h3>
+<ul>
+<li><strong>Page max-width:</strong> 1200px</li>
+<li><strong>Section gap:</strong> 96px</li>
+<li><strong>Card padding:</strong> 24px</li>
+<li><strong>Element gap:</strong> 10px</li>
+</ul>
+<h2 id="components">Components</h2>
+<h3 id="floating-navigation-pill">Floating Navigation Pill</h3>
+<p><strong>Role:</strong> Persistent top header</p>
+<p>White (#ffffff) pill, 16px radius, 1px black border, fixed at the top center of the viewport. Contains the wordmark left-aligned, social icons centered, and a black-bordered &#39;Get the App&#39; ghost button on the right with a small black square icon. Padding roughly 10px vertical, 20px horizontal.</p>
+<h3 id="ghost-navigation-button-get-the-app">Ghost Navigation Button (Get the App)</h3>
+<p><strong>Role:</strong> Secondary header action</p>
+<p>White background, 1px black border, 16px radius, Inter 14px weight 500, black text, padding 5–10px. Left-side 20px black square icon.</p>
+<h3 id="display-headline-block">Display Headline Block</h3>
+<p><strong>Role:</strong> Hero and section openers</p>
+<p>Helvetica Now Display Cn Bold 85–164px, weight 900, line-height 0.85, letter-spacing -0.033em (-2.81px at 85px, -5.41px at 164px), color #000000, centered or left-aligned at 168px page padding. The condensed bold caps are the loudest element on any screen.</p>
+<h3 id="feature-card-saturated-sticker">Feature Card (Saturated Sticker)</h3>
+<p><strong>Role:</strong> Three-up feature showcase</p>
+<p>Full-bleed saturated fill (Riot Pink #fa00ff, Voltage Cyan #02bbff, or Sticker Khaki #e7e3bf), 1px black border, 16px radius, 24px padding. Contains a tilted phone-mockup illustration and a heading. Cards sit on a 34px column gap.</p>
+<h3 id="sticker-card-khaki">Sticker Card (Khaki)</h3>
+<p><strong>Role:</strong> Neutral feature card</p>
+<p>Sticker Khaki (#e7e3bf) fill, 1px black border, 16px radius, 24px padding, no shadow. Used when a card needs visual weight without screaming a brand color.</p>
+<h3 id="dark-panel-card">Dark Panel Card</h3>
+<p><strong>Role:</strong> Inverted surface for bank/account listings</p>
+<p>Surface Graphite (#3a3a3a) or Hardware Ink (#000100) fill, white (#ffffff) text, 1px black border, 16–46px radius. Hosts list rows with flag icons, country names, and outlined &#39;Open&#39; buttons.</p>
+<h3 id="toxic-lime-pill-button">Toxic Lime Pill Button</h3>
+<p><strong>Role:</strong> Primary action in lists or CTAs</p>
+<p>Toxic Lime (#adff02) background, 1px black border, 16px radius, Inter 14px weight 700, black text, padding 5–10px. The only filled color CTA in the system.</p>
+<h3 id="outlined-open-button">Outlined Open Button</h3>
+<p><strong>Role:</strong> Row-level action inside account lists</p>
+<p>White (#ffffff) background, 1px black border, 16px radius, Inter 14px weight 500 black text, padding 5–10px.</p>
+<h3 id="bank-account-row">Bank Account Row</h3>
+<p><strong>Role:</strong> List item inside Dark Panel Card</p>
+<p>White interior surface inside a dark panel, 1px black border, 8–16px radius. Left: 24px square flag icon. Center: country name (Inter 18px weight 700) over muted helper text (Inter 14px weight 400 in #6e6e6e). Right: Outlined Open Button.</p>
+<h3 id="phone-mockup-frame">Phone Mockup Frame</h3>
+<p><strong>Role:</strong> Product preview</p>
+<p>Hardware Ink (#000100) or Surface Graphite (#3a3a3a) body, 1px black border, 43px outer radius with 8–16px offset duplicate frame creating the peeled-sticker effect. Interior shows the app screen on a white card.</p>
+<h3 id="tilted-sticker-illustration">Tilted Sticker Illustration</h3>
+<p><strong>Role:</strong> Decorative motif across cards</p>
+<p>Saturated fills (#fa00ff, #02bbff, #adff02, #e7e3bf) with 1px black borders, rotated -8° to +12°, sitting on top of card surfaces as if physically pasted on. Often contains bold short copy or iconography.</p>
+<h3 id="footer-social-row">Footer Social Row</h3>
+<p><strong>Role:</strong> Brand/footer micro-interaction</p>
+<p>Inline icon group (Discord, Instagram) rendered as 16–20px black-filled glyphs inside the navigation pill. No background, no border, 10px gap between icons.</p>
+<h3 id="section-title-h2">Section Title (H2)</h3>
+<p><strong>Role:</strong> Mid-page section headers</p>
+<p>Helvetica Now Display Cn Bold 64px, weight 700, line-height 0.94, letter-spacing -0.02em (-1.28px), color #000000, left-aligned, 96px section padding above/below.</p>
+<h3 id="card-caption-sub-label">Card Caption (Sub-label)</h3>
+<p><strong>Role:</strong> Two-line card description</p>
+<p>Inter 18px weight 500, line-height 1.33, color #000000. Always rendered as a two-line stack: action verb first, benefit clause second.</p>
+<h2 id="do-39-s-and-don-39-ts">Do&#39;s and Don&#39;ts</h2>
+<h3 id="do">Do</h3>
+<ul>
+<li>Use 1px solid #000000 borders on every card, button, and phone frame — borders are the load-bearing structure, not shadows</li>
+<li>Use Helvetica Now Display Cn Bold at 85–164px with letter-spacing -0.033em for section openers; never let body text reach display sizes</li>
+<li>Reach for the saturated brand colors (#fa00ff, #02bbff, #adff02, #e7e3bf) as full card or panel fills, never as thin text accents</li>
+<li>Set card and button radius to 16px; escalate to 38–46px only for hero-scale panels and phone frames</li>
+<li>Keep the page canvas at #f2f2f2 and default card surface at #ffffff; let the saturated stickers do the loud work on top</li>
+<li>Use Inter for everything below 24px — body, UI, navigation, captions — at 14–18px with -0.02em tracking</li>
+<li>Maintain 96px vertical section gaps and 10–20px element gaps to preserve the comfortable, sticker-pasted rhythm</li>
+</ul>
+<h3 id="don-39-t">Don&#39;t</h3>
+<ul>
+<li>Do not add drop shadows; elevation is drawn with borders and offset duplicate frames</li>
+<li>Do not use the saturated brand colors for thin underlines, icon strokes, or 1px borders — they need fill to read as stickers</li>
+<li>Do not use more than two type families on a single surface; Helvetica Now + Inter (or one handwritten accent) is the ceiling</li>
+<li>Do not push body text below 14px or above 20px — the UI scale is tight and the contrast assumes 14–18px body</li>
+<li>Do not set radius to 0 or to 9999px; the system lives in the 1px / 16px / 38–46px range</li>
+<li>Do not use the brand colors as text color on white backgrounds — black text on saturated fills, white text only on #000100/#3a3a3a panels</li>
+<li>Do not let display headlines wrap before 4 words; the 164px size assumes 1–3 short lines at 0.85 line-height</li>
+</ul>
+<h2 id="surfaces">Surfaces</h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Name</th>
+<th>Value</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>Canvas Cream</td>
+<td><code>#f2f2f2</code></td>
+<td>Page background and outer gutter</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Card White</td>
+<td><code>#ffffff</code></td>
+<td>Default product/feature card surface</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Sticker Khaki</td>
+<td><code>#e7e3bf</code></td>
+<td>Tinted feature panel and section background</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Surface Graphite</td>
+<td><code>#3a3a3a</code></td>
+<td>Inverted dark sections and phone-frame fills</td>
+</tr>
+</tbody></table>
+<h2 id="elevation">Elevation</h2>
+<ul>
+<li><strong>Sticker Cards:</strong> <code>1px solid #000000 — borders carry the weight</code></li>
+<li><strong>Phone Mockups:</strong> <code>1px solid #000000 with optional 8–16px offset duplicate frame for the peeled-sticker depth illusion</code></li>
+</ul>
+<h2 id="imagery">Imagery</h2>
+<p>Imagery is dominated by tilted, sticker-style illustrations of credit cards, percentage badges, candy/gem shapes, and phone mockups — all rendered with 1px black outlines and saturated fills as if die-cut and pasted onto the page. Photography is absent. Phone mockups appear repeatedly, sometimes overlapping cards at -8° to +12° rotations. Icons are flat, single-color, and outline-stroked in black. The visual register is printed-ephemera, not polished product render.</p>
+<h2 id="layout-2">Layout</h2>
+<p>Max-width 1200px centered, with the navigation rendered as a floating pill (not a full-width bar). The hero is a centered stacked composition: small floating nav, two-line 164px headline, then a phone mockup directly below. Mid-page alternates a three-column feature card row (16px radius, 24px column gap) with two-line captions beneath. A 168px horizontal padding wraps the hero, and 96px vertical gaps separate major sections. The bank-listing section uses a single dark panel with stacked white rows rather than a grid. Overall density is comfortable — generous whitespace between sections, tight rhythm inside cards.</p>
+<h2 id="agent-prompt-guide">Agent Prompt Guide</h2>
+<h2 id="quick-color-reference">Quick Color Reference</h2>
+<ul>
+<li>text: #000000</li>
+<li>background: #f2f2f2</li>
+<li>surface (card): #ffffff</li>
+<li>border: #000000 (1px, non-negotiable)</li>
+<li>accent sticker fills: #fa00ff (Riot Pink), #02bbff (Voltage Cyan), #adff02 (Toxic Lime), #e7e3bf (Sticker Khaki)</li>
+<li>primary action: no distinct CTA color</li>
+</ul>
+<h2 id="example-component-prompts">Example Component Prompts</h2>
+<ol>
+<li><strong>Floating Nav Pill</strong>: white (#ffffff) pill, 1px #000000 border, 16px radius, 10px/20px padding, fixed top-center, contains &#39;UGLYCASH&#39; wordmark left, Discord + Instagram black icons middle, &#39;Get the App&#39; ghost button right (white fill, 1px #000000 border, 16px radius, Inter 14/500).</li>
+<li><strong>Display Headline Section</strong>: 164px Helvetica Now Display Cn Bold weight 900, #000000, line-height 0.85, letter-spacing -5.41px, centered, with 168px horizontal page padding and 96px vertical gap below.</li>
+<li><strong>Three-Up Feature Card Row</strong>: three cards on a 24px column gap, each 16px radius with 1px #000000 border. Card 1 fill #e7e3bf, Card 2 fill #fa00ff, Card 3 fill #02bbff. Each card has 24px padding, a tilted phone mockup inside, and below the row a two-line caption in Inter 18/500 #000000.</li>
+<li><strong>Toxic Lime Pill Action</strong>: #adff02 background, 1px #000000 border, 16px radius, Inter 14/700 #000000, padding 5px/10px, sits inside any card or panel as a list-level action.</li>
+<li><strong>Dark Bank-Listing Panel</strong>: #3a3a3a fill, 1px #000000 border, 46px radius, 24px padding, containing white (#ffffff) interior rows with 16px radius, flag icon left, Inter 18/700 country name, Inter 14/400 #6e6e6e helper text, and a white-fill outlined &#39;Open&#39; button right.</li>
+</ol>
+<h2 id="similar-brands">Similar Brands</h2>
+<ul>
+<li><strong>Cash App</strong> — Same bright-against-neutral sticker aesthetic with single-vivid accent panels and oversized bold type, but UGLYCASH pushes the outlined-sticker border treatment harder</li>
+<li><strong>Revolut</strong> — Comparable fintech information architecture (multi-currency account lists inside dark panels), though UGLYCASH swaps Revolut&#39;s purple for a louder neon-pink/cyan/lime palette and a brutalist border language</li>
+<li><strong>Gumroad</strong> — Shares the irreverent Gen-Z tone, sticker-style illustration treatment, and a cream-and-black canvas that lets saturated accent colors do the work</li>
+<li><strong>Pimento</strong> — Tilted illustrated cards, condensed display headlines, and a paper-on-paste visual metaphor are virtually identical in approach</li>
+</ul>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="css-custom-properties">CSS Custom Properties</h3>
+<pre><code class="language-css">:root {
+  /* Colors */
+  --color-static-black: #000000;
+  --color-paper-cream: #f2f2f2;
+  --color-card-white: #ffffff;
+  --color-surface-graphite: #3a3a3a;
+  --color-hardware-ink: #000100;
+  --color-hairline-smoke: #6e6e6e;
+  --color-placeholder-ash: #888888;
+  --color-sticker-khaki: #e7e3bf;
+  --color-riot-pink: #fa00ff;
+  --color-voltage-cyan: #02bbff;
+  --color-toxic-lime: #adff02;
+
+  /* Typography — Font Families */
+  --font-helvetica-now-display-cn-bold: &#39;Helvetica Now Display Cn Bold&#39;, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif;
+  --font-inter: &#39;Inter&#39;, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif;
+  --font-miss-fajardose: &#39;Miss Fajardose&#39;, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif;
+  --font-system-sans-serif: &#39;System sans-serif&#39;, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif;
+
+  /* Typography — Scale */
+  --text-caption: 12px;
+  --leading-caption: 1.2;
+  --tracking-caption: -0.24px;
+  --text-body-sm: 14px;
+  --leading-body-sm: 1.29;
+  --text-body: 18px;
+  --leading-body: 1.33;
+  --tracking-body: -0.36px;
+  --text-subheading: 20px;
+  --leading-subheading: 1.2;
+  --tracking-subheading: -0.4px;
+  --text-heading-sm: 24px;
+  --leading-heading-sm: 1.22;
+  --tracking-heading-sm: -0.48px;
+  --text-heading: 64px;
+  --leading-heading: 0.94;
+  --tracking-heading: -1.28px;
+  --text-heading-lg: 85px;
+  --leading-heading-lg: 0.85;
+  --tracking-heading-lg: -2.81px;
+  --text-display: 164px;
+  --leading-display: 0.85;
+  --tracking-display: -5.41px;
+
+  /* Typography — Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  /* Spacing */
+  --spacing-4: 4px;
+  --spacing-5: 5px;
+  --spacing-9: 9px;
+  --spacing-10: 10px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-27: 27px;
+  --spacing-34: 34px;
+  --spacing-96: 96px;
+  --spacing-168: 168px;
+
+  /* Layout */
+  --page-max-width: 1200px;
+  --section-gap: 96px;
+  --card-padding: 24px;
+  --element-gap: 10px;
+
+  /* Border Radius */
+  --radius-sm: 1px;
+  --radius-lg: 8.2px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-2xl-2: 23px;
+  --radius-3xl: 38px;
+  --radius-3xl-2: 43px;
+  --radius-3xl-3: 46px;
+  --radius-full: 50px;
+  --radius-full-2: 100px;
+
+  /* Named Radii */
+  --radius-cards: 16px;
+  --radius-buttons: 16px;
+  --radius-hairline: 1px;
+  --radius-herocards: 38px;
+  --radius-phoneframes: 43px;
+  --radius-featurepanels: 46px;
+
+  /* Surfaces */
+  --surface-canvas-cream: #f2f2f2;
+  --surface-card-white: #ffffff;
+  --surface-sticker-khaki: #e7e3bf;
+  --surface-surface-graphite: #3a3a3a;
+}
+</code></pre>
+<h3 id="tailwind-v4">Tailwind v4</h3>
+<pre><code class="language-css">@theme {
+  /* Colors */
+  --color-static-black: #000000;
+  --color-paper-cream: #f2f2f2;
+  --color-card-white: #ffffff;
+  --color-surface-graphite: #3a3a3a;
+  --color-hardware-ink: #000100;
+  --color-hairline-smoke: #6e6e6e;
+  --color-placeholder-ash: #888888;
+  --color-sticker-khaki: #e7e3bf;
+  --color-riot-pink: #fa00ff;
+  --color-voltage-cyan: #02bbff;
+  --color-toxic-lime: #adff02;
+
+  /* Typography */
+  --font-helvetica-now-display-cn-bold: &#39;Helvetica Now Display Cn Bold&#39;, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif;
+  --font-inter: &#39;Inter&#39;, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif;
+  --font-miss-fajardose: &#39;Miss Fajardose&#39;, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif;
+  --font-system-sans-serif: &#39;System sans-serif&#39;, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif;
+
+  /* Typography — Scale */
+  --text-caption: 12px;
+  --leading-caption: 1.2;
+  --tracking-caption: -0.24px;
+  --text-body-sm: 14px;
+  --leading-body-sm: 1.29;
+  --text-body: 18px;
+  --leading-body: 1.33;
+  --tracking-body: -0.36px;
+  --text-subheading: 20px;
+  --leading-subheading: 1.2;
+  --tracking-subheading: -0.4px;
+  --text-heading-sm: 24px;
+  --leading-heading-sm: 1.22;
+  --tracking-heading-sm: -0.48px;
+  --text-heading: 64px;
+  --leading-heading: 0.94;
+  --tracking-heading: -1.28px;
+  --text-heading-lg: 85px;
+  --leading-heading-lg: 0.85;
+  --tracking-heading-lg: -2.81px;
+  --text-display: 164px;
+  --leading-display: 0.85;
+  --tracking-display: -5.41px;
+
+  /* Spacing */
+  --spacing-4: 4px;
+  --spacing-5: 5px;
+  --spacing-9: 9px;
+  --spacing-10: 10px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-27: 27px;
+  --spacing-34: 34px;
+  --spacing-96: 96px;
+  --spacing-168: 168px;
+
+  /* Border Radius */
+  --radius-sm: 1px;
+  --radius-lg: 8.2px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-2xl-2: 23px;
+  --radius-3xl: 38px;
+  --radius-3xl-2: 43px;
+  --radius-3xl-3: 46px;
+  --radius-full: 50px;
+  --radius-full-2: 100px;
+}
+</code></pre>
+<footer>DONECASH · Final English Handover · 9 October 2026 · Product blueprint, not a production application.</footer></main></div></body></html>

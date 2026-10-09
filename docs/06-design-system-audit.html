@@ -1,0 +1,223 @@
+<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DONECASH — Design-System Audit and Improvement Plan</title><link rel="stylesheet" href="../presentation.css"></head><body><header class="reader-top"><a href="../START-HERE.html">← Delivery portal</a><span>DONECASH · ENGLISH HANDOVER</span><a href="06-design-system-audit.md">Markdown source</a></header><div class="document-layout"><aside class="toc"><strong>IN THIS DOCUMENT</strong><a href="#1-honest-conclusion">1. Honest conclusion</a><a href="#2-original-reference-evidence">2. Original reference evidence</a><a href="#3-delivery-coverage-matrix">3. Delivery coverage matrix</a><a href="#4-brand-is-not-a-literal-landing-page-copy">4. Brand is not a literal landing-page copy</a><a href="#5-product-extension-and-recommended-improvements">5. Product extension and recommended improvements</a><a href="#6-what-the-english-prototype-improved">6. What the English prototype improved</a><a href="#7-design-approval-checklist">7. Design approval checklist</a><a href="#8-recommendation">8. Recommendation</a><a href="#9-additional-production-assets">9. Additional production assets</a><a href="#10-ios-and-android-adaptation">10. iOS and Android adaptation</a><a href="#sources">Sources</a></aside><main class="document"><h1>DONECASH — Design-System Audit and Improvement Plan</h1>
+<p>English handover edition · Original reference inspection: 13 September 2026. This handover review separates evidenced brand use from unverified production conformance.</p>
+<h2 id="1-honest-conclusion">1. Honest conclusion</h2>
+<p>The supplied foundation is used visibly and the product extension is imported by the prototype. <strong>It is not accurate to certify complete, error-free application of every design-system rule.</strong> The first preview was incomplete; the English prototype improves route coverage but still uses font fallbacks, text/glyph icons, compact type, mixed hard-coded values and illustrative rather than fully implemented component states.</p>
+<p>The earlier audit&#39;s blanket “complete” claims—especially minimum body typography and accessibility—are not repeated as certified results. The delivery includes all supplied design-system files unmodified and documents the non-destructive product layer separately.</p>
+<h2 id="2-original-reference-evidence">2. Original reference evidence</h2>
+<p>The source audit recorded local review of <code>DESIGN (1).md</code>, <code>tokens.json</code>, <code>variables.css</code>, <code>theme.css</code>, DONECASH PNG/SVG assets and the UGLYCASH site. Its reported measurements were:</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Reference observation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Canvas</td>
+<td><code>#f2f2f2</code></td>
+</tr>
+<tr>
+<td>Structure</td>
+<td>Black text/borders</td>
+</tr>
+<tr>
+<td>Display typography</td>
+<td>Helvetica Now Display Cn Bold</td>
+</tr>
+<tr>
+<td>UI/body</td>
+<td>Inter with Roboto/SF Pro/system surfaces</td>
+</tr>
+<tr>
+<td>Display sizes</td>
+<td>164, 85 and 64px marketing scale</td>
+</tr>
+<tr>
+<td>Small/body sizes</td>
+<td>12, 14, 18, 20 and 24px</td>
+</tr>
+<tr>
+<td>Accents</td>
+<td>Cyan <code>#02bbff</code>, Pink <code>#fa00ff</code>, Lime <code>#adff02</code>, Khaki <code>#e7e3bf</code></td>
+</tr>
+<tr>
+<td>Dark</td>
+<td><code>#000100</code>, <code>#3a3a3a</code></td>
+</tr>
+<tr>
+<td>Large radii</td>
+<td>38, 43 and 46px</td>
+</tr>
+<tr>
+<td>Control radii</td>
+<td>Approximately 15–16px; secondary 23px</td>
+</tr>
+<tr>
+<td>Composition</td>
+<td>Oversized headline, phone frame, floating navigation and outlined sticker character</td>
+</tr>
+</tbody></table>
+<p>Those are retained historical observations, not a new October site measurement. Secondary grays must be semantic tokens rather than copied ad hoc.</p>
+<h2 id="3-delivery-coverage-matrix">3. Delivery coverage matrix</h2>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Delivery evidence</th>
+<th>Assessment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cream canvas, white/dark surfaces and saturated panels</td>
+<td>Visible in hub/mobile/backoffice</td>
+<td>Applied brand foundation</td>
+</tr>
+<tr>
+<td>Black structural borders and no conventional shadows</td>
+<td>Prototype CSS treatment</td>
+<td>Applied core visual language</td>
+</tr>
+<tr>
+<td>Lime primary actions</td>
+<td>Primary buttons and selection</td>
+<td>Applied</td>
+</tr>
+<tr>
+<td>Supplied logo/icon</td>
+<td>Local PNG/SVG references</td>
+<td>Applied; original masters included</td>
+</tr>
+<tr>
+<td>Large frame/marketing composition</td>
+<td>Prototype phone/hub</td>
+<td>Applied with contextual variants</td>
+</tr>
+<tr>
+<td>Original typography</td>
+<td>Family aliases/system and condensed fallbacks</td>
+<td>Not guaranteed font matching; font files absent</td>
+</tr>
+<tr>
+<td>Minimum readable body text</td>
+<td>Several selectors use 10–12px</td>
+<td>Requires production sizing review; not fully conformant</td>
+</tr>
+<tr>
+<td>Exact token/radius discipline</td>
+<td>Source includes 28/30px and direct values</td>
+<td>Contextual variants need documented aliases or alignment</td>
+</tr>
+<tr>
+<td>Comfortable spacing</td>
+<td>Product and dense operations layouts differ</td>
+<td>Intentional density extension, not identical marketing rhythm</td>
+</tr>
+<tr>
+<td>All component states</td>
+<td>Default pages plus selected examples</td>
+<td>Not exhaustive interactive state coverage</td>
+</tr>
+<tr>
+<td>English-first UI</td>
+<td>36 mobile and 22 operations route labels/content</td>
+<td>Applied; future Arabic is not implemented</td>
+</tr>
+<tr>
+<td>Accessibility/device certification</td>
+<td>Requirements and platform shell only</td>
+<td>Not verified; native QA remains</td>
+</tr>
+</tbody></table>
+<h2 id="4-brand-is-not-a-literal-landing-page-copy">4. Brand is not a literal landing-page copy</h2>
+<p>Separate brand expression (logo, palette, condensed headings, sticker decoration) from product clarity (readable names/numbers/forms/statuses) and operations density (tables, timelines, masking/approvals). Marketing&#39;s 164px type and tilted illustrations should not be imposed on financial review screens.</p>
+<h2 id="5-product-extension-and-recommended-improvements">5. Product extension and recommended improvements</h2>
+<p>The included <a href="../Design%20System/product-extension.css">product-extension.css</a> extends rather than replaces <a href="../Design%20System/variables.css">variables.css</a>. Review the actual file for the implemented aliases; the following is the intended extension contract, not a claim that every component consumes every token.</p>
+<h3 id="semantic-colors">Semantic colors</h3>
+<pre><code class="language-css">--color-status-success-bg: #adff02;
+--color-status-processing-bg: #02bbff;
+--color-status-attention-bg: #e7e3bf;
+--color-status-danger-bg: #ffd8d8;
+--color-status-danger-ink: #7a0000;
+--color-focus-ring: #000000;
+--color-disabled-bg: #e3e3e3;
+--color-disabled-ink: #6e6e6e;
+--color-divider: #c8c8c8;
+</code></pre>
+<p>Pink remains a brand color, not the default destructive signal. Validate every foreground/background pairing.</p>
+<h3 id="typography">Typography</h3>
+<p>Licensed condensed display font for short marketing headings; Inter 14–18px for product text; bold tabular financial numbers; 12–14px references where readable. Do not use condensed faces for long names, amounts or long action labels. Supply licensed WOFF2/OTF/TTF files for predictable rendering.</p>
+<h3 id="states-and-financial-components">States and financial components</h3>
+<p>Specify default/hover/pressed/focus/disabled/loading, validation/warning/success, selected/unread/processing and destructive confirmation. Define amount input/keypad, masked-recipient block, fee/total breakdown, status/timeline, receipt/reference, privacy/holds, limit meter and balanced ledger table.</p>
+<h3 id="operations-density">Operations density</h3>
+<p>Comfortable mobile, default web and compact operations modes; table rows around 44px minimum, role-aware ~236px sidebar and split review workspaces. Reveal-with-reason is a standard component. Bulk actions must not enable uncontrolled money changes.</p>
+<h3 id="accessibility-and-responsive-layout">Accessibility and responsive layout</h3>
+<p>48px mobile and approximately 40px web targets, visible 2px focus ring/offset, non-color status cues and documented 200% scaling. Define compact mobile 320–374, standard mobile 375–479, tablet 768–1023, operations 1024–1439 and wide operations ≥1440. The prototype shell is not a validated responsive native implementation at all these sizes.</p>
+<h3 id="motion-and-icons">Motion and icons</h3>
+<p>120–180ms small transitions, 220–280ms page/sheet changes, no looping financial-success animation and reduced-motion fallback. Use one coherent 20–24px SVG icon system inside adequately sized targets. Textual symbols are prototype placeholders, not final production artwork.</p>
+<h2 id="6-what-the-english-prototype-improved">6. What the English prototype improved</h2>
+<p>English-first screen copy; full listed route representation; clickable navigation; platform-shell previews; preserved brand assets; semantic product extension; operations-specific density and financial content. It does not establish that every error/recovery path, interaction, font, target or contrast pairing has passed acceptance testing.</p>
+<h2 id="7-design-approval-checklist">7. Design approval checklist</h2>
+<p>Token rather than unexplained hex; correct font role; explicit currency/tabular numbers; structural border/elevation; approved radius; text plus shape for statuses; one clear primary action; touch/focus/keyboard/assistive states; empty/loading/error/offline/processing/disabled specs; clear English; disclosed fees. Record approval per screen and state, not solely per contact sheet.</p>
+<h2 id="8-recommendation">8. Recommendation</h2>
+<p>Retain <strong>Brand Foundation v1</strong> and evolve <strong>Product UI Extension v1</strong> without overwriting the supplied identity. Prioritize coherent semantic state patterns, readable financial UI, accessibility and operational controls over adding decorative colors. Native implementation should replace prototype-specific direct values with a reviewed shared token/component library.</p>
+<h2 id="9-additional-production-assets">9. Additional production assets</h2>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Asset</th>
+<th>Needed specification</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P0</td>
+<td>Licensed font files</td>
+<td>Selected web/native weights with clear redistribution rights</td>
+</tr>
+<tr>
+<td>P0</td>
+<td>Production icon family</td>
+<td>24px SVG grid, consistent stroke and selected states</td>
+</tr>
+<tr>
+<td>P0</td>
+<td>KYC overlays</td>
+<td>Front/back/selfie/liveness vectors without real personal data</td>
+</tr>
+<tr>
+<td>P0</td>
+<td>Store assets</td>
+<td>Native screenshots, feature graphic, adaptive Android icon and compliant store exports</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>Service pictograms</td>
+<td>Transfer, utilities, ATM, merchant and donation categories</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>Empty/error/offline art</td>
+<td>6–8 brand-consistent sticker illustrations with readable alternatives</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>Motion</td>
+<td>Short Lottie/Rive assets with static/reduced-motion fallback</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>Merchant/agent markers</td>
+<td>Verified/unavailable/degraded states</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>Marketing compositions</td>
+<td>Device/sticker scenes derived from the owned brand</td>
+</tr>
+</tbody></table>
+<p>The included Illustrator master, logos and app icons are valuable source assets. No stock portraits are required for financial screens. Production iconography and licensed fonts are the highest-priority missing visual inputs. Reference-site artwork is not included or represented as owned DONECASH artwork.</p>
+<h2 id="10-ios-and-android-adaptation">10. iOS and Android adaptation</h2>
+<p>Shared information architecture with native insets, accessibility, secure storage, biometrics and verified links. Keep biometric templates local. Implement iOS App Attest and Android Play Integrity as risk signals with unsupported-device fallback. Review golden screens at 320/375/390/430px, small/standard Android and foldable sizes, and large-text settings. Existing screenshots evidence browser design coverage only.</p>
+<h2 id="sources">Sources</h2>
+<p>UGLYCASH, <a href="https://ugly.cash/">Official product website</a>, visually inspected and computed-style sampled 13 September 2026.</p>
+<footer>DONECASH · Final English Handover · 9 October 2026 · Product blueprint, not a production application.</footer></main></div></body></html>

@@ -1,0 +1,783 @@
+<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DONECASH — Product Requirements</title><link rel="stylesheet" href="../presentation.css"></head><body><header class="reader-top"><a href="../START-HERE.html">← Delivery portal</a><span>DONECASH · ENGLISH HANDOVER</span><a href="01-product-requirements.md">Markdown source</a></header><div class="document-layout"><aside class="toc"><strong>IN THIS DOCUMENT</strong><a href="#1-product-definition-and-scope">1. Product definition and scope</a><a href="#2-stakeholder-identification">2. Stakeholder identification</a><a href="#3-requirements-gathering">3. Requirements gathering</a><a href="#4-functional-requirements">4. Functional requirements</a><a href="#5-non-functional-requirements">5. Non-functional requirements</a><a href="#6-user-stories-and-acceptance-criteria">6. User stories and acceptance criteria</a><a href="#7-minimum-viable-product">7. Minimum viable product</a><a href="#8-moscow-prioritization">8. MoSCoW prioritization</a><a href="#9-product-kpis">9. Product KPIs</a><a href="#10-open-risks-and-decisions">10. Open risks and decisions</a><a href="#sources">Sources</a></aside><main class="document"><h1>DONECASH — Product Requirements</h1>
+<p>English handover edition · Requirements baseline, not a claim that the requirements have been implemented. Targets below require validation during development and pilot operation.</p>
+<h2 id="1-product-definition-and-scope">1. Product definition and scope</h2>
+<p>An EGP digital wallet for individuals in Egypt, with merchant/agent capabilities and an integrated internal operations system. The portfolio edition uses synthetic customers and simulated providers. Real-money operation requires approved sponsorship/licensing and certified integrations.</p>
+<h3 id="goals">Goals</h3>
+<ol>
+<li>Make sending, receiving, cash services and everyday payments clear and secure.</li>
+<li>Prevent avoidable recipient, fee and duplicate-payment mistakes.</li>
+<li>Preserve financial integrity through balanced, immutable accounting.</li>
+<li>Give support, risk, compliance and finance traceable workflows with controlled authority.</li>
+<li>Provide an English-first, accessible cross-platform experience suitable for low-bandwidth use; plan Arabic/RTL localization separately.</li>
+</ol>
+<h3 id="outside-the-mvp">Outside the MVP</h3>
+<p>Lending, interest-bearing products, FX and outbound remittances, BNPL/crypto, proprietary card issuance, open-banking aggregation, children&#39;s wallets and building an owned nationwide agent network. Card funding and incoming remittance require separate commercial/technical approval.</p>
+<h2 id="2-stakeholder-identification">2. Stakeholder identification</h2>
+<table>
+<thead>
+<tr>
+<th>Stakeholder</th>
+<th>Interest</th>
+<th>Influence</th>
+<th>Engagement</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Individual customer</td>
+<td>Safe, simple sending, receiving and payment</td>
+<td>High</td>
+<td>Interviews, usability sessions, product analytics</td>
+</tr>
+<tr>
+<td>Merchant/small business</td>
+<td>QR acceptance, settlement and statements</td>
+<td>High</td>
+<td>Pilot and weekly feedback</td>
+</tr>
+<tr>
+<td>Cash agent</td>
+<td>Verified service, evidence, commission and liquidity</td>
+<td>High</td>
+<td>SOPs, training and liquidity monitoring</td>
+</tr>
+<tr>
+<td>Product owner</td>
+<td>Value, scope and priorities</td>
+<td>High</td>
+<td>Weekly product council</td>
+</tr>
+<tr>
+<td>Finance/treasury</td>
+<td>Correct balances, reconciliation and closing</td>
+<td>Critical</td>
+<td>Ledger and reconciliation sign-off</td>
+</tr>
+<tr>
+<td>Compliance/MLRO</td>
+<td>KYC, AML/CFT, screening and reporting</td>
+<td>Critical</td>
+<td>Gates before financial releases</td>
+</tr>
+<tr>
+<td>Fraud/risk</td>
+<td>Account takeover, fraud and loss prevention</td>
+<td>Critical</td>
+<td>Real-time rules and case management</td>
+</tr>
+<tr>
+<td>Customer support</td>
+<td>Resolve issues without exposing secrets or changing funds</td>
+<td>High</td>
+<td>Scoped permissions and Customer 360</td>
+</tr>
+<tr>
+<td>Engineering/SRE/security</td>
+<td>Availability, integrity and observability</td>
+<td>Critical</td>
+<td>ADRs, threat modeling and runbooks</td>
+</tr>
+<tr>
+<td>Internal audit</td>
+<td>Tamper-resistant evidence</td>
+<td>High</td>
+<td>Read-only access and periodic review</td>
+</tr>
+<tr>
+<td>CBE/NTRA</td>
+<td>Compliance, consumer protection and service stability</td>
+<td>Critical</td>
+<td>Formal approvals, reporting and communications</td>
+</tr>
+<tr>
+<td>Sponsor bank/Meeza/PSP/billers</td>
+<td>Settlement, service levels and dispute liability</td>
+<td>Critical</td>
+<td>Contracts and certification</td>
+</tr>
+<tr>
+<td>Stores/SMS/KYC vendors</td>
+<td>Distribution, delivery and verification</td>
+<td>Medium/high</td>
+<td>Vendor governance, DPA and SLA</td>
+</tr>
+</tbody></table>
+<h3 id="responsibility-matrix">Responsibility matrix</h3>
+<p>R = Responsible; A = Accountable; C = Consulted; I = Informed.</p>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Product</th>
+<th>Engineering</th>
+<th>Compliance</th>
+<th>Finance</th>
+<th>Security</th>
+<th>Operations</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MVP scope</td>
+<td>A/R</td>
+<td>C</td>
+<td>C</td>
+<td>C</td>
+<td>C</td>
+<td>C</td>
+</tr>
+<tr>
+<td>KYC/AML and limits</td>
+<td>C</td>
+<td>C</td>
+<td>A/R</td>
+<td>C</td>
+<td>C</td>
+<td>I</td>
+</tr>
+<tr>
+<td>Ledger design</td>
+<td>C</td>
+<td>R</td>
+<td>C</td>
+<td>A</td>
+<td>C</td>
+<td>I</td>
+</tr>
+<tr>
+<td>Security risk acceptance</td>
+<td>I</td>
+<td>C</td>
+<td>C</td>
+<td>I</td>
+<td>A/R</td>
+<td>I</td>
+</tr>
+<tr>
+<td>Financial reconciliation</td>
+<td>I</td>
+<td>C</td>
+<td>C</td>
+<td>A/R</td>
+<td>I</td>
+<td>C</td>
+</tr>
+<tr>
+<td>Go-live preparation</td>
+<td>A</td>
+<td>R</td>
+<td>C</td>
+<td>C</td>
+<td>C</td>
+<td>R</td>
+</tr>
+</tbody></table>
+<p>Go-live additionally requires separate recorded compliance, finance and security approvals. This clarifies the original matrix&#39;s multiple accountable signatories; it does not waive any gate.</p>
+<h2 id="3-requirements-gathering">3. Requirements gathering</h2>
+<h3 id="proposed-research-plan">Proposed research plan</h3>
+<p>No completed customer interviews or usability results are evidenced in the source files. The following is the planned validation work:</p>
+<ol>
+<li>Semi-structured interviews with 8–12 users across age, region and wallet experience.</li>
+<li>Interviews with an agent, support representative, fraud analyst, compliance officer and reconciliation accountant.</li>
+<li>Official competitor-page analysis of onboarding, transfer, withdrawal, bills and QR.</li>
+<li>CBE/NTRA and legal review covering licensing, consumer rights and accessibility.</li>
+<li>Money-movement event storming: initiated → authorized → posted → settled/failed/reversed.</li>
+<li>Prototype testing of onboarding, transfer and dispute journeys.</li>
+</ol>
+<h3 id="research-questions">Research questions</h3>
+<ul>
+<li>What makes customers confident enough to confirm a recipient? Is a masked name sufficient?</li>
+<li>Where do fees, remaining limits and processing/completed states cause confusion?</li>
+<li>How do customers behave on weak networks or delayed provider responses?</li>
+<li>Which support contacts can be prevented through better UI?</li>
+<li>What evidence do fraud analysts and accountants need to resolve a payment?</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Assumption</th>
+<th>Test</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Phone is the easiest transfer identifier</td>
+<td>Compare phone, QR and beneficiaries</td>
+<td>≥80% first-attempt success</td>
+</tr>
+<tr>
+<td>Masked recipient reduces wrong transfers</td>
+<td>Review-screen experiment</td>
+<td>≥30% fewer simulated errors</td>
+</tr>
+<tr>
+<td>Home shortcuts improve speed</td>
+<td>Task test</td>
+<td>Transfer P50 &lt;45 seconds</td>
+</tr>
+<tr>
+<td>Users understand processing</td>
+<td>Comprehension test</td>
+<td>≥85% select the correct action</td>
+</tr>
+<tr>
+<td>Upfront fees improve trust</td>
+<td>Interview and customer effort assessment</td>
+<td>Clarity ≥4/5</td>
+</tr>
+</tbody></table>
+<h2 id="4-functional-requirements">4. Functional requirements</h2>
+<h3 id="customer-application">Customer application</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Area</th>
+<th>Requirement</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FR-001</td>
+<td>Onboarding</td>
+<td>Egyptian mobile registration, OTP and trusted-device binding</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-002</td>
+<td>KYC</td>
+<td>Identity data/media capture, consent and review tracking</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-003</td>
+<td>Authentication</td>
+<td>At least six-digit MPIN, optional biometrics and safe recovery</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-004</td>
+<td>Wallet</td>
+<td>Available/held balance and daily/monthly limits</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-005</td>
+<td>P2P</td>
+<td>Recipient check, fee quote, transfer and shareable receipt</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-006</td>
+<td>Beneficiaries</td>
+<td>Saved alias and first-transfer warning</td>
+<td>Should</td>
+</tr>
+<tr>
+<td>FR-007</td>
+<td>Cash</td>
+<td>ATM/agent deposit instructions and withdrawal requests with expiring code</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-008</td>
+<td>Bills</td>
+<td>Inquiry, payment and own/other-number top-up</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-009</td>
+<td>Merchant payment</td>
+<td>QR scan, merchant/amount verification and payment</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-010</td>
+<td>Activity</td>
+<td>Search/filter, status, reference and fee details</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-011</td>
+<td>Disputes</td>
+<td>Transaction-linked case, evidence and SLA/status tracking</td>
+<td>Should</td>
+</tr>
+<tr>
+<td>FR-012</td>
+<td>Notifications</td>
+<td>Financial/security push/SMS and in-app inbox</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-013</td>
+<td>Profile</td>
+<td>Non-sensitive profile, device management, MPIN change and wallet closure</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-014</td>
+<td>Accessibility</td>
+<td>VoiceOver/TalkBack, text scaling, contrast and equivalent cues</td>
+<td>Must</td>
+</tr>
+</tbody></table>
+<h3 id="merchant-and-agent-capabilities">Merchant and agent capabilities</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requirement</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FR-101</td>
+<td>Static/dynamic merchant QR linked to a branch</td>
+<td>Should</td>
+</tr>
+<tr>
+<td>FR-102</td>
+<td>Receipts, daily settlements and downloadable statement</td>
+<td>Should</td>
+</tr>
+<tr>
+<td>FR-103</td>
+<td>Policy-controlled full/partial refund with approval</td>
+<td>Could</td>
+</tr>
+<tr>
+<td>FR-104</td>
+<td>Verified cash service and transaction evidence</td>
+<td>Should</td>
+</tr>
+<tr>
+<td>FR-105</td>
+<td>Agent liquidity and terminal/staff limits</td>
+<td>Could</td>
+</tr>
+</tbody></table>
+<p>Merchant/agent standalone portals are future implementation scope; they are not separate delivered prototypes.</p>
+<h3 id="backoffice">Backoffice</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Area</th>
+<th>Requirement</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FR-201</td>
+<td>Customer 360</td>
+<td>Controlled search, customer/KYC/wallet/device/activity context</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-202</td>
+<td>KYC</td>
+<td>Queue, review, more-information and reason-coded decisions</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-203</td>
+<td>Risk</td>
+<td>Alerts, score/evidence, linked cases and maker-checker restriction/release</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-204</td>
+<td>Transactions</td>
+<td>End-to-end trace, ledger/provider references and controlled retry/reversal</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-205</td>
+<td>Support</td>
+<td>Tickets, timeline, templates, SLA and sensitive-data masking</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-206</td>
+<td>Reconciliation</td>
+<td>Import, match, exceptions and closing</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-207</td>
+<td>Policy</td>
+<td>Versioned fees/limits by customer, channel and operation</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-208</td>
+<td>IAM</td>
+<td>RBAC, SSO/MFA, segregation of duties and access review</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-209</td>
+<td>Audit</td>
+<td>Append-only sensitive-read, change and financial-action record</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>FR-210</td>
+<td>Reporting</td>
+<td>Controlled financial, operational and regulatory exports</td>
+<td>Should</td>
+</tr>
+</tbody></table>
+<h3 id="core-business-rules">Core business rules</h3>
+<ul>
+<li>One wallet per mobile number; national-ID wallet count is regulatory policy (the original reference described up to three), not a hard-coded assumption.</li>
+<li>EGP only in the MVP; currency remains explicit on every monetary record.</li>
+<li>Debits require appropriate authorization after recipient, fee and total review.</li>
+<li>Fees/limits are effective-dated policies, with the decision version retained.</li>
+<li>Posted entries cannot be edited; corrections use linked reversing entries.</li>
+<li>Financial command endpoints require an idempotency key. Identical retries return the original result; a changed payload with the same key is rejected.</li>
+<li>Support cannot reveal MPIN/OTP, edit ledger postings or independently override compliance.</li>
+</ul>
+<h2 id="5-non-functional-requirements">5. Non-functional requirements</h2>
+<p>These are proposed production acceptance targets, not measured results.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Dimension</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NFR-001</td>
+<td>Availability</td>
+<td>Financial monthly uptime 99.95%; non-critical 99.9%</td>
+</tr>
+<tr>
+<td>NFR-002</td>
+<td>Latency</td>
+<td>Internal read P95 ≤400ms; initiation ≤1.5s excluding provider latency</td>
+</tr>
+<tr>
+<td>NFR-003</td>
+<td>Integrity</td>
+<td>Balanced journals; no negative available balance without explicit approved overdraft policy</td>
+</tr>
+<tr>
+<td>NFR-004</td>
+<td>Recovery</td>
+<td>Production-MVP RPO ≤5 minutes, RTO ≤60 minutes; quarterly restore tests</td>
+</tr>
+<tr>
+<td>NFR-005</td>
+<td>Scale</td>
+<td>Planning baseline: 1M registered, 100k DAU, peak 100 TPS; test 3× load</td>
+</tr>
+<tr>
+<td>NFR-006</td>
+<td>Security</td>
+<td>ASVS 5 level 2 baseline, MASVS, transport/storage encryption, secrets manager and staff MFA</td>
+</tr>
+<tr>
+<td>NFR-007</td>
+<td>Privacy</td>
+<td>Minimization, purpose limitation, retention matrix, DSAR and vendor DPA</td>
+</tr>
+<tr>
+<td>NFR-008</td>
+<td>Auditability</td>
+<td>Every sensitive action includes actor, device/IP, reason, correlation and appropriate before/after evidence</td>
+</tr>
+<tr>
+<td>NFR-009</td>
+<td>Accessibility</td>
+<td>WCAG 2.2 AA where applicable, 48dp targets, assistive technology and planned RTL</td>
+</tr>
+<tr>
+<td>NFR-010</td>
+<td>Observability</td>
+<td>Traces, metrics and structured logs across API, queue and provider</td>
+</tr>
+<tr>
+<td>NFR-011</td>
+<td>Compatibility</td>
+<td>Current and previous two major iOS/Android versions; graceful low-bandwidth behavior</td>
+</tr>
+<tr>
+<td>NFR-012</td>
+<td>Maintainability</td>
+<td>Domain boundaries, ≥80% ledger/risk coverage and adapter contract tests</td>
+</tr>
+<tr>
+<td>NFR-013</td>
+<td>Localization</td>
+<td>English first, externalized text; later Arabic pluralization/RTL; EGP and E.164 formatting</td>
+</tr>
+<tr>
+<td>NFR-014</td>
+<td>Explainability</td>
+<td>Internal reason code and safe customer explanation for each restriction/decline</td>
+</tr>
+</tbody></table>
+<h2 id="6-user-stories-and-acceptance-criteria">6. User stories and acceptance criteria</h2>
+<h3 id="us-01-registration-and-verification">US-01 — Registration and verification</h3>
+<p>As a new customer, I want to verify my phone and identity so that I can safely activate my wallet.</p>
+<ul>
+<li>A valid eligible phone creates a time-limited, attempt-limited OTP challenge.</li>
+<li>Wrong/expired codes do not activate the account; codes never appear in logs.</li>
+<li>Required consent records document version, time and channel; marketing is separate.</li>
+<li>Wallet activation requires approved KYC and successful MPIN setup.</li>
+</ul>
+<h3 id="us-02-login-and-device-binding">US-02 — Login and device binding</h3>
+<p>As a returning customer, I want secure access without losing control over trusted devices.</p>
+<ul>
+<li>Successful MPIN/device proof establishes a scoped session.</li>
+<li>Five failed attempts trigger the configured cooldown; limits are policy-controlled.</li>
+<li>Biometrics unlock a device-bound key rather than send biometric data to the server.</li>
+<li>A new device requires additional verification and an account-security notification.</li>
+</ul>
+<h3 id="us-03-wallet-transfer">US-03 — Wallet transfer</h3>
+<p>As a customer, I want to verify who receives my money and the total cost before sending.</p>
+<ul>
+<li>Review shows a masked recipient, amount, fee, total debit and resulting available balance.</li>
+<li>Expired quotes require refresh and reconfirmation; insufficient balance/limits prevent debit.</li>
+<li>Authorization binds customer intent to recipient, amount and quote.</li>
+<li>Duplicate identical submissions produce one financial effect and the same receipt.</li>
+<li>Notifications follow committed outcomes; external timeout displays processing, not failure.</li>
+</ul>
+<h3 id="us-04-limit-protection">US-04 — Limit protection</h3>
+<p>As a customer, I want to understand remaining capacity and avoid an invalid payment.</p>
+<ul>
+<li>Usage shows policy, window and reset timezone (Africa/Cairo).</li>
+<li>A command exceeding the effective limit is rejected before posting.</li>
+<li>Concurrent requests cannot bypass the limit.</li>
+<li>Historical decisions retain the effective policy version.</li>
+</ul>
+<h3 id="us-05-atm-agent-cash-out">US-05 — ATM/agent cash-out</h3>
+<p>As a customer, I want a withdrawal code that is secure and traceable.</p>
+<ul>
+<li>The code has a short expiry, is single-use and is bound to channel and amount.</li>
+<li>Available funds are reserved; only authoritative provider confirmation captures the hold.</li>
+<li>Expiry/cancellation safely releases eligible holds; duplicates cannot dispense/post twice.</li>
+<li>Unknown provider outcomes remain processing and enter inquiry/reconciliation.</li>
+</ul>
+<h3 id="us-06-bill-payment">US-06 — Bill payment</h3>
+<p>As a customer, I want to see what I owe and know whether the bill was paid.</p>
+<ul>
+<li>Inquiry alone creates no ledger posting.</li>
+<li>The review shows biller, subscriber reference, amount, fee and quote expiry.</li>
+<li>Duplicate bill references/requests are handled by provider-aware protection.</li>
+<li>Timeout remains processing and is resolved through inquiry/reconciliation.</li>
+</ul>
+<h3 id="us-07-merchant-qr">US-07 — Merchant QR</h3>
+<p>As a customer, I want to confirm a legitimate merchant and amount before payment.</p>
+<ul>
+<li>Invalid, expired or unverifiable QR payloads are rejected.</li>
+<li>Dynamic signed QR amount cannot be edited; static QR allows validated amount entry.</li>
+<li>Merchant name/branch, amount and fees appear before authorization.</li>
+<li>Scanning a QR alone never counts as successful payment.</li>
+</ul>
+<h3 id="us-08-activity-and-receipt">US-08 — Activity and receipt</h3>
+<p>As a customer, I want a reliable history and evidence for each payment.</p>
+<ul>
+<li>Activity filters by date/type/status using stable pagination.</li>
+<li>Detail includes timeline, amount, fee, public reference and counterparty snapshot.</li>
+<li>Receipt reflects actual status, including processing/reversal.</li>
+<li>Shared receipts contain neither identity-document data nor secrets.</li>
+</ul>
+<h3 id="us-09-transaction-dispute">US-09 — Transaction dispute</h3>
+<p>As a customer, I want to request help and follow the case without repeating payment.</p>
+<ul>
+<li>Eligibility and duplicate-open-reason checks precede submission.</li>
+<li>Evidence upload is validated and access-controlled.</li>
+<li>Case reference, SLA and message timeline remain visible.</li>
+<li>A complaint does not automatically reverse money; resolution uses approved operations.</li>
+</ul>
+<h3 id="us-10-kyc-review">US-10 — KYC review</h3>
+<p>As a KYC analyst, I want evidence and safe decision controls.</p>
+<ul>
+<li>Role/assignment permits access to watermarked, controlled document views.</li>
+<li>Approval, rejection and more-information decisions require reason codes.</li>
+<li>Sensitive/high-risk decisions follow the applicable maker-checker policy.</li>
+<li>Evidence access and decisions are audited; safe reasons reach the customer.</li>
+</ul>
+<h3 id="us-11-customer-360">US-11 — Customer 360</h3>
+<p>As a support/compliance employee, I want relevant context without unnecessary disclosure.</p>
+<ul>
+<li>Exact lookup requires a reason and is rate-limited/audited.</li>
+<li>Sensitive fields are masked; reveal requires permission and a recorded reason.</li>
+<li>Customer, KYC, wallets, devices and activity link consistently.</li>
+<li>No MPIN/OTP or editable ledger controls are exposed.</li>
+</ul>
+<h3 id="us-12-risk-investigation">US-12 — Risk investigation</h3>
+<p>As a fraud analyst, I want explainable evidence and controlled containment.</p>
+<ul>
+<li>Alerts retain rule version, input snapshot, score and time.</li>
+<li>Cases link affected customers, devices and transactions.</li>
+<li>Restriction/release requests require reason and second-person approval where applicable.</li>
+<li>Customer messaging does not disclose detection rules or accuse the customer.</li>
+</ul>
+<h3 id="us-13-reconciliation">US-13 — Reconciliation</h3>
+<p>As a reconciliation accountant, I want to resolve discrepancies without rewriting history.</p>
+<ul>
+<li>File/provider ingestion is idempotent and validates totals/references.</li>
+<li>Matching preserves internal and external evidence.</li>
+<li>Exceptions enter investigation; no direct posting edits are permitted.</li>
+<li>Approved resolution creates a linked adjustment/reversal and re-runs matching.</li>
+</ul>
+<h3 id="us-14-fee-and-limit-policy-management">US-14 — Fee and limit policy management</h3>
+<p>As an authorized policy owner, I want controlled, testable changes.</p>
+<ul>
+<li>Versions include scope and effective dates; overlapping policy selection is deterministic.</li>
+<li>Preview covers at least ten representative/boundary cases.</li>
+<li>Draft → submitted → approved → effective lifecycle separates maker and checker.</li>
+<li>Pending approvals do not affect live commands; every activation is audited.</li>
+</ul>
+<h2 id="7-minimum-viable-product">7. Minimum viable product</h2>
+<h3 id="customer-mvp">Customer MVP</h3>
+<p>Phone/OTP, consent, KYC, MPIN/device trust, balances/holds/limits, P2P, one cash rail, basic bills/top-up, verified QR, activity/receipts, financial/security notifications and basic support/security settings.</p>
+<h3 id="operations-mvp">Operations MVP</h3>
+<p>Customer 360, KYC review, transaction/ledger trace, risk cases, support, reconciliation, policy approval, RBAC and audit. Merchant/agent expansion is prioritized separately.</p>
+<h3 id="demonstration-vertical-slice">Demonstration vertical slice</h3>
+<p>Simulated deposit EGP 2,500 → transfer EGP 375 with a disclosed fee → receipt → provider timeout on a bill → processing → finance reconciliation → support case. These scenarios describe the intended end-to-end application slice; the delivered navigation prototype does not implement a financial engine.</p>
+<h3 id="future-implementation-definition-of-done">Future implementation definition of done</h3>
+<ul>
+<li>Automated acceptance coverage for Must requirements and invariant tests for accounting.</li>
+<li>No unresolved unacceptable Critical/High security findings.</li>
+<li>Restore/incident drill and operational runbooks demonstrated.</li>
+<li>At least 80% unaided critical-flow completion in moderated testing.</li>
+<li>200% text/accessibility review completed on representative devices.</li>
+</ul>
+<h2 id="8-moscow-prioritization">8. MoSCoW prioritization</h2>
+<table>
+<thead>
+<tr>
+<th>Must have</th>
+<th>Should have</th>
+<th>Could have</th>
+<th>Won&#39;t have now</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Onboarding/KYC/consent</td>
+<td>Saved beneficiaries</td>
+<td>Partner-backed virtual card</td>
+<td>Lending/BNPL</td>
+</tr>
+<tr>
+<td>MPIN/OTP/device binding</td>
+<td>Merchant portal</td>
+<td>Cashback/coupons</td>
+<td>Crypto/FX</td>
+</tr>
+<tr>
+<td>Wallet/double-entry ledger</td>
+<td>Agent operations</td>
+<td>Incoming international remittance</td>
+<td>Physical card</td>
+</tr>
+<tr>
+<td>P2P/fees/limits</td>
+<td>Advanced disputes</td>
+<td>Recurring bills</td>
+<td>Investment/savings</td>
+</tr>
+<tr>
+<td>Cash adapters</td>
+<td>English and future Arabic help</td>
+<td>Request to Pay</td>
+<td>Owned agent network</td>
+</tr>
+<tr>
+<td>Bills/top-up/QR</td>
+<td>Advanced fraud graph</td>
+<td>Merchant refunds</td>
+<td>Full microservice architecture</td>
+</tr>
+<tr>
+<td>Activity/receipts/alerts</td>
+<td>Scheduled reports</td>
+<td>Family wallets</td>
+<td>Multi-region active-active</td>
+</tr>
+<tr>
+<td>Backoffice/audit</td>
+<td>Data warehouse/BI</td>
+<td>Voice-assisted flow</td>
+<td>Offline stored value</td>
+</tr>
+<tr>
+<td>Reconciliation</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>Could items are optional expansion candidates, not committed MVP deliverables. Eligibility, safeguarding and accessibility remain Must regardless of presentation emphasis.</p>
+<h2 id="9-product-kpis">9. Product KPIs</h2>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Indicator</th>
+<th>Proposed definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Acquisition</td>
+<td>KYC completion rate</td>
+<td>Submitted / onboarding started; track approved completion separately</td>
+</tr>
+<tr>
+<td>Activation</td>
+<td>First successful value movement</td>
+<td>Within seven days of activation</td>
+</tr>
+<tr>
+<td>Engagement</td>
+<td>Transacting MAU</td>
+<td>Customer with a successful financial transaction in the month</td>
+</tr>
+<tr>
+<td>Trust</td>
+<td>Wrong-recipient contact rate</td>
+<td>Wrong-recipient complaints / completed P2P</td>
+</tr>
+<tr>
+<td>Reliability</td>
+<td>Financial success rate</td>
+<td>Completed / authorized, excluding user declines</td>
+</tr>
+<tr>
+<td>Risk</td>
+<td>Fraud loss basis points</td>
+<td>Confirmed fraud loss / processed value ×10,000</td>
+</tr>
+<tr>
+<td>Support</td>
+<td>First-contact resolution</td>
+<td>Resolved without reopening/escalation</td>
+</tr>
+<tr>
+<td>Operations</td>
+<td>Reconciliation break rate</td>
+<td>Unmatched items / external items</td>
+</tr>
+</tbody></table>
+<p>Segment by provider/channel/cohort. Report pending separately and agree measurement horizons; these are proposed definitions, not observed DONECASH metrics.</p>
+<h2 id="10-open-risks-and-decisions">10. Open risks and decisions</h2>
+<p>Sponsor/licensing model; final approved fees/limits; future USSD/non-smartphone reach; digital-financial-identity eligibility; vendor finality/reversal rules; store legal-entity requirements; customer evidence retention and accessibility sign-off. None is resolved by a visual approval alone.</p>
+<h2 id="sources">Sources</h2>
+<ol>
+<li>Central Bank of Egypt, <a href="https://www.cbe.org.eg/en/news-publications/news/2025/06/19/08/20/psos-and-psps-licensing-rules">Rules for Licensing and Registration of PSOs and PSPs</a>, 19 June 2025.</li>
+<li>Orange Egypt, <a href="https://www.orange.eg/en/services/Orange-financial-services">Orange Cash E-Wallet</a>, accessed 13 September 2026.</li>
+<li>Vodafone Egypt, <a href="https://web.vodafone.com.eg/en/vodafone-cash">Vodafone Cash</a>, accessed 13 September 2026.</li>
+<li>e&amp; Egypt, <a href="https://www.eand.com.eg/portal/pages/services/eand_money_en.html">e&amp; money</a>, accessed 13 September 2026.</li>
+<li>National Telecom Regulatory Authority, <a href="https://www.tra.gov.eg/en/mobile-wallets-regulatory-rules/">Mobile Wallets Regulatory Rules</a>, accessed 13 September 2026.</li>
+<li>NTRA, <a href="https://www.tra.gov.eg/en/ntra-issues-instructions-to-facilitate-the-use-of-mobile-e-wallet-services-for-people-of-determination/">Instructions for Mobile Wallet Accessibility</a>, 4 December 2024.</li>
+<li>OWASP, <a href="https://owasp.github.io/www-project-application-security-verification-standard/">Application Security Verification Standard 5.0</a>, 2025.</li>
+<li>OWASP, <a href="https://mas.owasp.org/MASVS/">Mobile Application Security Verification Standard</a>, accessed 13 September 2026.</li>
+<li>Android Accessibility Help, <a href="https://support.google.com/accessibility/android/answer/7101858">Touch Target Size</a>, accessed 13 September 2026.</li>
+<li>Central Bank of Egypt, <a href="https://www.cbe.org.eg/en/payment-systems-and-services/digital-financial-identity">Digital Financial Identity</a>, updated 23 August 2026.</li>
+<li>Apple Developer, <a href="https://developer.apple.com/app-store/review/guidelines/">App Review Guidelines</a>, accessed 13 September 2026.</li>
+</ol>
+<footer>DONECASH · Final English Handover · 9 October 2026 · Product blueprint, not a production application.</footer></main></div></body></html>

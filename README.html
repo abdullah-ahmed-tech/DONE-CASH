@@ -1,0 +1,95 @@
+<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DONECASH — Final English Handover</title><link rel="stylesheet" href="./presentation.css"></head><body><header class="reader-top"><a href="./START-HERE.html">← Delivery portal</a><span>DONECASH · ENGLISH HANDOVER</span><a href="README.md">Markdown source</a></header><div class="document-layout"><aside class="toc"><strong>IN THIS DOCUMENT</strong><a href="#start-here">Start here</a><a href="#deliverables">Deliverables</a><a href="#scope-and-truthfulness">Scope and truthfulness</a></aside><main class="document"><h1>DONECASH — Final English Handover</h1>
+<p><strong>Release:</strong> 1.0 · <strong>Prepared:</strong> 9 October 2026 · <strong>Stage:</strong> Product blueprint and interactive design, before application development.</p>
+<p>DONECASH is an Egyptian digital-wallet concept covering a customer experience for iOS and Android and an integrated operations backoffice. This self-contained package brings together the work completed during analysis, planning and design. All delivery documentation and user-facing prototype copy are in English.</p>
+<h2 id="start-here">Start here</h2>
+<p>Open <a href="START-HERE.html">START-HERE.html</a> in a browser for the presentation portal, document reader and screenshot gallery. No build, account, backend or internet connection is needed for the prototype. External research links need internet access. Unzip the entire package before opening it; keep the directory structure unchanged.</p>
+<p>For a guided presentation, follow <a href="handover/PRESENTATION-GUIDE.html">the presentation guide</a>. For an accurate statement of completion and remaining work, read <a href="handover/DELIVERY-STATUS.html">delivery status</a>.</p>
+<h2 id="deliverables">Deliverables</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="docs/00-research-brief.html">00 — Research brief</a></td>
+<td>Market evidence, competitor inventory and product decisions</td>
+</tr>
+<tr>
+<td><a href="docs/01-product-requirements.html">01 — Product requirements</a></td>
+<td>Stakeholders, gathering plan, functional/non-functional requirements, user stories, acceptance criteria, MVP and MoSCoW</td>
+</tr>
+<tr>
+<td><a href="docs/02-database-design.html">02 — Database design</a></td>
+<td>Entities, attributes, relationships, ERD, 3NF, ledger design and physical-schema handoff</td>
+</tr>
+<tr>
+<td><a href="docs/03-technical-design.html">03 — Technical design</a></td>
+<td>Stack, architecture, API endpoints, security and deployment</td>
+</tr>
+<tr>
+<td><a href="docs/04-ux-ui-design.html">04 — UX/UI design</a></td>
+<td>Sitemaps, full page inventory, user flows, wireframes and UI specifications</td>
+</tr>
+<tr>
+<td><a href="docs/05-business-logic.html">05 — Business logic</a></td>
+<td>Domain rules, state transitions, financial invariants, operations and test scenarios</td>
+</tr>
+<tr>
+<td><a href="docs/06-design-system-audit.html">06 — Design-system audit</a></td>
+<td>Brand application, documented extensions, limitations and missing production assets</td>
+</tr>
+<tr>
+<td><a href="docs/07-external-integrations.html">07 — External integrations</a></td>
+<td>Payment rails, identity, communications, vendor evaluation and market-entry gates</td>
+</tr>
+<tr>
+<td><a href="database/schema.sql">SQL baseline</a></td>
+<td>PostgreSQL schema source; not a deployed database or completed Prisma implementation</td>
+</tr>
+<tr>
+<td><a href="prototype/index.html">Prototype hub</a></td>
+<td>Interactive presentation entry point</td>
+</tr>
+<tr>
+<td><a href="prototype/mobile.html">Mobile prototype</a></td>
+<td>36 screen routes with iOS/Android presentation modes</td>
+</tr>
+<tr>
+<td><a href="prototype/backoffice.html">Backoffice prototype</a></td>
+<td>22 operations routes</td>
+</tr>
+<tr>
+<td><a href="design/README.html">Design gallery</a></td>
+<td>English wireframes and final prototype screenshots</td>
+</tr>
+<tr>
+<td><a href="Design%20System/DESIGN%20%281%29.html">Design system</a></td>
+<td>Supplied reference, tokens and non-destructive product extension</td>
+</tr>
+<tr>
+<td><a href="handover/ASSET-INVENTORY.html">Asset inventory</a></td>
+<td>Original logo/icon PNG, SVG and Illustrator master</td>
+</tr>
+<tr>
+<td><a href="handover/VALIDATION-REPORT.html">Validation report</a></td>
+<td>Packaging checks and the scope of evidence</td>
+</tr>
+<tr>
+<td><a href="handover/FILE-MANIFEST.json">File manifest</a></td>
+<td>File inventory and SHA-256 checksums</td>
+</tr>
+</tbody></table>
+<h2 id="scope-and-truthfulness">Scope and truthfulness</h2>
+<ul>
+<li>Currency: EGP. English is primary; Arabic is a future localization requirement.</li>
+<li>Recommended implementation: React Native/Expo, Next.js, NestJS modular monolith, PostgreSQL and Prisma.</li>
+<li>The delivered HTML is a navigation/design prototype using synthetic data, not an implemented financial application. Inputs and many secondary controls illustrate the intended UI rather than execute business rules.</li>
+<li>Screenshots show browser-rendered platform shells; they are not evidence of native iOS/Android builds or device certification.</li>
+<li>Research sources retain their original September 2026 access dates. This release organizes and edits the existing research; it does not claim a new regulatory review on 9 October.</li>
+<li>Licensing/sponsorship, commercial integrations, security assessment, accessibility/device testing and operational approval remain prerequisites for real-money launch.</li>
+<li>Original working files remain outside this delivery folder. Legacy Arabic wireframes are not included; their English edition is included here.</li>
+</ul>
+<p>The financial design uses an append-only double-entry ledger. Balance is derived from postings and active holds; support agents must never directly edit customer money.</p>
+<footer>DONECASH · Final English Handover · 9 October 2026 · Product blueprint, not a production application.</footer></main></div></body></html>

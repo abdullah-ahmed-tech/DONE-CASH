@@ -1,0 +1,495 @@
+<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DONECASH — External Integrations and Market-Readiness Plan</title><link rel="stylesheet" href="../presentation.css"></head><body><header class="reader-top"><a href="../START-HERE.html">← Delivery portal</a><span>DONECASH · ENGLISH HANDOVER</span><a href="07-external-integrations.md">Markdown source</a></header><div class="document-layout"><aside class="toc"><strong>IN THIS DOCUMENT</strong><a href="#1-purpose">1. Purpose</a><a href="#2-executive-decision">2. Executive decision</a><a href="#3-integration-landscape">3. Integration landscape</a><a href="#4-priority-matrix">4. Priority matrix</a><a href="#5-core-financial-integrations">5. Core financial integrations</a><a href="#6-identity-compliance-and-fraud">6. Identity, compliance and fraud</a><a href="#7-customer-communications">7. Customer communications</a><a href="#8-platform-readiness">8. Platform readiness</a><a href="#9-optional-card-funding-and-tokenization">9. Optional card funding and tokenization</a><a href="#10-future-incoming-international-remittance">10. Future incoming international remittance</a><a href="#11-support-analytics-and-operations">11. Support, analytics and operations</a><a href="#12-canonical-adapter-contracts">12. Canonical adapter contracts</a><a href="#13-webhook-standard">13. Webhook standard</a><a href="#14-failure-and-reconciliation-rules">14. Failure and reconciliation rules</a><a href="#15-vendor-security-and-data-requirements">15. Vendor security and data requirements</a><a href="#16-vendor-evaluation-scorecard">16. Vendor evaluation scorecard</a><a href="#17-competitive-roadmap">17. Competitive roadmap</a><a href="#18-suggested-nestjs-layout">18. Suggested NestJS layout</a><a href="#19-go-live-exit-criteria">19. Go-live exit criteria</a><a href="#20-open-commercial-decisions">20. Open commercial decisions</a><a href="#sources">Sources</a></aside><main class="document"><h1>DONECASH — External Integrations and Market-Readiness Plan</h1>
+<p>English handover edition · Original research snapshot: 13 September 2026. This is an integration plan, not evidence of commercial contracts, production access or legal approval.</p>
+<h2 id="1-purpose">1. Purpose</h2>
+<p>Identify what turns a portfolio wallet concept into an operable Egyptian financial product. Separate fully simulated portfolio behavior, vendor sandboxes and capabilities unavailable until an eligible licensed entity/sponsor, contracts and certification exist.</p>
+<p>Keep each provider behind an internal port and independent adapter. Preserve protected request/response evidence, external reference, correlation identifier and reconciliation status. No vendor should dictate the domain&#39;s financial vocabulary.</p>
+<h2 id="2-executive-decision">2. Executive decision</h2>
+<p>An SMS API and KYC SDK alone do not authorize a wallet launch. Evaluate:</p>
+<ol>
+<li><strong>Bank-sponsored model:</strong> an eligible regulated bank/partner sponsors the service and provides approved rails, settlement and controls.</li>
+<li><strong>Licensed-provider model:</strong> operate through the appropriate licensed PSP/operating arrangements and contracted infrastructure, subject to applicable approvals.</li>
+</ol>
+<p>The portfolio design proposes fake <code>SponsorBankAdapter</code> and <code>MeezaDigitalAdapter</code> implementations. Real-money launch still requires written legal/sponsor confirmation. The cited June 2025 CBE rules cover payment activities including cash services, transfers, issuance and acceptance; exact authorization depends on the entity and service scope.</p>
+<h2 id="3-integration-landscape">3. Integration landscape</h2>
+<pre><code class="language-mermaid">flowchart LR
+  M[React Native App\niOS + Android] --&gt; API[NestJS API]
+  O[Next.js Backoffice] --&gt; API
+  API --&gt; IAM[Identity &amp; Device Trust]
+  API --&gt; ORCH[Payment Orchestrator]
+  API --&gt; RISK[Risk &amp; Compliance]
+  API --&gt; MSG[Notification Orchestrator]
+  ORCH --&gt; LEDGER[Internal Double-entry Ledger]
+  ORCH --&gt; SPONSOR[Sponsor Bank / Licensed PSP]
+  SPONSOR --&gt; EBC[EBC / Meeza Digital]
+  SPONSOR --&gt; IPN[Instant Payment Network]
+  SPONSOR --&gt; CASH[ATM + Agent Network]
+  ORCH --&gt; BILL[Bill Aggregator]
+  ORCH --&gt; MERCHANT[QR / R2P Acceptance]
+  IAM --&gt; DFI[CBE Digital Financial Identity / eKYC]
+  IAM --&gt; OTP[SMS OTP Provider]
+  IAM --&gt; DEVICE[App Attest / Play Integrity]
+  RISK --&gt; SCREEN[Sanctions / PEP Screening]
+  MSG --&gt; PUSH[APNs + FCM]
+  API --&gt; OBS[Observability / SIEM]
+  ORCH --&gt; RECON[Provider Files + Webhooks + Reconciliation]
+</code></pre>
+<h2 id="4-priority-matrix">4. Priority matrix</h2>
+<table>
+<thead>
+<tr>
+<th>Integration</th>
+<th>Purpose</th>
+<th>Portfolio</th>
+<th>Pilot</th>
+<th>Production importance</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sponsor bank/licensed PSP</td>
+<td>Legal operation, safeguarding and rail access</td>
+<td>Mock</td>
+<td>Contract/sandbox</td>
+<td>Required</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Meeza Digital</td>
+<td>Wallet transfer, acceptance and wallet channels</td>
+<td>Mock</td>
+<td>Sponsor sandbox</td>
+<td>Required for proposed rails</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Identity/eKYC</td>
+<td>Onboarding and identity updates</td>
+<td>Fake SDK</td>
+<td>Eligible certified sandbox</td>
+<td>Required</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Mobile ownership/SIM risk</td>
+<td>Ownership and account-takeover controls</td>
+<td>Mock</td>
+<td>MNO/sponsor arrangement</td>
+<td>Required control</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>SMS OTP</td>
+<td>Phone verification/recovery/fallback</td>
+<td>Test sink</td>
+<td>Approved local route</td>
+<td>Required</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>APNs/FCM</td>
+<td>Financial/security notifications</td>
+<td>Development credentials</td>
+<td>Pilot credentials</td>
+<td>Required</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>App Attest/Play Integrity</td>
+<td>App/device risk signals</td>
+<td>Test verdicts</td>
+<td>Pilot</td>
+<td>Required capability with fallback</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Cash network</td>
+<td>ATM/agent deposit and withdrawal</td>
+<td>Simulator</td>
+<td>Limited rail</td>
+<td>Required</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Reconciliation feeds</td>
+<td>Settlement proof and discrepancies</td>
+<td>Synthetic files</td>
+<td>Daily files</td>
+<td>Required</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Bill aggregator</td>
+<td>Utilities, telecom and services</td>
+<td>Mock catalog</td>
+<td>Sandbox</td>
+<td>Competitive baseline</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Merchant QR/R2P</td>
+<td>Acceptance</td>
+<td>Static mock</td>
+<td>Sandbox</td>
+<td>Competitive baseline</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Account value load/IPN</td>
+<td>Bank-account funding</td>
+<td>Mock</td>
+<td>Sponsor sandbox</td>
+<td>High value</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Sanctions/PEP/AML screening</td>
+<td>Onboarding and ongoing review</td>
+<td>Fake rules</td>
+<td>Vendor sandbox</td>
+<td>Required before real-money pilot under policy</td>
+<td>P1 procurement, launch gate</td>
+</tr>
+<tr>
+<td>Fraud intelligence</td>
+<td>Device/velocity/linked risk</td>
+<td>Internal simulation</td>
+<td>Shadow mode</td>
+<td>Required controls at scale</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>CRM/contact center</td>
+<td>Complaint operations</td>
+<td>Internal design</td>
+<td>Optional connector</td>
+<td>Optional vendor</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>Analytics/experimentation</td>
+<td>Funnel/adoption</td>
+<td>Local events</td>
+<td>Privacy review</td>
+<td>Optional</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>Incoming remittance</td>
+<td>Convert eligible inbound funds to EGP</td>
+<td>Outside MVP</td>
+<td>Partner pilot</td>
+<td>Differentiator</td>
+<td>P2</td>
+</tr>
+</tbody></table>
+<p>Priority is sequencing, not permission to launch without AML/screening controls.</p>
+<h2 id="5-core-financial-integrations">5. Core financial integrations</h2>
+<h3 id="5-1-sponsor-bank-or-licensed-partner">5.1 Sponsor bank or licensed partner</h3>
+<p>Agree who safeguards customer funds, owns settlement accounts, connects rails and assumes dispute/incident liability. Obtain approved product limits, pricing, settlement cycle, finality, KYC/AML responsibilities, consumer complaints and reporting obligations.</p>
+<p>Required technical contract:</p>
+<ul>
+<li>Transport/protocol: REST, SOAP, ISO 8583 or files by channel.</li>
+<li>mTLS, allowlists, signing and HSM/key-ceremony requirements.</li>
+<li>External-reference uniqueness and retention.</li>
+<li>Status definitions and authoritative final states.</li>
+<li>Retry/inquiry semantics, maintenance and SLA.</li>
+<li>Webhook authentication and replay window.</li>
+<li>Business-day timezone, settlement/reconciliation file timing.</li>
+<li>Sandbox scenarios, UAT evidence and escalation contacts.</li>
+</ul>
+<p>DONECASH&#39;s ledger is the internal accounting truth; sponsor/network records are reconciled against it. A discrepancy creates an exception, not a direct balance rewrite. Internal truth does not eliminate safeguarding or external settlement obligations.</p>
+<h3 id="5-2-ebc-meeza-digital">5.2 EBC / Meeza Digital</h3>
+<p>The cited EBC materials describe Meeza Digital, IPN and shared cash infrastructure. Proposed integration capabilities are wallet-to-wallet transfer, privacy-preserving alias resolution, QR/R2P, approved account value load, cash messages, settlement positions and network reconciliation.</p>
+<p>Do not assume a public developer API or direct participation rights. Access typically depends on sponsor/processor contracts and scheme eligibility. An adapter class does not establish access authorization.</p>
+<h3 id="5-3-ipn-bank-to-wallet-funding">5.3 IPN / bank-to-wallet funding</h3>
+<p>The cited CBE description allows eligible channels to transfer to accounts, Meeza cards and wallets. NTRA&#39;s Q2 2025 report attributed 65% of reported wallet funding sources to InstaPay bank transfers, motivating a sponsor-backed funding path.</p>
+<p>Handle incoming-credit notifications, reference deduplication, permitted name/alias checks, reject/return mapping and daily reconciliation. Do not design the MVP as an unapproved direct DONECASH connection to IPN or as integration with a consumer application&#39;s private interface.</p>
+<h3 id="5-4-cash-in-and-cash-out">5.4 Cash-in and cash-out</h3>
+<p>Official wallet channels include provider branches, eligible agents and supporting cardless ATMs. Adapter capabilities:</p>
+<ol>
+<li>Quote amount/fees/channel availability.</li>
+<li>Create deposit reference or withdrawal code.</li>
+<li>Bind authorization to amount/channel/customer.</li>
+<li>Confirm deposit/dispense.</li>
+<li>Cancel/expire safely and release eligible reservations.</li>
+<li>Query unknown provider outcomes.</li>
+<li>Ingest settlement files and ATM/agent exception reasons.</li>
+</ol>
+<p>Codes are short-lived, single-use and absent from logs. Capture only after appropriate authoritative confirmation. A disconnect after dispense remains processing until inquiry/reconciliation; expiry cannot blindly release a potentially dispensed withdrawal. Support opens a case rather than edits money.</p>
+<h3 id="5-5-bill-aggregator">5.5 Bill aggregator</h3>
+<p>Procure a suitably eligible licensed aggregator/sponsor service after coverage, contract and technical evaluation. Original research named Fawry/e-finance as examples, not selected or contracted vendors.</p>
+<p>Functional contract: list/version billers; validate subscriber; inquire amount/expiry/additional fields; pay valid quote; query pending payment; permitted refund/reversal; catalog and reconciliation feeds.</p>
+<p>Evaluate utility/telecom/education/donation/government coverage, per-biller success/latency, inquiry validity, duplicate protection, refund semantics, exception SLA and transaction-level settlement matching. Aggregate success averages can hide a failing biller.</p>
+<h3 id="5-6-merchant-qr-and-request-to-pay">5.6 Merchant QR and Request to Pay</h3>
+<p>Validate merchant/terminal; support static QR with entered amount and dynamic QR with signed locked amount; return display name, branch, MCC and verification status; check expiry/nonce/signature; define void/refund finality, merchant fees and settlement.</p>
+<p>The customer reviews merchant, amount and fees before authorization. Reading QR is not payment success; success requires authoritative execution and balanced accounting.</p>
+<h2 id="6-identity-compliance-and-fraud">6. Identity, compliance and fraud</h2>
+<h3 id="6-1-digital-financial-identity-ekyc">6.1 Digital financial identity/eKYC</h3>
+<p>The source research references the CBE framework updated in August 2026. Eligibility/access and permitted use need sponsor/compliance confirmation, rather than assuming a generic SDK connects to the framework.</p>
+<p>Integration requirements: short-lived verification session; secure evidence capture/upload; OCR with independent authenticity checks; document authenticity, face match and liveness; separate rescreenable sanctions/PEP checks; reason-coded decisions and manual-review evidence; authenticated webhook with polling fallback; lawful retention/deletion controls.</p>
+<p>Minimize raw media. Backoffice accesses encrypted object storage through short-lived signed, watermarked views with viewing audit. Verify vendor security claims, including actual encryption endpoints, rather than advertising unvalidated “end-to-end” encryption.</p>
+<h3 id="6-2-mobile-ownership-and-sim-signals">6.2 Mobile ownership and SIM signals</h3>
+<p>Ownership matching supports the proposed one-wallet-per-number rule. Seek contract-permitted ownership match, recent SIM swap, porting/recycled-number risk, line status and routing without unnecessary identity disclosure. Recent change may trigger cooldown/step-up/manual review, not permanent automated rejection.</p>
+<h3 id="6-3-sanctions-pep-and-adverse-media">6.3 Sanctions, PEP and adverse media</h3>
+<p>Original research named LSEG World-Check, LexisNexis, Dow Jones and ComplyAdvantage as RFP examples; no provider has been selected. Test Arabic/transliterated-name matching, local/international list coverage and freshness, provenance/explainability, rescreening, residency/DPA/retention, per-check cost and false-positive operations.</p>
+<p>Provider output is evidence for internal compliance policy, not an unquestioned approve/reject boolean. Controls must be ready before the real-money pilot.</p>
+<h3 id="6-4-device-intelligence">6.4 Device intelligence</h3>
+<p>Android Play Integrity verdicts are checked server-side. iOS App Attest supports legitimate-app/device-key assertions with fallback for unsupported devices. Bind a secure local key to server challenges, rotating after recovery. Attestation is one risk input alongside value, device age, SIM, recipient and velocity—not the sole fraud decision or a tracking identifier.</p>
+<h2 id="7-customer-communications">7. Customer communications</h2>
+<h3 id="sms-otp">SMS OTP</h3>
+<p>Evaluate approved local/MNO routes, sender registration, delivery receipts, English/Arabic Unicode, per-MNO metrics, controlled failover, phone/device/IP throttling, templates and fraud escalation. Do not use uncontrolled active-active sends that duplicate challenges. Store code hash, expiry and attempt counter, never cleartext OTP. Avoid unnecessary monetary/identity details in messages.</p>
+<h3 id="push">Push</h3>
+<p>APNs for iOS and FCM for Android, with trusted-server credentials/OAuth where applicable. Push is a wake-up signal; authoritative status comes from the API. Financial/security notifications are separate from optional marketing preferences. Exclude sensitive balance/identity from payloads and lock-screen exposure. Provider acceptance/delivery is not proof of customer reading.</p>
+<h3 id="email-and-whatsapp">Email and WhatsApp</h3>
+<p>Verified email can deliver non-urgent receipts/statements. WhatsApp Business is optional for consented, non-sensitive support/notifications using approved templates. Authentication and sensitive decisions stay on security-approved channels.</p>
+<h2 id="8-platform-readiness">8. Platform readiness</h2>
+<table>
+<thead>
+<tr>
+<th>iOS</th>
+<th>Android</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>APNs, App Attest, Keychain/Secure Enclave, LocalAuthentication</td>
+<td>FCM, Play Integrity, Keystore, BiometricPrompt</td>
+</tr>
+<tr>
+<td>Universal Links</td>
+<td>Verified App Links</td>
+</tr>
+<tr>
+<td>Privacy manifest and permission descriptions</td>
+<td>Signing, obfuscation and secure network configuration</td>
+</tr>
+<tr>
+<td>Dynamic Type, VoiceOver, reduced motion and safe areas</td>
+<td>TalkBack, font scaling, gestures and edge-to-edge insets</td>
+</tr>
+</tbody></table>
+<p>Biometrics unlock a local key; no fingerprint/face template is sent to DONECASH. Provide secure MPIN/recovery alternatives and unsupported-hardware fallback.</p>
+<h2 id="9-optional-card-funding-and-tokenization">9. Optional card funding and tokenization</h2>
+<p>Use hosted/tokenized acquirer components, keeping PAN/CVV away from DONECASH servers. Agree 3-D Secure, PCI scope, token-reference storage, chargeback evidence and refund/reversal mapping. Tokens alone do not remove PCI obligations. The cited December 2024 CBE tokenization/Apple Pay announcement establishes market context, not DONECASH eligibility or a committed feature.</p>
+<h2 id="10-future-incoming-international-remittance">10. Future incoming international remittance</h2>
+<p>The original NTRA source described inbound remittance converted to EGP and attributed 7% of reported Q2 2025 funding sources to it. A future integration requires eligible remittance partner/bank settlement, sender/corridor screening, disclosed FX source/quote, transfer-purpose fields, name matching and AML case workflow. Post immutable EGP amounts while preserving source currency, amount and rate as reference evidence. Outside MVP.</p>
+<h2 id="11-support-analytics-and-operations">11. Support, analytics and operations</h2>
+<h3 id="crm-contact-center">CRM/contact center</h3>
+<p>An internal support module can serve the MVP. Zendesk/Freshdesk/Salesforce were example options, not selected vendors. Any connector receives masked identifiers, not full KYC. Keep sensitive reveal inside DONECASH; synchronize tickets idempotently and coordinate retention/deletion across systems.</p>
+<h3 id="analytics">Analytics</h3>
+<p>Privacy-review any PostHog/Amplitude/Mixpanel or other tool. Allowlist events/properties; exclude OTP, MPIN, national ID, full phone and balance. Separate pseudonymous analytics identity and appropriate optional consents. Financial conversions derive from committed backend events, not client tracking alone.</p>
+<h3 id="observability-siem">Observability/SIEM</h3>
+<p>OpenTelemetry spans across API/queues/providers; metrics/SLO dashboards (for example Prometheus/Grafana or a reviewed hosted equivalent); scrubbed mobile crash reporting; audit/security-event SIEM. Track per-provider success, latency, pending exposure and reconciliation breaks. Vendor names are options, not evidence of existing services.</p>
+<h2 id="12-canonical-adapter-contracts">12. Canonical adapter contracts</h2>
+<pre><code class="language-ts">export type ProviderResult&lt;T&gt; =
+  | { kind: &#39;completed&#39;; externalRef: string; data: T }
+  | { kind: &#39;declined&#39;; code: string; safeMessage: string }
+  | { kind: &#39;processing&#39;; externalRef?: string; retryAfterMs?: number };
+
+export interface PaymentRailPort {
+  quote(command: QuoteCommand): Promise&lt;Quote&gt;;
+  execute(command: ExecuteCommand): Promise&lt;ProviderResult&lt;ExecutionData&gt;&gt;;
+  inquire(externalRef: string): Promise&lt;ProviderResult&lt;ExecutionData&gt;&gt;;
+  reverse(command: ReverseCommand): Promise&lt;ProviderResult&lt;ReversalData&gt;&gt;;
+}
+
+export interface IdentityVerificationPort {
+  createSession(customerId: string): Promise&lt;VerificationSession&gt;;
+  getDecision(providerCaseId: string): Promise&lt;IdentityDecision&gt;;
+  requestDeletion(providerCaseId: string): Promise&lt;void&gt;;
+}
+</code></pre>
+<p>These are illustrative interfaces, not compiled implementation files; referenced types need concrete definitions. Map provider statuses to domain vocabulary while retaining original protected evidence.</p>
+<h2 id="13-webhook-standard">13. Webhook standard</h2>
+<ol>
+<li>mTLS where available and/or rotating HMAC/JWS per contract.</li>
+<li>Unique provider event ID, timestamp and replay window.</li>
+<li>Persist protected/redacted authenticated evidence before processing.</li>
+<li>Acknowledge quickly; process through inbox workers.</li>
+<li>Enforce <code>(provider, eventId)</code> uniqueness.</li>
+<li>Never assume event order.</li>
+<li>Inquire before declaring an unknown outcome failed.</li>
+<li>Dead-letter handling, replay authorization and documented runbook.</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;eventId&quot;: &quot;evt_01J...&quot;,
+  &quot;eventType&quot;: &quot;payment.status.changed&quot;,
+  &quot;occurredAt&quot;: &quot;2026-09-13T10:42:19.122Z&quot;,
+  &quot;externalReference&quot;: &quot;EXT-E-55218&quot;,
+  &quot;status&quot;: &quot;SUCCESS&quot;,
+  &quot;amount&quot;: { &quot;minor&quot;: 42050, &quot;currency&quot;: &quot;EGP&quot; },
+  &quot;signatureVersion&quot;: &quot;v2&quot;
+}
+</code></pre>
+<p>Verify webhook amount, currency, reference and authorized operation before applying financial effects.</p>
+<h2 id="14-failure-and-reconciliation-rules">14. Failure and reconciliation rules</h2>
+<table>
+<thead>
+<tr>
+<th>External situation</th>
+<th>Internal outcome</th>
+<th>Ledger action</th>
+<th>Next action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Confirmed synchronous success</td>
+<td>COMPLETED</td>
+<td>Balanced posting/capture once</td>
+<td>Receipt and notification</td>
+</tr>
+<tr>
+<td>Confirmed decline</td>
+<td>DECLINED</td>
+<td>Release eligible reservation</td>
+<td>Safe reason</td>
+</tr>
+<tr>
+<td>Timeout/no response</td>
+<td>PROCESSING</td>
+<td>Hold/no final posting according to rail</td>
+<td>Inquiry and reconciliation</td>
+</tr>
+<tr>
+<td>Authoritative late success</td>
+<td>COMPLETED</td>
+<td>Capture once</td>
+<td>Notify</td>
+</tr>
+<tr>
+<td>Authoritative late failure</td>
+<td>FAILED</td>
+<td>Release eligible hold</td>
+<td>Notify</td>
+</tr>
+<tr>
+<td>Duplicate event</td>
+<td>Unchanged</td>
+<td>No repeat posting</td>
+<td>Idempotent acknowledgement</td>
+</tr>
+<tr>
+<td>Provider success without internal command</td>
+<td>Reconciliation exception</td>
+<td>No blind credit/debit</td>
+<td>Finance investigation</td>
+</tr>
+<tr>
+<td>Amount/currency mismatch</td>
+<td>Reconciliation exception</td>
+<td>Preserve evidence</td>
+<td>Maker-checker resolution</td>
+</tr>
+<tr>
+<td>Accepted final reversal</td>
+<td>REVERSED</td>
+<td>Linked reverse journal</td>
+<td>Receipt and audit</td>
+</tr>
+</tbody></table>
+<p>“Reconciliation exception” is an operations record, not a value in the current payment-status CHECK list. Conflicting late events require inquiry/guarded resolution rather than reversal of a known final outcome by timestamp alone.</p>
+<h2 id="15-vendor-security-and-data-requirements">15. Vendor security and data requirements</h2>
+<p>Before approval assess regulatory standing, subprocessors, residency/cross-border transfers, transit/storage encryption and keys, authenticated service credentials, tenant isolation, least privilege, appropriate independent security evidence, breach-notification SLA, cooperation, RTO/RPO/continuity tests, deletion/export/exit, audit access, uptime/latency/support terms and service credits.</p>
+<p>Never put provider secrets in the mobile app or repository. Use a secrets manager, short-lived credentials where possible, rotation and tested revocation. Security certifications are evidence inputs, not replacements for product-specific assessment.</p>
+<h2 id="16-vendor-evaluation-scorecard">16. Vendor evaluation scorecard</h2>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Weight</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Regulatory fit/licensing</td>
+<td>20%</td>
+</tr>
+<tr>
+<td>Security/privacy/audit</td>
+<td>20%</td>
+</tr>
+<tr>
+<td>Functional coverage</td>
+<td>15%</td>
+</tr>
+<tr>
+<td>Per-use-case success/latency</td>
+<td>10%</td>
+</tr>
+<tr>
+<td>Reconciliation/operations</td>
+<td>10%</td>
+</tr>
+<tr>
+<td>API/sandbox/test evidence</td>
+<td>10%</td>
+</tr>
+<tr>
+<td>Commercial model/unit economics</td>
+<td>8%</td>
+</tr>
+<tr>
+<td>Support/SLA/incident response</td>
+<td>5%</td>
+</tr>
+<tr>
+<td>Exit portability</td>
+<td>2%</td>
+</tr>
+</tbody></table>
+<p>Regulatory or security gate failure disqualifies a vendor irrespective of weighted score.</p>
+<h2 id="17-competitive-roadmap">17. Competitive roadmap</h2>
+<h3 id="portfolio-implementation">Portfolio implementation</h3>
+<p>Provider simulators with success/decline/timeout/late webhook; synthetic KYC/manual review; SMS/mail sinks and mock push; reconciliation fixtures; attestation test interfaces; contract tests without real customer data. These are future implementation tasks, not delivered working adapters.</p>
+<h3 id="licensed-mvp">Licensed MVP</h3>
+<p>Sponsor/eligible partner, proposed wallet rail, one cash rail, eKYC/ownership checks, local SMS/APNs/FCM, sanctions/PEP controls, daily reconciliation/runbooks and core bills. All regulated/compliance gates precede pilot.</p>
+<h3 id="competitive-expansion">Competitive expansion</h3>
+<p>Approved bank funding, dynamic QR/R2P, agent/ATM locator and health, bill favorites/contract-permitted autopay, incoming remittance, merchant statements and explainable advanced fraud models.</p>
+<h2 id="18-suggested-nestjs-layout">18. Suggested NestJS layout</h2>
+<pre><code class="language-text">src/integrations/
+  sponsor-bank/
+  meeza-digital/
+  cash-network/
+  bill-aggregator/
+  identity-verification/
+  mobile-ownership/
+  screening/
+  device-attestation/
+  notifications/
+  observability/
+src/platform/
+  provider-inbox/
+  transactional-outbox/
+  reconciliation/
+  secrets/
+  contract-testing/
+</code></pre>
+<p>Each integration needs a port, adapter, mapper, client, webhook controller, contract tests and fake adapter. Domain modules depend on ports. This is a proposed source layout, not an existing application tree.</p>
+<h2 id="19-go-live-exit-criteria">19. Go-live exit criteria</h2>
+<ul>
+<li>Written legal/contractual scope and approved operation.</li>
+<li>Partner-tested status/finality/reversal semantics.</li>
+<li>UAT: duplicates, timeout, out-of-order events and late success.</li>
+<li>Multi-business-day ledger/partner reconciliation evidence.</li>
+<li>Rotated production keys and tested revocation.</li>
+<li>No PII/secrets in logs, analytics or crash reports.</li>
+<li>On-call/runbooks/escalation tree and approved customer messaging.</li>
+<li>Successful restore/DR exercises.</li>
+<li>Independent security review with no unaccepted Critical/High findings.</li>
+<li>Trained support/compliance/finance operations and approved complaint process.</li>
+</ul>
+<h2 id="20-open-commercial-decisions">20. Open commercial decisions</h2>
+<p>Sponsor, revenue share and liability; safeguarding/settlement ownership; rail/agent/biller/funding fees; vendor minimum commitments; co-branding/channel rights; customer-data ownership/portability; exclusivity and adding a second rail. Obtain legal/finance/compliance decisions rather than deriving them from the prototype.</p>
+<h2 id="sources">Sources</h2>
+<ol>
+<li>Central Bank of Egypt, <a href="https://www.cbe.org.eg/en/news-publications/news/2025/06/19/08/20/psos-and-psps-licensing-rules">Central Bank of Egypt Issues Licensing and Registration Rules for Payment System Operators and Payment Service Providers</a>, 19 June 2025.</li>
+<li>Egyptian Banks Company, <a href="https://www.egyptianbanks.com/">The Advanced Operator of National Payment Infrastructure</a>, accessed 13 September 2026.</li>
+<li>Egyptian Banks Company, <a href="https://www.egyptianbanks.com/meeza-digital/">Meeza Digital</a>, accessed 13 September 2026.</li>
+<li>Central Bank of Egypt, <a href="https://www.cbe.org.eg/en/payment-systems-and-services/instant-payment-network">Instant Payment Network</a>, accessed 13 September 2026.</li>
+<li>National Telecom Regulatory Authority, <a href="https://www.tra.gov.eg/en/ntra-issues-q2-2025-report-on-the-usage-indicators-of-mobile-wallets-operated-by-telecom-companies/">Q2 2025 Report on the Usage Indicators of Mobile Wallets Operated by Telecom Companies</a>, 10 September 2025.</li>
+<li>National Telecom Regulatory Authority, <a href="https://www.tra.gov.eg/en/regulations/consumer-manuals-and-tips/mobile-wallet-services/">Mobile Wallet Services</a>, accessed 13 September 2026.</li>
+<li>Central Bank of Egypt, <a href="https://www.cbe.org.eg/en/payment-systems-and-services/digital-financial-identity">Digital Financial Identity</a>, updated 23 August 2026.</li>
+<li>Android Developers, <a href="https://developer.android.com/google/play/integrity/overview">Overview of the Play Integrity API</a>, updated 20 April 2026.</li>
+<li>Apple Developer, <a href="https://developer.apple.com/documentation/devicecheck/validating-apps-that-connect-to-your-server">Validating Apps That Connect to Your Server</a>, accessed 13 September 2026.</li>
+<li>Firebase, <a href="https://firebase.google.com/docs/cloud-messaging/server-environment">Your Server Environment and FCM</a>, accessed 13 September 2026.</li>
+<li>Central Bank of Egypt, <a href="https://www.cbe.org.eg/en/news-publications/news/2024/12/10/12/56/the-launch-of-payment-cards-tokenization-on-mobile-applications-and-apple-pay-service">The Launch of Payment Cards’ Tokenization on Mobile Applications and Apple Pay Service</a>, 10 December 2024.</li>
+</ol>
+<footer>DONECASH · Final English Handover · 9 October 2026 · Product blueprint, not a production application.</footer></main></div></body></html>

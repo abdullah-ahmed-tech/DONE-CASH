@@ -1,0 +1,87 @@
+<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DONECASH — Presentation Guide</title><link rel="stylesheet" href="../presentation.css"></head><body><header class="reader-top"><a href="../START-HERE.html">← Delivery portal</a><span>DONECASH · ENGLISH HANDOVER</span><a href="PRESENTATION-GUIDE.md">Markdown source</a></header><div class="document-layout"><aside class="toc"><strong>IN THIS DOCUMENT</strong><a href="#preparation">Preparation</a><a href="#suggested-12-minute-walkthrough">Suggested 12-minute walkthrough</a><a href="#direct-demo-entry-points">Direct demo entry points</a><a href="#presenter-talking-points">Presenter talking points</a><a href="#questions-to-capture-at-sign-off">Questions to capture at sign-off</a></aside><main class="document"><h1>DONECASH — Presentation Guide</h1>
+<h2 id="preparation">Preparation</h2>
+<p>Extract the complete archive, open <code>START-HERE.html</code> and test the three prototype links before presenting. Use a desktop browser at roughly 1600×1000 for the full inventory and review panel. Narrow browser views hide prototype review sidebars; the phone remains a design preview rather than a native app.</p>
+<p>Keep this opening statement explicit: <strong>“This delivery covers the product blueprint, database baseline and interactive design before implementation. All data and payments in this demo are simulated.”</strong></p>
+<h2 id="suggested-12-minute-walkthrough">Suggested 12-minute walkthrough</h2>
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>Topic</th>
+<th>Show</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0–1 min</td>
+<td>Product value and boundaries</td>
+<td>Portal and delivery status</td>
+</tr>
+<tr>
+<td>1–2 min</td>
+<td>Market and operational trust</td>
+<td>Research brief; confirm-before-send and trace-after-send thesis</td>
+</tr>
+<tr>
+<td>2–4 min</td>
+<td>Customer flow</td>
+<td>Mobile: Onboarding → simulated KYC approval → Home → Recipient → Amount → Review → Authorization → Receipt</td>
+</tr>
+<tr>
+<td>4–5 min</td>
+<td>Platform adaptation</td>
+<td>Switch iOS/Android; explain native QA still required</td>
+</tr>
+<tr>
+<td>5–6 min</td>
+<td>Honest pending</td>
+<td>Bills → inquiry → simulated authorization → processing detail; do not pay again</td>
+</tr>
+<tr>
+<td>6–8 min</td>
+<td>Operations</td>
+<td>Customer search → Customer 360 → trace; then reconciliation/approval/audit pages</td>
+</tr>
+<tr>
+<td>8–9 min</td>
+<td>Full screen coverage</td>
+<td>Screenshot gallery, contact sheets and individual exports</td>
+</tr>
+<tr>
+<td>9–10 min</td>
+<td>Financial/technical design</td>
+<td>Ledger example, ERD/SQL, modular architecture, API and business rules</td>
+</tr>
+<tr>
+<td>10–11 min</td>
+<td>Launch dependency</td>
+<td>External integrations, sponsor and certification gates</td>
+</tr>
+<tr>
+<td>11–12 min</td>
+<td>Approval and next phase</td>
+<td>Delivery status, open decisions and sign-off template</td>
+</tr>
+</tbody></table>
+<h2 id="direct-demo-entry-points">Direct demo entry points</h2>
+<ul>
+<li><a href="../prototype/mobile.html#splash">Onboarding</a></li>
+<li><a href="../prototype/mobile.html#recipient">Send money</a></li>
+<li><a href="../prototype/mobile.html#billers">Bills</a></li>
+<li><a href="../prototype/mobile.html#qr">Merchant QR</a></li>
+<li><a href="../prototype/mobile.html#cash-in">Cash deposit</a></li>
+<li><a href="../prototype/mobile.html#cash-out">Cash withdrawal</a></li>
+<li><a href="../prototype/mobile.html#transaction-detail">Transaction support</a></li>
+<li><a href="../prototype/mobile.html#profile">Account/security</a></li>
+<li><a href="../prototype/backoffice.html#customer-360">Customer 360</a></li>
+<li><a href="../prototype/backoffice.html#transaction-trace">Transaction trace</a></li>
+<li><a href="../prototype/backoffice.html#recon-exceptions">Reconciliation exceptions</a></li>
+<li><a href="../prototype/backoffice.html#approvals">Approvals</a></li>
+<li><a href="../prototype/backoffice.html#audit">Audit</a></li>
+</ul>
+<p>Use flow-entry buttons to initialize coherent simulated contexts. Inputs do not drive real calculations and secondary controls are not all active. The shared receipt/status route can vary by journey; the static contact sheets show a representative state.</p>
+<h2 id="presenter-talking-points">Presenter talking points</h2>
+<p>“The balance is not an editable wallet field; it comes from postings and holds.” “Timeout does not prove failure.” “Support has context, not unrestricted money powers.” “Fees and limits are policies, not hard-coded regulatory guesses.” “A modular monolith supports atomic finance operations before distributed complexity.”</p>
+<h2 id="questions-to-capture-at-sign-off">Questions to capture at sign-off</h2>
+<p>Are all screens and recovery states approved? Who signs off accounting and compliance? Which sponsor/rails are available? Which fees/limits are contractually confirmed? What is the first implementation vertical slice? Which assets/device/accessibility tests are required before release?</p>
+<p>Do not claim measured uptime, actual transaction volume, live vendor connectivity, full WCAG compliance or an App Store/Google Play build based on this package.</p>
+<footer>DONECASH · Final English Handover · 9 October 2026 · Product blueprint, not a production application.</footer></main></div></body></html>

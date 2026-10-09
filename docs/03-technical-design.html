@@ -1,0 +1,669 @@
+<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DONECASH — Technical Design</title><link rel="stylesheet" href="../presentation.css"></head><body><header class="reader-top"><a href="../START-HERE.html">← Delivery portal</a><span>DONECASH · ENGLISH HANDOVER</span><a href="03-technical-design.md">Markdown source</a></header><div class="document-layout"><aside class="toc"><strong>IN THIS DOCUMENT</strong><a href="#1-technology-decisions">1. Technology decisions</a><a href="#2-bounded-contexts">2. Bounded contexts</a><a href="#3-system-architecture">3. System architecture</a><a href="#4-api-design">4. API design</a><a href="#5-financial-execution">5. Financial execution</a><a href="#6-security-considerations">6. Security considerations</a><a href="#7-deployment-strategy">7. Deployment strategy</a><a href="#8-development-sequence">8. Development sequence</a><a href="#9-architecture-decision-records-to-finalize">9. Architecture decision records to finalize</a><a href="#sources">Sources</a></aside><main class="document"><h1>DONECASH — Technical Design</h1>
+<p>English handover edition · Proposed architecture and API contract. There is no implemented NestJS/Next.js/React Native application in this package.</p>
+<h2 id="1-technology-decisions">1. Technology decisions</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Recommendation</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Customer app</td>
+<td>React Native + Expo development client</td>
+<td>JavaScript ecosystem with native camera, secure storage, biometrics and notifications</td>
+</tr>
+<tr>
+<td>Backoffice/merchant web</td>
+<td>Next.js + TypeScript</td>
+<td>Role-aware forms, operations workspaces and accessible web UI</td>
+</tr>
+<tr>
+<td>API/domain</td>
+<td>NestJS modular monolith</td>
+<td>Explicit boundaries, dependency injection and lower initial operational complexity</td>
+</tr>
+<tr>
+<td>Financial database</td>
+<td>PostgreSQL + Prisma + reviewed SQL</td>
+<td>Transactions, constraints, locks and migration control</td>
+</tr>
+<tr>
+<td>Ephemeral infrastructure</td>
+<td>Redis</td>
+<td>Throttling/cache/coordination; never authoritative balance</td>
+</tr>
+<tr>
+<td>Asynchronous work</td>
+<td>BullMQ + transactional outbox</td>
+<td>Retryable delivery without losing committed financial events</td>
+</tr>
+<tr>
+<td>Media</td>
+<td>Encrypted S3-compatible storage</td>
+<td>Controlled KYC evidence lifecycle and signed access</td>
+</tr>
+<tr>
+<td>Observability</td>
+<td>OpenTelemetry, metrics and redacted structured logs</td>
+<td>Trace API, worker and provider causality</td>
+</tr>
+<tr>
+<td>Local development</td>
+<td>Docker Compose</td>
+<td>Repeatable PostgreSQL/Redis/object-storage environment</td>
+</tr>
+</tbody></table>
+<p>Neon and Upstash can support portfolio/preview environments where service limits and latency fit. Regulated production selection requires residency, SLA, backups, failover, predictable connections, key management and contractual review. A hosted product name is not an automatic production approval.</p>
+<h2 id="2-bounded-contexts">2. Bounded contexts</h2>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>Owns</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Identity/access</td>
+<td>Customer identity, sessions, consent and device trust</td>
+</tr>
+<tr>
+<td>KYC/compliance</td>
+<td>Verification, screening and review</td>
+</tr>
+<tr>
+<td>Wallet/ledger</td>
+<td>Wallet lifecycle, holds, accounts and journals</td>
+</tr>
+<tr>
+<td>Payments</td>
+<td>Quotes, orchestration and rail finality</td>
+</tr>
+<tr>
+<td>Policy/risk</td>
+<td>Fees, limits, rule evaluation and cases</td>
+</tr>
+<tr>
+<td>Support</td>
+<td>Tickets, disputes and customer communication</td>
+</tr>
+<tr>
+<td>Operations/finance</td>
+<td>Reconciliation, approvals and reports</td>
+</tr>
+<tr>
+<td>Platform</td>
+<td>Outbox/inbox, notifications, audit, secrets and telemetry</td>
+</tr>
+</tbody></table>
+<p>Use ports rather than importing another module&#39;s persistence internals. Ledger posting has one controlled entry point. Avoid cyclic dependencies and provider-specific statuses in the domain. Extract services only when ownership, independent scaling or isolation requirements justify it.</p>
+<h2 id="3-system-architecture">3. System architecture</h2>
+<pre><code class="language-mermaid">flowchart TB
+  subgraph Channels
+    RN[React Native customer app]
+    BO[Next.js Backoffice]
+    MP[Next.js Merchant portal]
+  end
+  WAF[CDN/WAF/API Gateway]
+  BFF[Channel BFF / NestJS APIs]
+  subgraph Core[NestJS Modular Core]
+    IAM[Identity &amp; Device]
+    KYC[Customer &amp; KYC]
+    PAY[Payments Orchestrator]
+    WAL[Wallet &amp; Policy]
+    LED[Ledger]
+    RISK[Risk &amp; Compliance]
+    OPS[Disputes &amp; Reconciliation]
+  end
+  PG[(PostgreSQL primary + replica)]
+  REDIS[(Redis)]
+  OBJ[(Encrypted object storage)]
+  BUS[Outbox worker / Queue]
+  EXT[Bank / Meeza / Billers / SMS / KYC]
+  OBS[Logs + Metrics + Traces + SIEM]
+
+  RN --&gt; WAF
+  BO --&gt; WAF
+  MP --&gt; WAF
+  WAF --&gt; BFF
+  BFF --&gt; IAM
+  BFF --&gt; KYC
+  BFF --&gt; PAY
+  BFF --&gt; OPS
+  PAY --&gt; WAL
+  PAY --&gt; RISK
+  PAY --&gt; LED
+  Core --&gt; PG
+  IAM --&gt; REDIS
+  KYC --&gt; OBJ
+  PG --&gt; BUS
+  BUS --&gt; EXT
+  EXT --&gt; WAF
+  Core --&gt; OBS
+  WAF --&gt; OBS
+</code></pre>
+<p>A modular monolith enables atomic ledger/outbox commits, easier debugging and fewer distributed failure modes. Workers may deploy separately while retaining domain contracts. External calls must not run inside a long-lived financial database transaction.</p>
+<h2 id="4-api-design">4. API design</h2>
+<h3 id="common-contract">Common contract</h3>
+<ul>
+<li>Customer base: <code>/api/v1</code>; UTF-8 JSON. Example amount: <code>{ &quot;amountMinor&quot;: 37500, &quot;currency&quot;: &quot;EGP&quot; }</code>.</li>
+<li>Staff authentication: OAuth/OIDC. Customer sessions: short-lived access credentials and rotating refresh tokens.</li>
+<li>Financial POST commands require <code>Idempotency-Key</code>; accept or generate <code>X-Correlation-ID</code>.</li>
+<li>Changed request content under an existing key returns a conflict, not another payment.</li>
+<li>Administrative updates use <code>If-Match</code>/version checks.</li>
+<li>Cursor pagination: <code>?limit=20&amp;after=...</code>; ownership and permission checks on each resource.</li>
+<li>Problem Details fields: <code>type</code>, <code>title</code>, <code>status</code>, <code>code</code>, <code>detail</code>, <code>correlationId</code>, <code>fieldErrors</code>; no secrets.</li>
+<li>Webhooks use authenticated signatures/mTLS, timestamp/replay protection, inbox deduplication and fast acknowledgement before asynchronous work.</li>
+</ul>
+<h3 id="identity-and-onboarding">Identity and onboarding</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Purpose</th>
+<th>Authorization</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>POST</td>
+<td><code>/auth/otp/challenges</code></td>
+<td>Start registration/login/step-up OTP</td>
+<td>Public, rate-limited</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/otp/challenges/{id}/verify</code></td>
+<td>Verify challenge</td>
+<td>Public, challenge-bound</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/mpin/setup</code></td>
+<td>Set MPIN after strong proof</td>
+<td>Enrollment token</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/sessions</code></td>
+<td>MPIN/device login</td>
+<td>Device proof</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/sessions/refresh</code></td>
+<td>Rotate refresh credentials</td>
+<td>Refresh token</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code>/auth/sessions/{id}</code></td>
+<td>Revoke session/device</td>
+<td>Customer ownership</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/customers</code></td>
+<td>Create draft customer</td>
+<td>Enrollment token</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/customers/me</code></td>
+<td>Profile and status</td>
+<td>Customer</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/customers/me/consents</code></td>
+<td>Record versioned consent</td>
+<td>Customer</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/kyc/cases</code></td>
+<td>Start verification</td>
+<td>Customer</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/kyc/cases/{id}/documents/upload-url</code></td>
+<td>Short-lived upload URL</td>
+<td>Customer ownership</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/kyc/cases/{id}/submit</code></td>
+<td>Submit review</td>
+<td>Customer ownership</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/kyc/cases/{id}</code></td>
+<td>Verification status</td>
+<td>Customer ownership</td>
+</tr>
+</tbody></table>
+<h3 id="wallet-and-p2p">Wallet and P2P</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Purpose / controls</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET</td>
+<td><code>/wallets/me</code></td>
+<td>Available balance, holds and limits; safe short-lived caching</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/wallets/me/activity</code></td>
+<td>Cursor-filtered history</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/transactions/{publicId}</code></td>
+<td>Owned details and receipt</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/recipients/resolve</code></td>
+<td>Masked name/eligibility; enumeration protection</td>
+</tr>
+<tr>
+<td>GET / POST</td>
+<td><code>/beneficiaries</code></td>
+<td>List/add; step-up for sensitive addition</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code>/beneficiaries/{id}</code></td>
+<td>Audited logical removal</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/transfers/quotes</code></td>
+<td>Fees, limits and signed expiry</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/transfers</code></td>
+<td>Quote-bound, authorized, idempotent execution</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/transactions/{id}/reversal-requests</code></td>
+<td>Controlled request, not direct reversal</td>
+</tr>
+</tbody></table>
+<h3 id="cash-bills-and-merchants">Cash, bills and merchants</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>POST</td>
+<td><code>/cash-out/quotes</code></td>
+<td>Fees and channel availability</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/cash-out/requests</code></td>
+<td>Authorized withdrawal code and reservation</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/cash-out/requests/{id}</code></td>
+<td>Status/expiry; never credential hashes</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/cash-in/requests</code></td>
+<td>Deposit reference and channel instructions</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/billers</code></td>
+<td>Catalog/categories</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/bill-inquiries</code></td>
+<td>Inquiry without debit</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/bill-payments</code></td>
+<td>Authorized payment from valid inquiry</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/merchant-qr/resolve</code></td>
+<td>Validate QR and merchant</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/merchant-payments</code></td>
+<td>Merchant payment</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/merchants/me/settlements</code></td>
+<td>Merchant statement</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/merchants/me/qr-codes</code></td>
+<td>Static/dynamic merchant QR</td>
+</tr>
+</tbody></table>
+<h3 id="support-and-notifications">Support and notifications</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>POST</td>
+<td><code>/disputes</code></td>
+<td>Create eligible transaction-linked case</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/disputes</code></td>
+<td>Customer&#39;s cases</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/disputes/{id}</code></td>
+<td>Timeline/SLA</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/disputes/{id}/messages</code></td>
+<td>Evidence/additional information</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/notifications</code></td>
+<td>Inbox</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td><code>/notifications/{id}</code></td>
+<td>Owned read status only</td>
+</tr>
+</tbody></table>
+<h3 id="backoffice-base-ops-v1">Backoffice base: <code>/ops/v1</code></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Permission / guard</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET</td>
+<td><code>/customers/search</code></td>
+<td><code>customer:search</code>, access reason</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/customers/{id}/overview</code></td>
+<td>Scoped <code>customer:read_sensitive</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/kyc/cases</code></td>
+<td><code>kyc:review</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/kyc/cases/{id}/decisions</code></td>
+<td><code>kyc:decide</code>, reason and approval policy</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/transactions/{id}/trace</code></td>
+<td><code>transaction:trace</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/wallets/{id}/hold-requests</code></td>
+<td><code>wallet:restrict</code>, approval</td>
+</tr>
+<tr>
+<td>GET / PATCH</td>
+<td><code>/risk/cases/{id}</code></td>
+<td><code>risk:investigate</code></td>
+</tr>
+<tr>
+<td>GET / PATCH</td>
+<td><code>/support/tickets/{id}</code></td>
+<td><code>support:manage</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/reconciliation/batches</code></td>
+<td><code>recon:import</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/reconciliation/batches/{id}/exceptions</code></td>
+<td><code>recon:review</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/reconciliation/items/{id}/resolution-requests</code></td>
+<td><code>recon:adjust</code>, approval</td>
+</tr>
+<tr>
+<td>GET / POST</td>
+<td><code>/policies/fees</code></td>
+<td><code>policy:author</code></td>
+</tr>
+<tr>
+<td>GET / POST</td>
+<td><code>/policies/limits</code></td>
+<td><code>policy:author</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/approval-requests/{id}/decisions</code></td>
+<td><code>approval:decide</code>, checker different from maker</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/audit/events</code></td>
+<td><code>audit:read</code></td>
+</tr>
+</tbody></table>
+<p>This is the baseline endpoint inventory, not a complete executable OpenAPI document. Extended risk-rule/template/staff/report APIs and detailed request/response schemas need specification during implementation.</p>
+<h3 id="webhooks-base-webhooks-v1">Webhooks base: <code>/webhooks/v1</code></h3>
+<ul>
+<li><code>POST /providers/{providerCode}/transactions</code></li>
+<li><code>POST /providers/{providerCode}/kyc-results</code></li>
+<li><code>POST /providers/{providerCode}/bill-status</code></li>
+<li><code>POST /providers/{providerCode}/cash-status</code></li>
+</ul>
+<p>Persist authenticated events in a provider inbox/deduplication store before internal processing. This inbox is a required extension, not a table in the current SQL. Guard out-of-order transitions using provider sequence/authoritative inquiry and explicit state rules.</p>
+<h2 id="5-financial-execution">5. Financial execution</h2>
+<pre><code class="language-mermaid">sequenceDiagram
+  participant A as Mobile App
+  participant API as Payments API
+  participant R as Risk/Policy
+  participant DB as PostgreSQL
+  participant Q as Outbox Worker
+  participant N as Notification
+
+  A-&gt;&gt;API: POST /transfers + Idempotency-Key + proof
+  API-&gt;&gt;R: validate limits, recipient, risk
+  R--&gt;&gt;API: allow + fee + rule versions
+  API-&gt;&gt;DB: Serializable transaction
+  Note over DB: lock source account/consumption&lt;br/&gt;insert payment + journal + postings + outbox
+  DB--&gt;&gt;API: commit transactionId
+  API--&gt;&gt;A: 201 COMPLETED + receipt
+  Q-&gt;&gt;DB: claim outbox event
+  Q-&gt;&gt;N: send both notifications
+  N--&gt;&gt;Q: delivered/accepted
+</code></pre>
+<p>For an internal P2P command: validate proof/quote/recipient/policy/risk; use a short serializable transaction; lock relevant account/limit resources; persist payment, balanced journal, postings and outbox atomically; return the committed result; send notifications asynchronously.</p>
+<p>For external rails: reserve funds, enter processing, call the provider outside the database transaction, then capture/release once through authenticated webhook or inquiry. An unknown outcome must not be changed to failed merely because the request timed out.</p>
+<h2 id="6-security-considerations">6. Security considerations</h2>
+<table>
+<thead>
+<tr>
+<th>Threat</th>
+<th>Required controls</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Account takeover/SIM swap</td>
+<td>Device binding, OTP throttling, recovery cooldown, risk signals</td>
+</tr>
+<tr>
+<td>Recipient enumeration</td>
+<td>Masking, bounded lookup, rate limits and abuse monitoring</td>
+</tr>
+<tr>
+<td>Duplicate/replayed payment</td>
+<td>Payload-aware idempotency, signed authorization, unique provider events</td>
+</tr>
+<tr>
+<td>Overspend/race</td>
+<td>Serializable/locked reservations and atomic limit consumption</td>
+</tr>
+<tr>
+<td>Forged/out-of-order webhook</td>
+<td>mTLS/HMAC/JWS, replay window, inbox and state guards</td>
+</tr>
+<tr>
+<td>Staff misuse</td>
+<td>Least privilege, access reasons, maker-checker, immutable audit</td>
+</tr>
+<tr>
+<td>KYC exposure</td>
+<td>Encrypted object storage, short-lived signed URLs and audited watermarked viewing</td>
+</tr>
+<tr>
+<td>Injection/broken access</td>
+<td>Validation, parameterized queries, ownership checks, ASVS verification</td>
+</tr>
+<tr>
+<td>Secret leakage</td>
+<td>Secrets manager, rotation, redacted telemetry and no client provider credentials</td>
+</tr>
+<tr>
+<td>Supply-chain/device compromise</td>
+<td>Dependency/SBOM controls, MASVS and attestation as risk input</td>
+</tr>
+</tbody></table>
+<h3 id="mobile">Mobile</h3>
+<p>Keychain/Keystore, LocalAuthentication/BiometricPrompt, screen privacy for sensitive views, minimal permissions, verified links and authenticated API requests. Biometrics unlock local keys; no face/fingerprint template is sent to DONECASH. App Attest/Play Integrity requires server verification and a safe unsupported-device fallback.</p>
+<h3 id="api-and-backoffice">API and backoffice</h3>
+<p>OIDC/SSO and phishing-resistant staff MFA; secure HttpOnly/SameSite cookies where appropriate; CSRF/CSP controls for browser sessions; least-privilege database roles; encrypted backups; controlled signed exports; audit read and write access. Use NIST authentication guidance and ASVS/MASVS as review baselines, not as unearned compliance labels.</p>
+<h3 id="pci-and-consumer-protection">PCI and consumer protection</h3>
+<p>Hosted/tokenized card collection reduces PAN exposure but does not automatically remove PCI scope. No PAN/CVV should traverse the application servers in the intended card-funding model. Show fees, references, honest statuses, dispute pathways and accessible controls. Avoid disclosing fraud rules or internal provider errors.</p>
+<h2 id="7-deployment-strategy">7. Deployment strategy</h2>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Data and purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Local</td>
+<td>Docker, synthetic data and fake adapters</td>
+</tr>
+<tr>
+<td>Preview</td>
+<td>Isolated branch/review deployment, no production secrets</td>
+</tr>
+<tr>
+<td>Integration/sandbox</td>
+<td>Contract tests and provider credentials scoped to sandbox</td>
+</tr>
+<tr>
+<td>Staging/UAT</td>
+<td>Production-like controls and agreed partner scenarios</td>
+</tr>
+<tr>
+<td>Production</td>
+<td>Approved infrastructure, restricted deployment and real-money gates</td>
+</tr>
+</tbody></table>
+<h3 id="pipeline">Pipeline</h3>
+<p>Lint/types/unit tests → dependency/secret/SAST checks → integration/property/concurrency tests → migration validation → build/sign artifacts and SBOM → staging smoke/security/partner UAT → approved progressive release with rollback/runbook. Use expand-contract migrations and restore evidence; never rely on destructive schema rollback for financial history.</p>
+<h3 id="topology">Topology</h3>
+<p>Portfolio: API/workers, Next.js and managed PostgreSQL with fake providers. Regulated: controlled ingress/WAF, redundant application capacity, isolated workers, HA PostgreSQL, secrets/KMS, encrypted object storage, central telemetry and an approved recovery site. Choose container orchestration only to match actual operational needs.</p>
+<h3 id="slo-and-disaster-recovery">SLO and disaster recovery</h3>
+<p>Proposed financial SLO 99.95%, non-critical 99.9%, RPO ≤5 minutes and RTO ≤60 minutes. Monitor provider-specific success/latency, pending exposure, outbox age and reconciliation breaks. Test restore/failover and payment-state recovery; these targets have not been measured in this package.</p>
+<h2 id="8-development-sequence">8. Development sequence</h2>
+<table>
+<thead>
+<tr>
+<th>Sprint</th>
+<th>Focus</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>Scope/design sign-off, threat model, provider contracts and CI skeleton</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Identity, consent, device trust and KYC workflow</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Ledger, balances, holds and invariant tests</td>
+</tr>
+<tr>
+<td>3</td>
+<td>P2P quotes/authorization/idempotency and receipts</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Cash/bills/QR adapters and failure handling</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Customer 360, support, risk and approvals</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Reconciliation, policies, observability and reporting</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Accessibility/native QA, load/security/DR/UAT and controlled release</td>
+</tr>
+</tbody></table>
+<h2 id="9-architecture-decision-records-to-finalize">9. Architecture decision records to finalize</h2>
+<p>ADR-001 modular monolith; ADR-002 native mobile vs PWA; ADR-003 ledger source of truth; ADR-004 SQL/Prisma responsibility split; ADR-005 outbox/inbox guarantees; ADR-006 sponsored vs independent operation; ADR-007 residency/hosting and recovery. Record owners, alternatives, rationale, consequences and review dates before implementation.</p>
+<h2 id="sources">Sources</h2>
+<ol>
+<li>NestJS, <a href="https://docs.nestjs.com/microservices/basics">Microservices Overview</a>, accessed 13 September 2026.</li>
+<li>Neon, <a href="https://neon.com/docs/connect/connection-pooling">Connection Pooling</a>, accessed 13 September 2026.</li>
+<li>Upstash, <a href="https://upstash.com/docs/redis/overall/usecases">Redis Use Cases</a>, accessed 13 September 2026.</li>
+<li>NIST, <a href="https://pages.nist.gov/800-63-4/sp800-63b.html">SP 800-63B-4: Authentication and Authenticator Management</a>, July 2025.</li>
+<li>OWASP, <a href="https://mas.owasp.org/MASVS/">Mobile Application Security Verification Standard</a>, accessed 13 September 2026.</li>
+<li>OWASP, <a href="https://owasp.github.io/www-project-application-security-verification-standard/">Application Security Verification Standard 5.0</a>, 2025.</li>
+<li>PCI Security Standards Council, <a href="https://www.pcisecuritystandards.org/standards/pci-dss/">PCI Data Security Standard</a>, accessed 13 September 2026.</li>
+<li>NTRA, <a href="https://www.tra.gov.eg/en/regulations/charter-of-consumers-rights-and-duties/">Charter of Consumers Rights and Duties</a>, accessed 13 September 2026.</li>
+<li>NTRA, <a href="https://www.tra.gov.eg/en/ntra-issues-instructions-to-facilitate-the-use-of-mobile-e-wallet-services-for-people-of-determination/">Instructions for Mobile Wallet Accessibility</a>, 4 December 2024.</li>
+</ol>
+<footer>DONECASH · Final English Handover · 9 October 2026 · Product blueprint, not a production application.</footer></main></div></body></html>

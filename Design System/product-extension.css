@@ -1,0 +1,38 @@
+:root {
+  /* Product semantic aliases: keep the supplied brand foundation as source. */
+  --color-status-success-bg: var(--color-toxic-lime);
+  --color-status-processing-bg: var(--color-voltage-cyan);
+  --color-status-attention-bg: var(--color-sticker-khaki);
+  --color-status-danger-bg: #ffd8d8;
+  --color-status-danger-ink: #7a0000;
+  --color-focus-ring: var(--color-static-black);
+  --color-disabled-bg: #e3e3e3;
+  --color-disabled-ink: var(--color-hairline-smoke);
+  --color-divider: #c8c8c8;
+
+  /* Product typography roles. */
+  --font-display-product: var(--font-helvetica-now-display-cn-bold);
+  --font-ui-product: var(--font-inter);
+  --font-reference-product: ui-monospace, "SFMono-Regular", Consolas, monospace;
+
+  /* Interaction and accessibility. */
+  --target-mobile-min: 48px;
+  --target-web-min: 40px;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --motion-control: 160ms;
+  --motion-surface: 240ms;
+
+  /* Operations density. */
+  --table-row-min: 44px;
+  --operations-sidebar-width: 236px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}

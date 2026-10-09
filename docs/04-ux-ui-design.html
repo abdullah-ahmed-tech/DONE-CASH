@@ -1,0 +1,764 @@
+<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DONECASH — UX and UI Design</title><link rel="stylesheet" href="../presentation.css"></head><body><header class="reader-top"><a href="../START-HERE.html">← Delivery portal</a><span>DONECASH · ENGLISH HANDOVER</span><a href="04-ux-ui-design.md">Markdown source</a></header><div class="document-layout"><aside class="toc"><strong>IN THIS DOCUMENT</strong><a href="#1-experience-direction">1. Experience direction</a><a href="#2-product-sitemaps">2. Product sitemaps</a><a href="#3-full-page-inventory">3. Full page inventory</a><a href="#4-navigation-model">4. Navigation model</a><a href="#5-user-flows">5. User flows</a><a href="#6-wireframes">6. Wireframes</a><a href="#7-ui-specification">7. UI specification</a><a href="#8-english-content-design">8. English content design</a><a href="#9-component-inventory">9. Component inventory</a><a href="#10-state-matrix">10. State matrix</a><a href="#11-accessibility-and-platform-review">11. Accessibility and platform review</a><a href="#12-test-and-approval-plan">12. Test and approval plan</a><a href="#13-presentation-sources">13. Presentation sources</a><a href="#sources">Sources</a></aside><main class="document"><h1>DONECASH — UX and UI Design</h1>
+<p>English handover edition · <a href="../prototype/index.html">Interactive prototype</a> · <a href="../design/README.html">Screenshot gallery</a>.</p>
+<h2 id="1-experience-direction">1. Experience direction</h2>
+<p>Combine the clarity expected of a financial product with the supplied expressive brand: Paper Cream <code>#f2f2f2</code>, white surfaces, black 1px borders and Pink/Cyan/Lime/Khaki panels. Saturated colors identify spaces and moments; status also needs explicit text and a meaningful icon/shape.</p>
+<h3 id="ux-principles">UX principles</h3>
+<ol>
+<li>Trust before speed: masked recipient, fees and total before confirmation.</li>
+<li>One understandable status: timeout is processing, with a next-step explanation.</li>
+<li>Safe correction: separate review, new-beneficiary warning and cancellation only before execution allows it.</li>
+<li>Available funds first: explain holds and limits separately from the posted balance.</li>
+<li>English first, LTR: future Arabic uses true RTL without reversing phone numbers/references.</li>
+<li>Accessibility is part of the product: assistive technology, scalable text, 48dp targets and non-color cues.</li>
+</ol>
+<h2 id="2-product-sitemaps">2. Product sitemaps</h2>
+<h3 id="customer-application">Customer application</h3>
+<pre><code class="language-mermaid">flowchart TD
+  A[Launch] --&gt; B{Authenticated?}
+  B -- No --&gt; C[Welcome]
+  C --&gt; D[Phone + OTP]
+  D --&gt; E[Consent]
+  E --&gt; F[KYC]
+  F --&gt; G[Create MPIN]
+  G --&gt; H[Home]
+  B -- Yes --&gt; H
+  H --&gt; I[Send money]
+  H --&gt; J[Cash in/out]
+  H --&gt; K[Pay bills &amp; top up]
+  H --&gt; L[Scan QR]
+  H --&gt; M[Activity]
+  H --&gt; N[Profile &amp; security]
+  H --&gt; O[Notifications]
+  I --&gt; P[Recipient]
+  P --&gt; Q[Amount]
+  Q --&gt; R[Review]
+  R --&gt; S[Authorize]
+  S --&gt; T[Receipt/status]
+  M --&gt; U[Transaction detail]
+  U --&gt; V[Get help / dispute]
+  N --&gt; W[Devices]
+  N --&gt; X[Limits &amp; fees]
+  N --&gt; Y[Close wallet]
+</code></pre>
+<h3 id="operations-backoffice">Operations backoffice</h3>
+<pre><code class="language-mermaid">flowchart TD
+  A[SSO + phishing-resistant MFA] --&gt; B[Operations home]
+  B --&gt; C[Customer 360]
+  B --&gt; D[KYC queue]
+  B --&gt; E[Transactions]
+  B --&gt; F[Risk cases]
+  B --&gt; G[Support]
+  B --&gt; H[Reconciliation]
+  B --&gt; I[Policies]
+  B --&gt; J[Approvals]
+  B --&gt; K[Reports]
+  B --&gt; L[Audit]
+  C --&gt; C1[Profile/KYC/wallet/devices/activity]
+  E --&gt; E1[Trace/ledger/provider timeline]
+  H --&gt; H1[Batches/exceptions/resolutions]
+  I --&gt; I1[Fees/limits/risk rules/templates]
+</code></pre>
+<h2 id="3-full-page-inventory">3. Full page inventory</h2>
+<p>The prototype includes 36 mobile routes (M-01–M-34 plus M-18A/M-19A) and 22 operations routes. Required states below are implementation/design acceptance requirements; route coverage does not mean every state is interactively implemented.</p>
+<h3 id="mobile">Mobile</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Screen</th>
+<th>Purpose / primary action</th>
+<th>Required states</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>M-01</td>
+<td>Secure launch</td>
+<td>Version/security check; continue</td>
+<td>Offline, maintenance, forced update</td>
+</tr>
+<tr>
+<td>M-02</td>
+<td>Welcome</td>
+<td>Explain value; get started</td>
+<td>Returning user</td>
+</tr>
+<tr>
+<td>M-03</td>
+<td>Phone</td>
+<td>Enter eligible number; send code</td>
+<td>Invalid, rate-limited</td>
+</tr>
+<tr>
+<td>M-04</td>
+<td>OTP</td>
+<td>Verify ownership</td>
+<td>Wrong, expired, resend timer</td>
+</tr>
+<tr>
+<td>M-05</td>
+<td>Consent</td>
+<td>Required terms and optional marketing</td>
+<td>Version, separate consent</td>
+</tr>
+<tr>
+<td>M-06</td>
+<td>Identity guide</td>
+<td>Prepare ID/selfie; start capture</td>
+<td>Permission denied</td>
+</tr>
+<tr>
+<td>M-07</td>
+<td>ID capture</td>
+<td>Front/back evidence; use photo</td>
+<td>Blur, glare, crop, retry</td>
+</tr>
+<tr>
+<td>M-08</td>
+<td>Selfie/liveness</td>
+<td>Verify presence</td>
+<td>Retry, accessible/manual review</td>
+</tr>
+<tr>
+<td>M-09</td>
+<td>KYC status</td>
+<td>Explain review; supply information</td>
+<td>Pending, more information, rejected</td>
+</tr>
+<tr>
+<td>M-10</td>
+<td>Create MPIN</td>
+<td>Create/confirm secure PIN</td>
+<td>Weak sequence, mismatch</td>
+</tr>
+<tr>
+<td>M-11</td>
+<td>Login</td>
+<td>MPIN/device biometric</td>
+<td>Locked, recovery, new device</td>
+</tr>
+<tr>
+<td>M-12</td>
+<td>Home</td>
+<td>Available funds and shortcuts</td>
+<td>Hidden balance, holds, restricted</td>
+</tr>
+<tr>
+<td>M-13</td>
+<td>Recipient</td>
+<td>Phone/saved beneficiary</td>
+<td>Not found, self-transfer, blocked</td>
+</tr>
+<tr>
+<td>M-14</td>
+<td>Amount</td>
+<td>Amount/note; review</td>
+<td>Insufficient funds, above limit</td>
+</tr>
+<tr>
+<td>M-15</td>
+<td>Transfer review</td>
+<td>Recipient, fee and total</td>
+<td>Expired quote</td>
+</tr>
+<tr>
+<td>M-16</td>
+<td>Authorization</td>
+<td>MPIN/biometric proof</td>
+<td>Failed proof, step-up</td>
+</tr>
+<tr>
+<td>M-17</td>
+<td>Receipt</td>
+<td>Result and public reference</td>
+<td>Completed, processing, failed</td>
+</tr>
+<tr>
+<td>M-18</td>
+<td>Cash in</td>
+<td>Choose available channel</td>
+<td>Channel unavailable</td>
+</tr>
+<tr>
+<td>M-18A</td>
+<td>Cash-in instructions</td>
+<td>ATM/agent steps and reference</td>
+<td>Expired, unavailable, provider pending</td>
+</tr>
+<tr>
+<td>M-19</td>
+<td>Cash out</td>
+<td>Amount/channel; create code</td>
+<td>Expired, used, cancelled</td>
+</tr>
+<tr>
+<td>M-19A</td>
+<td>Cash-out code</td>
+<td>Code, TTL and instructions</td>
+<td>Consumed, expired, cancelled, pending</td>
+</tr>
+<tr>
+<td>M-20</td>
+<td>Bills/top-up categories</td>
+<td>Choose service/biller</td>
+<td>Empty, unavailable</td>
+</tr>
+<tr>
+<td>M-21</td>
+<td>Bill inquiry</td>
+<td>Subscriber, due amount and fee</td>
+<td>Not found, paid already, stale inquiry</td>
+</tr>
+<tr>
+<td>M-22</td>
+<td>QR scanner</td>
+<td>Read merchant payload</td>
+<td>Permission, invalid, expired</td>
+</tr>
+<tr>
+<td>M-23</td>
+<td>Merchant review</td>
+<td>Merchant/branch/amount; authorize</td>
+<td>Static editable vs dynamic locked</td>
+</tr>
+<tr>
+<td>M-24</td>
+<td>Activity</td>
+<td>Filter history; open transaction</td>
+<td>Loading, empty, filtered</td>
+</tr>
+<tr>
+<td>M-25</td>
+<td>Transaction detail</td>
+<td>Timeline, fees and reference</td>
+<td>Processing, reversed</td>
+</tr>
+<tr>
+<td>M-26</td>
+<td>New dispute</td>
+<td>Reason, description and evidence</td>
+<td>Duplicate, ineligible</td>
+</tr>
+<tr>
+<td>M-27</td>
+<td>Dispute detail</td>
+<td>SLA/status/messages</td>
+<td>Waiting for customer, closed</td>
+</tr>
+<tr>
+<td>M-28</td>
+<td>Notifications</td>
+<td>Financial/security event inbox</td>
+<td>Read, unread</td>
+</tr>
+<tr>
+<td>M-29</td>
+<td>Profile</td>
+<td>Identity and account settings</td>
+<td>Restricted account</td>
+</tr>
+<tr>
+<td>M-30</td>
+<td>Limits and fees</td>
+<td>Usage, remaining and policy</td>
+<td>Effective dates and timezone</td>
+</tr>
+<tr>
+<td>M-31</td>
+<td>Devices</td>
+<td>Review/revoke sessions</td>
+<td>Current, new, risky</td>
+</tr>
+<tr>
+<td>M-32</td>
+<td>Security</td>
+<td>MPIN, biometrics and privacy</td>
+<td>Cooldown, recovery</td>
+</tr>
+<tr>
+<td>M-33</td>
+<td>Help</td>
+<td>FAQ, contact and service status</td>
+<td>Provider outage</td>
+</tr>
+<tr>
+<td>M-34</td>
+<td>Close wallet</td>
+<td>Prerequisites, payout and request</td>
+<td>Nonzero funds, active holds/dispute</td>
+</tr>
+</tbody></table>
+<h3 id="backoffice">Backoffice</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Page</th>
+<th>Audience</th>
+<th>Core task</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>O-01</td>
+<td>Operations home</td>
+<td>All scoped roles</td>
+<td>Queues, operational SLOs and actionable exposure</td>
+</tr>
+<tr>
+<td>O-02</td>
+<td>Customer search</td>
+<td>Support/compliance</td>
+<td>Exact search with access reason</td>
+</tr>
+<tr>
+<td>O-03</td>
+<td>Customer 360</td>
+<td>Support/compliance</td>
+<td>Masked profile/KYC/wallet/devices/activity</td>
+</tr>
+<tr>
+<td>O-04</td>
+<td>KYC queue</td>
+<td>KYC analyst</td>
+<td>Priority, SLA and assignment</td>
+</tr>
+<tr>
+<td>O-05</td>
+<td>KYC review</td>
+<td>KYC analyst</td>
+<td>Evidence, screening and reason-coded decision</td>
+</tr>
+<tr>
+<td>O-06</td>
+<td>Transaction search</td>
+<td>Operations/finance</td>
+<td>Filters and provider/public references</td>
+</tr>
+<tr>
+<td>O-07</td>
+<td>Transaction trace</td>
+<td>Operations/finance</td>
+<td>State, ledger, webhook and outbox evidence</td>
+</tr>
+<tr>
+<td>O-08</td>
+<td>Risk alerts</td>
+<td>Fraud</td>
+<td>Queue and rule evidence</td>
+</tr>
+<tr>
+<td>O-09</td>
+<td>Risk case</td>
+<td>Fraud</td>
+<td>Linked entities and controlled containment</td>
+</tr>
+<tr>
+<td>O-10</td>
+<td>Support queue</td>
+<td>Support</td>
+<td>Priority, SLA and channel</td>
+</tr>
+<tr>
+<td>O-11</td>
+<td>Ticket workspace</td>
+<td>Support</td>
+<td>Context, messages and safe escalation</td>
+</tr>
+<tr>
+<td>O-12</td>
+<td>Reconciliation batches</td>
+<td>Finance</td>
+<td>Imports, status and totals</td>
+</tr>
+<tr>
+<td>O-13</td>
+<td>Reconciliation exceptions</td>
+<td>Finance</td>
+<td>Compare external/internal and request resolution</td>
+</tr>
+<tr>
+<td>O-14</td>
+<td>Fee policies</td>
+<td>Product/finance</td>
+<td>Version, preview and scheduling</td>
+</tr>
+<tr>
+<td>O-15</td>
+<td>Limit policies</td>
+<td>Compliance/product</td>
+<td>Scope, version and effective dates</td>
+</tr>
+<tr>
+<td>O-16</td>
+<td>Risk rules</td>
+<td>Fraud</td>
+<td>Draft, test and activate</td>
+</tr>
+<tr>
+<td>O-17</td>
+<td>Approvals inbox</td>
+<td>Checker</td>
+<td>Evidence, diff and approve/reject</td>
+</tr>
+<tr>
+<td>O-18</td>
+<td>Staff and roles</td>
+<td>IAM administration</td>
+<td>RBAC, expiry and segregation of duties</td>
+</tr>
+<tr>
+<td>O-19</td>
+<td>Audit explorer</td>
+<td>Auditor</td>
+<td>Actor/resource/time and controlled export</td>
+</tr>
+<tr>
+<td>O-20</td>
+<td>Reports</td>
+<td>Management/regulatory</td>
+<td>Scheduled controlled reports</td>
+</tr>
+<tr>
+<td>O-21</td>
+<td>Provider health</td>
+<td>SRE/operations</td>
+<td>Latency, errors and circuit status</td>
+</tr>
+<tr>
+<td>O-22</td>
+<td>Notification templates</td>
+<td>Operations/product</td>
+<td>English and future Arabic versions/preview</td>
+</tr>
+</tbody></table>
+<h2 id="4-navigation-model">4. Navigation model</h2>
+<p>Mobile bottom navigation: Home, Activity, Scan and Profile. Sending, bills and cash are tasks launched from Home rather than extra tabs. QR retains a visible label. Backoffice uses a role-aware sidebar; hiding links is not authorization—direct URLs require server-side permission checks.</p>
+<h2 id="5-user-flows">5. User flows</h2>
+<h3 id="registration-and-kyc">Registration and KYC</h3>
+<pre><code class="language-mermaid">flowchart LR
+  A[Phone] --&gt; B[OTP]
+  B --&gt; C{Valid?}
+  C -- No --&gt; B
+  C -- Yes --&gt; D[Consent]
+  D --&gt; E[ID capture]
+  E --&gt; F[Selfie and liveness]
+  F --&gt; G{Decision}
+  G -- Approved --&gt; H[Create MPIN]
+  H --&gt; I[Home]
+  G -- More information --&gt; E
+  G -- Manual review --&gt; J[Review status]
+  G -- Rejected --&gt; K[Safe reason and support]
+</code></pre>
+<h3 id="sending-money">Sending money</h3>
+<pre><code class="language-mermaid">flowchart LR
+  A[Send money] --&gt; B[Phone or beneficiary]
+  B --&gt; C[Masked recipient check]
+  C --&gt; D[Amount]
+  D --&gt; E{Funds, limits and risk}
+  E -- Blocked --&gt; F[Explained decline]
+  E -- Allowed --&gt; G[Review fee and total]
+  G --&gt; H[MPIN or biometric proof]
+  H --&gt; I{Finality}
+  I -- Completed --&gt; J[Receipt]
+  I -- Unknown --&gt; K[Processing and later notification]
+  I -- Declined --&gt; F
+</code></pre>
+<h3 id="cash-withdrawal">Cash withdrawal</h3>
+<pre><code class="language-mermaid">flowchart LR
+  A[Cash out] --&gt; B[ATM or agent]
+  B --&gt; C[Amount and fee]
+  C --&gt; D[Strong authorization]
+  D --&gt; E[Hold and expiring single-use code]
+  E --&gt; F{Authoritative outcome?}
+  F -- Confirmed dispense --&gt; G[Capture and receipt]
+  F -- Confirmed expiry without dispense --&gt; H[Release hold]
+  F -- Unknown --&gt; I[Processing and inquiry]
+</code></pre>
+<p>Unknown dispense must not release funds blindly merely because a local timer expired.</p>
+<h3 id="transaction-dispute">Transaction dispute</h3>
+<pre><code class="language-mermaid">flowchart LR
+  A[Transaction detail] --&gt; B[Get help]
+  B --&gt; C[Reason]
+  C --&gt; D{Eligible?}
+  D -- No --&gt; E[Explanation and support channel]
+  D -- Yes --&gt; F[Description and evidence]
+  F --&gt; G[Confirm submission]
+  G --&gt; H[Case reference and SLA]
+  H --&gt; I[Updates or more information]
+  I --&gt; J[Reasoned resolution]
+</code></pre>
+<h3 id="reconciliation-exception">Reconciliation exception</h3>
+<pre><code class="language-mermaid">flowchart LR
+  A[Import batch] --&gt; B[Auto-match]
+  B --&gt; C{Matched?}
+  C -- Yes --&gt; D[Close matched]
+  C -- No --&gt; E[Exception queue]
+  E --&gt; F[Compare provider, payment and ledger]
+  F --&gt; G[Resolution request]
+  G --&gt; H[Independent checker]
+  H --&gt; I[Approved adjustment or reversal]
+  I --&gt; J[Re-match and audit]
+</code></pre>
+<h3 id="login-and-recovery">Login and recovery</h3>
+<pre><code class="language-mermaid">flowchart LR
+  A[Welcome back] --&gt; B[MPIN or biometric proof]
+  B --&gt; C{Trusted device?}
+  C -- Yes --&gt; D[Home]
+  C -- No --&gt; E[OTP and device binding]
+  E --&gt; D
+  B -- Locked --&gt; F[Recovery and cooldown]
+  F --&gt; E
+</code></pre>
+<h3 id="deposits-bills-and-qr">Deposits, bills and QR</h3>
+<pre><code class="language-mermaid">flowchart LR
+  A[Home] --&gt; B{Service}
+  B -- Cash in --&gt; C[Channel]
+  C --&gt; D[Instructions and reference]
+  D --&gt; E[Provider confirmation]
+  B -- Bill --&gt; F[Biller and subscriber]
+  F --&gt; G[Inquiry and amount]
+  G --&gt; H[Review and authorize]
+  B -- QR --&gt; I[Scan or merchant code]
+  I --&gt; J[Verified merchant and amount]
+  J --&gt; H
+  H --&gt; K{Finality}
+  K -- Completed --&gt; L[Receipt]
+  K -- Unknown --&gt; M[Processing and later notification]
+</code></pre>
+<h3 id="account-security-and-closure">Account, security and closure</h3>
+<pre><code class="language-mermaid">flowchart LR
+  A[Profile] --&gt; B[Limits and fees]
+  A --&gt; C[Devices and sessions]
+  C --&gt; D[Review or revoke]
+  A --&gt; E[Security]
+  E --&gt; F[Biometrics, MPIN and privacy]
+  A --&gt; G[Close wallet]
+  G --&gt; H{No blocking holds or disputes?}
+  H -- No --&gt; I[Explain exact prerequisites]
+  H -- Yes --&gt; J[Confirm remaining-funds payout]
+  J --&gt; K{Funds resolved?}
+  K -- Yes --&gt; L[Confirm closure request]
+  K -- No --&gt; I
+</code></pre>
+<h3 id="operations-flow-coverage">Operations flow coverage</h3>
+<table>
+<thead>
+<tr>
+<th>Flow</th>
+<th>Start to finish</th>
+<th>Page IDs</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Customer support</td>
+<td>Reasoned search → Customer 360 → transaction → ticket → response/escalation</td>
+<td>O-02,03,06,07,10,11</td>
+</tr>
+<tr>
+<td>KYC</td>
+<td>Queue → evidence/screening → reason → decision → audit</td>
+<td>O-04,05,19</td>
+</tr>
+<tr>
+<td>Fraud</td>
+<td>Alert → linked case → notes → approved containment → audit</td>
+<td>O-08,09,17,19</td>
+</tr>
+<tr>
+<td>Transaction operations</td>
+<td>Search → API/ledger/provider/outbox trace → safe action</td>
+<td>O-06,07,21</td>
+</tr>
+<tr>
+<td>Reconciliation</td>
+<td>Batch → exception → compare → request → checker → re-match</td>
+<td>O-12,13,17,19</td>
+</tr>
+<tr>
+<td>Policy lifecycle</td>
+<td>Draft fee/limit/rule/template → preview → approval → effective activation</td>
+<td>O-14,15,16,17,22</td>
+</tr>
+<tr>
+<td>IAM</td>
+<td>Role assignment → SoD check → expiry/review → approval → audit</td>
+<td>O-18,17,19</td>
+</tr>
+<tr>
+<td>Oversight</td>
+<td>Overview → provider health → report → controlled export</td>
+<td>O-01,21,20,19</td>
+</tr>
+</tbody></table>
+<h2 id="6-wireframes">6. Wireframes</h2>
+<p><a href="../design/wireframes.html">English low-fidelity board</a> and its PNG cover Home → Recipient → Amount → Review → Receipt, plus Customer 360 and Transaction Trace. They are retained SDLC artifacts, not an alternative final UI. The complete screen inventory is represented by the higher-fidelity prototype, not by this intentionally limited wireframe board. A separate KYC wireframe is not evidenced by the original board.</p>
+<p>Reference mobile canvas 390×844; safe areas; 20px horizontal product padding; 10/16/24 rhythm; 48px controls; explicit back direction; financial review on a full page rather than a sheet hiding fees. Use skeleton content and contextual progress, not unexplained spinners.</p>
+<h2 id="7-ui-specification">7. UI specification</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Direction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Canvas</td>
+<td>Paper Cream <code>#f2f2f2</code></td>
+</tr>
+<tr>
+<td>Surface</td>
+<td>White or Graphite for deliberate inverted panels</td>
+</tr>
+<tr>
+<td>Structural ink</td>
+<td>Black, 1px border</td>
+</tr>
+<tr>
+<td>Main action</td>
+<td>Toxic Lime with black text</td>
+</tr>
+<tr>
+<td>Accents</td>
+<td>Pink/Cyan/Khaki full surfaces, not small low-contrast colored text</td>
+</tr>
+<tr>
+<td>Radius</td>
+<td>16px baseline controls/cards; 38–46px hero/frame reference</td>
+</tr>
+<tr>
+<td>Display font</td>
+<td>Licensed Helvetica condensed or approved substitute for short headings</td>
+</tr>
+<tr>
+<td>Product text</td>
+<td>Inter/system UI fallback; readable customer names and transaction labels</td>
+</tr>
+<tr>
+<td>Numbers</td>
+<td>Explicit currency and tabular, direction-isolated references</td>
+</tr>
+<tr>
+<td>Elevation</td>
+<td>Borders/offset decoration; no conventional drop shadows</td>
+</tr>
+</tbody></table>
+<p>Keep confirmation screens visually calm: cream/white, black boundaries and Lime CTA. Do not tilt financial amounts. Completed uses explicit success text; processing uses explicit non-final messaging. The prototype contains compact text and radii that need further token/accessibility alignment; <a href="06-design-system-audit.html">the audit</a> documents this honestly.</p>
+<h2 id="8-english-content-design">8. English content design</h2>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Recommended copy</th>
+<th>Avoid</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Transfer CTA</td>
+<td>“Review transfer”, then “Confirm and send”</td>
+<td>Submit / OK</td>
+</tr>
+<tr>
+<td>Recipient</td>
+<td>“You’re sending to Mohamed A.”</td>
+<td>Unnecessary full identity disclosure</td>
+</tr>
+<tr>
+<td>Fee</td>
+<td>“Transfer fee: 5.00 EGP”</td>
+<td>Fee hidden in a tooltip</td>
+</tr>
+<tr>
+<td>Pending</td>
+<td>“Your request is processing. Do not send again.”</td>
+<td>Generic error</td>
+</tr>
+<tr>
+<td>Confirmed no-debit failure</td>
+<td>“The transfer was not completed. Your balance was not debited.”</td>
+<td>Claiming no debit when outcome is unknown</td>
+</tr>
+<tr>
+<td>Limit</td>
+<td>“12,500 EGP remaining today”</td>
+<td>Bare technical error code</td>
+</tr>
+<tr>
+<td>Risk review</td>
+<td>“We need to review this transaction to protect your account.”</td>
+<td>Rule disclosure or accusation</td>
+</tr>
+</tbody></table>
+<h2 id="9-component-inventory">9. Component inventory</h2>
+<p>Mobile: app bar, balance/hold card, service tile, transaction row, keypad, recipient block, fee breakdown, banner, receipt, timeline, usage meter, OTP/PIN, capture/scanner overlays, empty/error/offline states and clear primary/secondary/destructive controls.</p>
+<p>Backoffice: scoped sidebar, exact-search bar, queues/filters/SLA, masked/reveal-with-reason field, evidence viewer, split workspace, trace/ledger table, policy diff, approval panel and audit row. Restrict bulk changes; never offer uncontrolled bulk financial mutation.</p>
+<h2 id="10-state-matrix">10. State matrix</h2>
+<p>For each important screen: default, loading, empty, validation error, business decline, offline, timeout/processing, restricted access and large text. Financial flows add duplicate submission, stale quote, provider unavailable and reversal. These are acceptance requirements for subsequent implementation; the current prototype is predominantly a default-state navigation representation.</p>
+<h2 id="11-accessibility-and-platform-review">11. Accessibility and platform review</h2>
+<ul>
+<li>AA text contrast, visible focus, logical assistive reading order and descriptive functional labels.</li>
+<li>48×48dp touch targets with separation where practical.</li>
+<li>Balance privacy control, rather than unexpectedly reading sensitive money aloud.</li>
+<li>Decorative art hidden from assistive technology; no status communicated by color alone.</li>
+<li>200% text without losing merchant, amount or CTA.</li>
+<li>OTP supports paste/autofill and a stable accessible alternative.</li>
+<li>Optional haptics/audio with equivalent visible feedback and reduced motion.</li>
+<li>Test VoiceOver, TalkBack, keyboard web and later mixed-direction Arabic references.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>iOS</th>
+<th>Android</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Insets</td>
+<td>Notch/Dynamic Island and home indicator</td>
+<td>Status bar, gestures/navigation and edge-to-edge</td>
+</tr>
+<tr>
+<td>Scaling</td>
+<td>Dynamic Type through target 200%</td>
+<td>Font/display scaling through target 200%</td>
+</tr>
+<tr>
+<td>Accessibility</td>
+<td>VoiceOver, Reduce Motion, Increase Contrast</td>
+<td>TalkBack, Remove Animations, contrast settings</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>Keychain/Secure Enclave</td>
+<td>Keystore/StrongBox where available</td>
+</tr>
+<tr>
+<td>Biometrics</td>
+<td>LocalAuthentication</td>
+<td>BiometricPrompt</td>
+</tr>
+<tr>
+<td>Integrity</td>
+<td>App Attest with fallback</td>
+<td>Play Integrity verified server-side</td>
+</tr>
+<tr>
+<td>Links</td>
+<td>Universal Links</td>
+<td>Verified Android App Links</td>
+</tr>
+</tbody></table>
+<p>The visual switch in the prototype illustrates platform shells. It does not substitute for native devices, simulators, secure-storage implementation or accessibility certification.</p>
+<h2 id="12-test-and-approval-plan">12. Test and approval plan</h2>
+<p>Design critique with product/engineering/finance/compliance/support; five-second trust test; two moderated rounds of five users each for KYC/P2P/disputes; weak-network/duplicate/wrong-OTP/recovery tests; contrast/keyboard/assistive-technology review; recorded screen/state/copy/rule/criteria approval with date and owner.</p>
+<p>Proposed sign-off targets: ≥80% unaided critical-flow completion, no wrong-recipient submission in the scripted scenario, ≥90% correct pending comprehension, fees/total before every authorization, no Critical accessibility issue and no High issue without accepted remediation. These are targets, not recorded test results.</p>
+<h2 id="13-presentation-sources">13. Presentation sources</h2>
+<p><code>prototype/</code> is the interactive source. <code>design/final/</code> holds derived presentation images and a route manifest. English wireframes are in <code>design/</code>. Supplied originals remain under <code>Assets/</code> and <code>Design System/</code>. First incomplete UI previews are not part of this delivery.</p>
+<h2 id="sources">Sources</h2>
+<ol>
+<li>Android Accessibility Help, <a href="https://support.google.com/accessibility/android/answer/7101858">Touch Target Size</a>, accessed 13 September 2026.</li>
+<li>NTRA, <a href="https://www.tra.gov.eg/en/ntra-issues-instructions-to-facilitate-the-use-of-mobile-e-wallet-services-for-people-of-determination/">Instructions for Mobile Wallet Accessibility</a>, 4 December 2024.</li>
+<li>NTRA, <a href="https://www.tra.gov.eg/en/regulations/consumer-manuals-and-tips/mobile-wallet-services/">Mobile Wallet Services</a>, accessed 13 September 2026.</li>
+<li>Orange Egypt, <a href="https://www.orange.eg/en/services/Orange-financial-services">Orange Cash E-Wallet</a>, accessed 13 September 2026.</li>
+<li>e&amp; Egypt, <a href="https://www.eand.com.eg/portal/pages/services/eand_money_en.html">e&amp; money</a>, accessed 13 September 2026.</li>
+</ol>
+<footer>DONECASH · Final English Handover · 9 October 2026 · Product blueprint, not a production application.</footer></main></div></body></html>
